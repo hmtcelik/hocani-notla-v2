@@ -135,10 +135,10 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@mantine/core@7.0.0-alpha.18":
-  version "7.0.0-alpha.18"
-  resolved "https://registry.yarnpkg.com/@mantine/core/-/core-7.0.0-alpha.18.tgz#6e565c178df75f80e61cffd433fafcf009ea1098"
-  integrity sha512-FPnws/NvCU+w/X0GwWfqCjCYsMTQMhHAdzWT5qD769ocO2LvqAouY/bGU3b1LKSjG/T/FY0ngAv/4kWYJn56mg==
+"@mantine/core@7.0.0-alpha.19":
+  version "7.0.0-alpha.19"
+  resolved "https://registry.yarnpkg.com/@mantine/core/-/core-7.0.0-alpha.19.tgz#043bef8e0d615ddf65b20905cf5c44565ea99e77"
+  integrity sha512-SroJicTUEKV1gmvHzX0PG3Y1OyOzqYWko04DBjdPsfj6np3zSFWYwpvNcrpaT4a7DUub9Fnzr/H9apDoBF1nuQ==
   dependencies:
     "@floating-ui/react" "^0.19.1"
     clsx "1.1.1"
@@ -146,10 +146,10 @@
     react-textarea-autosize "8.3.4"
     type-fest "^3.6.1"
 
-"@mantine/hooks@7.0.0-alpha.18":
-  version "7.0.0-alpha.18"
-  resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-7.0.0-alpha.18.tgz#737baf95dc1a5e25c9991086af8a94759d8320a7"
-  integrity sha512-9XEGMjtdgUifvO+EwLdmISIQv585WPOKzYTKyji+XKug+iRhDJzgunF1FHEl49+rFTJqV1OMsW4K+XP28kiaAg==
+"@mantine/hooks@7.0.0-alpha.19":
+  version "7.0.0-alpha.19"
+  resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-7.0.0-alpha.19.tgz#813068679331afa0b89b2de9066a882c5fb86d5e"
+  integrity sha512-ZVv6YJ/UenTiq0X6iZSQTQvcFfRd7ljSvnF5VmNNY81ecfQGrEOCSOy05xWq4m2Ax0upcG/6I9ypd9uyLLW6UA==
 
 "@next/env@13.4.10":
   version "13.4.10"
@@ -252,6 +252,19 @@
   integrity sha512-sJ902EfIzn1Fa+qYmjdQqh8tPsoxyBz+8yBKC2HKUxyezKJFwPGOn7pv4WY6QuQW//ySQi5lJjA/ZT9sNWWNTg==
   dependencies:
     tslib "^2.4.0"
+
+"@tabler/icons-react@^2.30.0":
+  version "2.30.0"
+  resolved "https://registry.yarnpkg.com/@tabler/icons-react/-/icons-react-2.30.0.tgz#e7ece4b83d6cd66b3a4ec043b89bf18e5341c03e"
+  integrity sha512-aYggXusHW133L4KujJkVf4GIIrjg7tIRHgNf/n37mnoHqMjwNP+PjmVdrBM1Z8Ywx9PKFRlrwM0eUMDcG+I4HA==
+  dependencies:
+    "@tabler/icons" "2.30.0"
+    prop-types "^15.7.2"
+
+"@tabler/icons@2.30.0":
+  version "2.30.0"
+  resolved "https://registry.yarnpkg.com/@tabler/icons/-/icons-2.30.0.tgz#4ea3c4da56fd5653bb9d0be0dc7feaa33602555c"
+  integrity sha512-tvtmkI4ALjKThVVORh++sB9JnkFY7eGInKxNy+Df7WVQiF7T85tlvGADzlgX4Ic+CK5MIUzZ0jhOlQ/RRlgXpg==
 
 "@types/json5@^0.0.29":
   version "0.0.29"
@@ -2079,7 +2092,12 @@ prelude-ls@^1.2.1:
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.2.1.tgz#debc6489d7a6e6b0e7611888cec880337d316396"
   integrity sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==
 
-prop-types@^15.8.1:
+prettier@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.0.0.tgz#e7b19f691245a21d618c68bc54dc06122f6105ae"
+  integrity sha512-zBf5eHpwHOGPC47h0zrPyNn+eAEIdEzfywMoYn2XPi0P44Zp0tSq64rq0xAREh4auw2cJZHo9QUob+NqCQky4g==
+
+prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
