@@ -1,4 +1,6 @@
 import "@mantine/core/styles.css";
+import "./style.scss";
+
 import type { Metadata } from 'next'
 import { MantineProvider, ColorSchemeScript } from "@mantine/core";
 
@@ -15,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <ColorSchemeScript />
+        <ColorSchemeScript color="light" />
       </head>
       <body>
         <MantineProvider>

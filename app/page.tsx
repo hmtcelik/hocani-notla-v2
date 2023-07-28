@@ -1,15 +1,13 @@
 'use client';
 
+import Image from 'next/image'
 import { useDisclosure } from '@mantine/hooks';
-import { AppShell, Burger, Alert, Grid, Accordion } from '@mantine/core';
-import {
-  IconSettings,
-  IconSearch,
-  IconPhoto,
-  IconMessageCircle,
-  IconTrash,
-  IconArrowsLeftRight,
-} from '@tabler/icons-react';
+import { AppShell, Burger, Alert, Grid, SimpleGrid, Group, Button } from '@mantine/core';
+import SideNavbar from './_components/SideNavbar';
+
+import { TextInput } from '@mantine/core';
+import DefaultLogo from '../public/defaultlogo.png';
+import { IconSettings, IconSearch } from '@tabler/icons-react';
 
 export default function Home() {
   const [opened, { toggle }] = useDisclosure();
@@ -17,28 +15,40 @@ export default function Home() {
   return (
     <AppShell
       header={{ height: 60 }}
-      navbar={{ width: 250, breakpoint: 'lg', collapsed: { mobile: !opened } }}
+      navbar={{ width: 400,  breakpoint: 'lg', collapsed: { mobile: !opened } }}
       padding="md"
     >
       <AppShell.Header>
-        <Burger opened={opened} onClick={toggle} hiddenFrom="lg" size="md" />
+        <Grid align='center' px={20}>
+          <Grid.Col span={3}  >
+            <Group justify='start'>
+              <Burger opened={opened} onClick={toggle} hiddenFrom="lg" size="md" />
+              <Image src={'/defaultlogo.png'} width={190} height={60} alt='logo'></Image> 
+            </Group>
+          </Grid.Col>
+          <Grid.Col span={6}>
+            <Group grow>
+              <TextInput
+                variant='filled'
+                size="md"
+                radius="lg"
+                leftSection={<IconSearch />}
+                placeholder="Input placeholder"
+                className='navbar-search'
+              />
+            </Group>
+          </Grid.Col>
+          <Grid.Col span={3}>
+            <Group justify='end'>
+              <Button variant="filled" radius="lg">Giriş Yap</Button>
+              <Button variant="light" radius="lg"><IconSettings></IconSettings></Button>
+            </Group>
+          </Grid.Col>
+        </Grid>
       </AppShell.Header>
 
-      <AppShell.Navbar p="md">
-        <Accordion defaultValue="Apples">
-          <Accordion.Item value="aa">
-            <Accordion.Control
-              styles={{
-                icon: {
-                  display: 'none',
-                },
-              }}
-            >
-              {'aa'}
-            </Accordion.Control>
-            {/* <Accordion.Panel>{''}</Accordion.Panel> */}
-          </Accordion.Item>
-        </Accordion>
+      <AppShell.Navbar pl={{'base':5, 'lg':200}} pr={5} pb={5} pt={5}>
+        <SideNavbar />
       </AppShell.Navbar>
 
       <AppShell.Main>

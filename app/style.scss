@@ -1,0 +1,12 @@
+.accordion-item{
+    &:hover{
+        background-color: #eee;
+        border-radius: 8px;
+    }
+}
+
+.navbar-search{
+    &::placeholder{
+        color: black
+    }
+}
