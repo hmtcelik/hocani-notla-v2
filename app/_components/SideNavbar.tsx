@@ -1,6 +1,5 @@
 import { Accordion } from '@mantine/core';
 import {
-  IconSettings,
   IconHome,
   IconSearch,
   IconPhoto,
