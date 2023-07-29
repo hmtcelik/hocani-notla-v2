@@ -9,12 +9,12 @@ import {
 } from '@tabler/icons-react';
 
 const menuItems = [
-  { icon: <IconHome />, label: 'Home' },
-  { icon: <IconSearch />, label: 'Search' },
-  { icon: <IconPhoto />, label: 'Photos' },
-  { icon: <IconMessageCircle />, label: 'Messages' },
-  { icon: <IconTrash />, label: 'Trash' },
-  { icon: <IconArrowsLeftRight />, label: 'Settings' },
+  { icon: <IconHome />, label: 'Ana Sayfa' },
+  { icon: <IconSearch />, label: 'Ara' },
+  { icon: <IconPhoto />, label: 'Fotolar' },
+  { icon: <IconMessageCircle />, label: 'Mesajlar' },
+  { icon: <IconTrash />, label: 'Çöp' },
+  { icon: <IconArrowsLeftRight />, label: 'Ayarlar' },
 ];
 
 export default function SideNavbar() {
