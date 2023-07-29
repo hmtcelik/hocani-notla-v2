@@ -6,7 +6,17 @@
 }
 
 .navbar-search{
-    &::placeholder{
-        color: black
+    input{
+        background-color: #eaeeef;
+        border-color: #ebebeb;
+    }
+    input::placeholder{
+        color: #666666
+    }
+    input:focus{
+        border-color: transparent;
+    }
+    input:hover{
+        background-color: #e1e6e7;
     }
 }
