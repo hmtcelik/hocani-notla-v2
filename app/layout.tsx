@@ -1,8 +1,9 @@
 import "@mantine/core/styles.css";
-import "./style.scss";
-
 import type { Metadata } from 'next'
 import { MantineProvider, ColorSchemeScript } from "@mantine/core";
+
+import "./style.scss";
+import BaseLayout from "./_layouts/BaseLayout";
 
 export const metadata: Metadata = {
   title: 'Hocani Notla v2',
@@ -21,7 +22,9 @@ export default function RootLayout({
       </head>
       <body>
         <MantineProvider>
-          {children}
+          <BaseLayout>
+            {children}
+          </BaseLayout>
         </MantineProvider>
       </body>
     </html>

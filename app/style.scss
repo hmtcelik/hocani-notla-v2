@@ -1,10 +1,23 @@
-.accordion-item{
+a{
+    text-decoration: none;
     &:hover{
-        background-color: #eee;
-        border-radius: 8px;
+        text-decoration: underline;
     }
 }
 
+.accordion{
+    a{
+        text-decoration: none;
+    }
+    
+    .item{
+        &:hover{
+            background-color: #eee;
+            border-radius: 8px;
+        }
+    }
+}
+    
 .navbar-search{
     input{
         background-color: #eaeeef;
