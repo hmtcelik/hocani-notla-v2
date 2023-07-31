@@ -1,6 +1,7 @@
 import { Grid, Avatar, Title, Text, Group, Button, Divider } from '@mantine/core';
 import { IconHeart, IconHeartFilled, IconArrowForward, IconMessageCircle, IconShare } from '@tabler/icons-react';
 import Link from 'next/link';
+import ScoreAvatar from './ScoreAvatar';
 
 interface PostProps {
   id: number;
@@ -11,6 +12,7 @@ interface PostProps {
   likes: number;
   comments: number;
   shares: number;
+  score: number;
   doctor: string | null;
   doctorId: string | null;
   university: string | null;
@@ -21,7 +23,7 @@ const cardTitleTextColor = '#595959'
 export default function Post(post: PostProps) {
   return (
     <>
-        <Grid p={10} className="post">
+        <Grid p={10} py={15} className="post">
           {post.doctor && post.university && post.doctorId && 
             <>
               <Grid.Col span={{base:2, xs:1}}>
@@ -42,7 +44,7 @@ export default function Post(post: PostProps) {
             }
               <Grid.Col span={{base:2, xs:1}}>
                 <Group justify="flex-end" align="flex-start">
-                  <Avatar radius="xl"  />
+                  <ScoreAvatar score={post.score} />
                 </Group>
               </Grid.Col>
           <Grid.Col span={{base:10, xs:11}}>

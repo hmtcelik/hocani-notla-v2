@@ -1,18 +1,23 @@
 import Link from 'next/link';
 import { Alert, Accordion } from '@mantine/core';
 import { Avatar } from '@mantine/core';
+import ScoreAvatar from './ScoreAvatar';
 
-const data = [
-  { avatar:'', label: 'İlker Türker', value: '123456' },
-  { avatar:'', label: 'Fehmi Akyol', value: '789012'},
-  { avatar:'', label: 'Ali Vural',  value: '345678' },
-  { avatar:'', label: 'Rahmiye Uslu', value: '901234' },
-  { avatar:'', label: 'Tekin Özdemir', value: '567890' },
-];
+interface DoctorData{
+  score: number;
+  label: string;
+  value: string;
+}
 
-export default function PopularDoctors() {
+interface AsideDoctorsProps{
+  data: DoctorData[]
+  title: string
+}
+
+export default function AsideDoctors({data, title}:AsideDoctorsProps) {
+
   return (
-    <Alert variant="light" bg={'#f9fafa'} color="gray" radius="md" title="Popüler Hocalar" p={10} style={{position:'fixed' ,maxWidth:300, width:'100%'}}>
+    <Alert variant="light" bg={'#f9fafa'} color="gray" radius="md" title={title} p={10}>
       <Accordion defaultValue="popularItems" variant="filled" className="accordion">
         {data.map((item) => (
         <Link href={`/doctor/${item.value}`}>
@@ -23,7 +28,7 @@ export default function PopularDoctors() {
                   display: 'none',
                 },
               }}
-              icon={<Avatar radius={'xl'} />}
+              icon={<ScoreAvatar score={item.score} />}
             >
               {item.label}
             </Accordion.Control>

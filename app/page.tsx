@@ -1,8 +1,8 @@
 'use client'
 
-import { Grid } from '@mantine/core';
+import { Grid, Group, Stack } from '@mantine/core';
 
-import PopularDoctors from './_components/PopularDoctors';
+import AsideDoctors from './_components/AsideDoctors';
 import Post from './_components/Post';
 
 export default function Home() {
@@ -17,7 +17,9 @@ export default function Home() {
         display={{ base: 'none', md: 'block' }}
         span={{ base: 12, md: 4, lg:3.2 }}
       >
-        <PopularDoctors />  
+        <Stack style={{position:'fixed', maxWidth:300, width:'100%'}}> 
+          <AsideDoctors title='Popüler Hocalar' data={POPULAR_DOCTORS}/>  
+        </Stack>
       </Grid.Col>
     </Grid>
 );
@@ -35,7 +37,8 @@ const POSTS = [
     shares: 3,
     doctor: 'Rahmiye Uslu',
     doctorId: '901234',
-    university: 'Karabük Üniversitesi'
+    university: 'Karabük Üniversitesi',
+    score: 3.2,
   },
   {
     id: 2,
@@ -48,7 +51,8 @@ const POSTS = [
     shares: 5,
     doctor: 'Rahmiye Uslu',
     doctorId: '901234',
-    university: 'Karabük Üniversitesi'
+    university: 'Karabük Üniversitesi',
+    score: 4,
   },
   {
     id: 3,
@@ -61,7 +65,8 @@ const POSTS = [
     shares: 4,
     doctor: 'Rahmiye Uslu',
     doctorId: '901234',
-    university: 'Karabük Üniversitesi'
+    university: 'Karabük Üniversitesi',
+    score: 1.2,
   },
   {
     id: 4,
@@ -74,7 +79,8 @@ const POSTS = [
     shares: 7,
     doctor: 'Rahmiye Uslu',
     doctorId: '901234',
-    university: 'Karabük Üniversitesi'
+    university: 'Karabük Üniversitesi',
+    score: 0.5,
   },
   {
     id: 5,
@@ -87,6 +93,16 @@ const POSTS = [
     shares: 9,
     doctor: 'Rahmiye Uslu',
     doctorId: '901234',
-    university: 'Karabük Üniversitesi'
+    university: 'Karabük Üniversitesi',
+    score: 0,
   },
 ]
+
+
+const POPULAR_DOCTORS = [
+  { score:4.6, label: 'İlker Türker', value: '123456' },
+  { score:2.6, label: 'Fehmi Akyol', value: '789012'},
+  { score:3.2, label: 'Ali Vural',  value: '345678' },
+  { score:1.8, label: 'Rahmiye Uslu', value: '901234' },
+  { score:5, label: 'Tekin Özdemir', value: '567890' },
+];
