@@ -19,8 +19,8 @@ export default function AsideDoctors({data, title}:AsideDoctorsProps) {
   return (
     <Alert variant="light" bg={'#f9fafa'} color="gray" radius="md" title={title} p={10}>
       <Accordion defaultValue="popularItems" variant="filled" className="accordion">
-        {data.map((item) => (
-        <Link href={`/doctor/${item.value}`}>
+        {data.map((item, index) => (
+        <Link key={index} href={`/doctor/${item.value}`}>
           <Accordion.Item key={item.label} value={item.label} className="item">
             <Accordion.Control
               styles={{

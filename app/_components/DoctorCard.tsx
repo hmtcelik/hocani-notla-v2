@@ -16,15 +16,15 @@ export default function DoctorCard() {
     <Grid p={20} gutter={0} bg='#f9fafb' style={{borderRadius:20}} justify='space-between'>
       <Grid.Col span={{base:6.5, xs:8}}>
           <Title py={12} order={2}>{doctor.title} {doctor.fullname}</Title>
-          {infoTexts.map((infoText) => (
-            <Group py={6} gap={10}>
+          {infoTexts.map((infoText, index) => (
+            <Group key={index} py={6} gap={10}>
               {infoText.icon}
               <Text fz={14} >{infoText.text}</Text>
             </Group>
           ))}
           <Group py={6} gap={3}>
-            {doctor.professions.split(',').map((profession) => (
-              <Badge size='lg' variant="light" color="#666666" title={profession}>{profession.slice(0,30)}{(profession.length > 30) ? '...' : ''}</Badge>
+            {doctor.professions.split(',').map((profession, index) => (
+              <Badge key={index} size='lg' variant="light" color="#666666" title={profession}>{profession.slice(0,30)}{(profession.length > 30) ? '...' : ''}</Badge>
               ))}
           </Group>
       </Grid.Col>
