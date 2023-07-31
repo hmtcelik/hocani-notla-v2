@@ -17,7 +17,7 @@ export default function Home() {
         display={{ base: 'none', md: 'block' }}
         span={{ base: 12, md: 4, lg:3.2 }}
       >
-        <PopularDoctors />
+        <PopularDoctors />  
       </Grid.Col>
     </Grid>
 );

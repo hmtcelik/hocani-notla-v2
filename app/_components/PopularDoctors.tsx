@@ -12,7 +12,7 @@ const data = [
 
 export default function PopularDoctors() {
   return (
-    <Alert variant="light" bg={'#f9fafa'} color="gray" radius="md" title="Popüler Hocalar" p={10} style={{position:'fixed', maxWidth:300, width:'100%'}}>
+    <Alert variant="light" bg={'#f9fafa'} color="gray" radius="md" title="Popüler Hocalar" p={10} style={{position:'fixed' ,maxWidth:300, width:'100%'}}>
       <Accordion defaultValue="popularItems" variant="filled" className="accordion">
         {data.map((item) => (
         <Link href={`/doctor/${item.value}`}>

@@ -16,7 +16,7 @@ export default function BaseLayout({children}: BaseLayoutProps) {
     return (
         <AppShell
         header={{ height: 60 }}
-        navbar={{ width: 400, breakpoint: 'lg', collapsed: { mobile: !opened } }}
+        navbar={{ width: '20%', breakpoint: 'lg', collapsed: { mobile: !opened } }}
         padding="md"
       >
 
@@ -24,11 +24,11 @@ export default function BaseLayout({children}: BaseLayoutProps) {
           <HeaderBar opened={opened} toggle={toggle} />
         </AppShell.Header>
   
-        <AppShell.Navbar pl={{ base: 10, md:10, lg: 200 }} pr={5} pb={5} pt={5}>
+        <AppShell.Navbar  pr={5} pb={5} pt={5}>
           <SideNavbar />
         </AppShell.Navbar>
   
-        <AppShell.Main pr={{ base: 10, md:10, lg: 150 }} >
+        <AppShell.Main pr={{ base: 10, md:10, lg: 160 }} >
             {children}
         </AppShell.Main>
 
