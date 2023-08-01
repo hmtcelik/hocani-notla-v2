@@ -3,10 +3,8 @@ import { Accordion, Group } from '@mantine/core';
 import {
   IconHome,
   IconSearch,
-  IconPhoto,
   IconMessageCircle,
-  IconTrash,
-  IconArrowsLeftRight,
+  IconSettings,
 } from '@tabler/icons-react';
 
 // TODO: link icon fill on click
@@ -14,10 +12,8 @@ import {
 const menuItems = [
   { icon: <IconHome />, label: 'Ana Sayfa', href: '/' },
   { icon: <IconSearch />, label: 'Ara', href: '#' },
-  { icon: <IconPhoto />, label: 'Fotolar', href: '#' },
   { icon: <IconMessageCircle />, label: 'Mesajlar', href: '#' },
-  { icon: <IconTrash />, label: 'Çöp', href: '#' },
-  { icon: <IconArrowsLeftRight />, label: 'Ayarlar', href: '#' },
+  { icon: <IconSettings />, label: 'Ayarlar', href: '#' },
 ];
 
 export default function SideNavbar() {

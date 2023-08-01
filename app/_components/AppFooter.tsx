@@ -1,32 +1,35 @@
-import { Group, SimpleGrid } from '@mantine/core';
-import {
-  IconHome,
-  IconSearch,
-  IconPhoto,
-  IconMessageCircle,
-  IconTrash,
-  IconArrowsLeftRight,
-} from '@tabler/icons-react';
+'use client';
 
-// TODO: link icon fill on click
-
-const menuItems = [
-  { icon: <IconHome size={26} />, label: 'Ana Sayfa', href: '/' },
-  { icon: <IconSearch size={26} />, label: 'Ara', href: '#' },
-  { icon: <IconPhoto size={26} />, label: 'Fotolar', href: '#' },
-  { icon: <IconMessageCircle size={26} />, label: 'Mesajlar', href: '#' },
-  { icon: <IconTrash size={26} />, label: 'Çöp', href: '#' },
-  { icon: <IconArrowsLeftRight size={26} />, label: 'Ayarlar', href: '#' },
-];
+import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { Group } from '@mantine/core';
+import { IconHome, IconSearch, IconMessageCircle, IconSettings } from '@tabler/icons-react';
+import Link from 'next/link';
 
 export default function AppFooter() {
+  const pathname = usePathname();
+  const [homeFill, setHomeFill] = useState<string>((pathname === '/') ? 'black' : 'none')
+
+  useEffect(() => {
+    (pathname === '/') ? setHomeFill('black') : setHomeFill('none')
+  }, [pathname]);
+
+  const menuItems = [
+    { icon: <IconHome size={26} fill={homeFill} color='black'/>, label: 'Ana Sayfa', href: '/' },
+    { icon: <IconSearch size={26} color='black' />, label: 'Ara', href: '#' },
+    { icon: <IconMessageCircle size={26} color='black' />, label: 'Mesajlar', href: '#' },
+    { icon: <IconSettings size={26} color='black' />, label: 'Ayarlar', href: '#' },
+  ];
+
   return (
     <>
-      <Group justify='space-between' py={15} px={30}>
+      <Group justify="space-between" py={15} px={30}>
         {menuItems.map((item, index) => (
-            <Group key={index} justify='center' align='center'>
+          <Link href={item.href} color='black'>
+            <Group key={index} justify="center" align="center">
                 {item.icon}
             </Group>
+          </Link>
         ))}
       </Group>
     </>
