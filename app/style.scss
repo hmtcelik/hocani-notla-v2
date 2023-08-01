@@ -53,3 +53,13 @@ a{
         background-color: #e0e4e6;
     }
 }
+
+.login-form{
+    a:hover{
+        text-decoration: none;
+    }
+    input::placeholder{
+        font-size: 15px;
+        color: #888888;
+    }
+}

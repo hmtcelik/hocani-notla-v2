@@ -4,6 +4,7 @@ import { Burger, Group, Button, Grid } from '@mantine/core';
 import { IconSettings } from '@tabler/icons-react';
 
 import DoctorSearch from './DoctorSearch';
+import LoginModal from './LoginModal';
 
 export default function HeaderBar() {
   return (
@@ -30,9 +31,7 @@ export default function HeaderBar() {
       </Grid.Col>
       <Grid.Col display={{ base: 'none', lg: 'block' }} span={{ base: 0, lg: 3 }}>
         <Group justify="flex-end">
-          <Button variant="filled" radius="lg">
-            Giriş Yap
-          </Button>
+          <LoginModal />
           <Button variant="light" radius="lg">
             <IconSettings />
           </Button>

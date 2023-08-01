@@ -21,11 +21,11 @@ export default function RootLayout({
         <ColorSchemeScript color="light" />
       </head>
       <body>
-        <MantineProvider>
-          <BaseLayout>
-            {children}
-          </BaseLayout>
-        </MantineProvider>
+          <MantineProvider>
+              <BaseLayout>
+                  {children}
+              </BaseLayout>
+          </MantineProvider>
       </body>
     </html>
   )
