@@ -7,23 +7,20 @@ import { GoogleLogin } from '@react-oauth/google';
 
 import GoogleAuthProvider from '../_providers/GoogleAuthProvider';
 
-export default function LoginModal() {
+export default function RegisterModal() {
   const [opened, { open, close }] = useDisclosure(false);
 
   return (
     <GoogleAuthProvider>
-      <Button variant="filled" radius="lg" onClick={open}>
-        Giriş Yap
-      </Button>
       <Modal opened={opened} onClose={close} title="" radius='xl' size="sm" centered closeOnClickOutside={false}>
         <Stack p={40} pt={10} className="login-form">
-          <Title order={4}>Giriş Yap</Title>
+          <Title order={4}>Kayıt Ol</Title>
           <GoogleLogin
             onSuccess={(credentialResponse) => {
               console.log(credentialResponse);
             }}
             onError={() => {
-              console.log('Login Failed');
+              console.log('Register Failed');
             }}
             shape="circle"
             size="large"
@@ -32,13 +29,7 @@ export default function LoginModal() {
           <Divider my="xs" label="veya" fz={20} fw="bold" labelPosition="center" />
           <TextInput variant="filled" size="md" radius="xl" placeholder="Email" />
           <TextInput variant="filled" size="md" radius="xl" placeholder="Şifre" />
-          <Group>
-            <Link href="#">
-              <Text fz={13} c="black" td="underline">
-                Şifreni mi unuttun ?
-              </Text>
-            </Link>
-          </Group>
+          <TextInput variant="filled" size="md" radius="xl" placeholder="Yeniden Şifre" />
           <Link href="#">
             <Button radius="xl" size="md" fz={15} fullWidth>
               Giriş Yap
@@ -46,11 +37,11 @@ export default function LoginModal() {
           </Link>
           <Group gap={5}>
               <Text fz={13} c="black">
-                Hesabın yok mu?
+                Zaten bir hesabın var mı?
               </Text>
             <Link href="#">
               <Text fz={13} c="indigo" td='underline'>
-                Kayıt ol
+                Giriş Yap
               </Text>
             </Link>
           </Group>
