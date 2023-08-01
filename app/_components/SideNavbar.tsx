@@ -9,6 +9,8 @@ import {
   IconArrowsLeftRight,
 } from '@tabler/icons-react';
 
+// TODO: link icon fill on click
+
 const menuItems = [
   { icon: <IconHome />, label: 'Ana Sayfa', href: '/' },
   { icon: <IconSearch />, label: 'Ara', href: '#' },

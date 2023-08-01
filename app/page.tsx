@@ -17,7 +17,7 @@ export default function Home() {
         display={{ base: 'none', md: 'block' }}
         span={{ base: 12, md: 4, lg:3.2 }}
       >
-        <Stack style={{position:'fixed', maxWidth:300, width:'100%'}}> 
+        <Stack style={{position:'fixed', maxWidth:260, width:'100%'}}> 
           <AsideDoctors title='Popüler Hocalar' data={POPULAR_DOCTORS}/>  
         </Stack>
       </Grid.Col>

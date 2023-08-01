@@ -5,18 +5,12 @@ import { IconSettings } from '@tabler/icons-react';
 
 import DoctorSearch from './DoctorSearch';
 
-interface HeaderBarProps {
-  opened: boolean;
-  toggle: () => void;
-}
-
-export default function HeaderBar({ toggle, opened }: HeaderBarProps) {
+export default function HeaderBar() {
   return (
     <Grid align="center" justify="center" px={20}>
-      <Grid.Col span={{ base: 2, sm: 4, md: 4, lg: 2.5 }}>
+      <Grid.Col span={{ base: 0, xs: 4, md: 4, lg: 2.5 }}>
         <Group justify="start">
-          <Burger opened={opened} onClick={toggle} hiddenFrom="lg" size="md" />
-          <Group display={{ base: 'none', sm: 'block' }}>
+          <Group display={{ base: 'none', xs: 'block' }}>
             <Link href={'/'}>
               <Image
                 key={'defaultlogo'}
@@ -29,12 +23,12 @@ export default function HeaderBar({ toggle, opened }: HeaderBarProps) {
           </Group>
         </Group>
       </Grid.Col>
-      <Grid.Col span={{ base: 10, sm: 8, md: 8, lg: 6.5 }}>
+      <Grid.Col span={{ base: 11, xs: 8, md: 8, lg: 6.5 }}>
         <Group grow>
           <DoctorSearch />
         </Group>
       </Grid.Col>
-      <Grid.Col display={{ base: 'none', lg: 'block' }} span={{ base: 3, lg: 3 }}>
+      <Grid.Col display={{ base: 'none', lg: 'block' }} span={{ base: 0, lg: 3 }}>
         <Group justify="flex-end">
           <Button variant="filled" radius="lg">
             Giriş Yap
