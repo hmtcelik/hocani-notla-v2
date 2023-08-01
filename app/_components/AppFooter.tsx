@@ -25,8 +25,8 @@ export default function AppFooter() {
     <>
       <Group justify="space-between" py={15} px={30}>
         {menuItems.map((item, index) => (
-          <Link href={item.href} color='black'>
-            <Group key={index} justify="center" align="center">
+          <Link key={index} href={item.href} color='black'>
+            <Group justify="center" align="center">
                 {item.icon}
             </Group>
           </Link>
