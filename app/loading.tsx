@@ -18,7 +18,6 @@ export default function Loadddd() {
       <Grid.Col display={{ base: 'none', md: 'block' }} span={{ base: 12, md: 4, lg: 3.2 }}>
         <Stack style={{ position:'fixed', maxWidth:300, width:'100%' }}>            
             <Skeleton className='skeleton' height={250} radius="xl" />
-            <Skeleton className='skeleton' height={250} radius="xl" />
         </Stack>
       </Grid.Col>
     </Grid>

@@ -17,6 +17,15 @@ a{
         }
     }
 }
+
+.skeleton{
+    &::before{
+        background-color: #f2f6f7 !important;
+    }
+    &::after{
+        background-color: #e9ecee !important;
+    }
+}
     
 .navbar-search{
     input{
