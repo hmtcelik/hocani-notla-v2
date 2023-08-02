@@ -52,6 +52,36 @@ a{
     button:hover{
         background-color: #e0e4e6;
     }
+    .doctor-link{
+        &:hover{
+            text-decoration: underline;
+        }
+    }
+    .like{
+        color:#666666;
+        &:hover{
+            color: #ed111a;
+        }
+    }
+    .comment{
+        color:#666666;
+        &:hover{
+            color: rgb(24, 141, 24);
+        }
+    }
+    .share{
+        color:#666666;
+        &:hover{
+            color: rgb(99, 11, 121);
+        }
+    }
+}
+
+.non-decoration{
+    text-decoration: none;
+    &:hover{
+        text-decoration: none;
+    }
 }
 
 .login-form{

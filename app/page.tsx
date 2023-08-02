@@ -1,6 +1,7 @@
 'use client'
 
 import { Grid, Group, Stack } from '@mantine/core';
+import Link from 'next/link';
 
 import AsideDoctors from './_components/AsideDoctors';
 import Post from './_components/Post';
@@ -10,7 +11,9 @@ export default function Home() {
     <Grid grow>
       <Grid.Col span={{ base: 12, md: 8, lg:8.8 }}>
         {POSTS.map((post) => (
-          <Post key={post.id} {...post} />
+          <Link key={post.id} href={`/post/${post.id}`} className='non-decoration'>
+            <Post {...post} />
+          </Link>
         ))}
       </Grid.Col>
       <Grid.Col
@@ -34,7 +37,7 @@ const POSTS = [
     date: '29-07-2023',
     likes: 25,
     comments: 8,
-    shares: 3,
+    isLiked: true,
     doctor: 'Rahmiye Uslu',
     doctorId: '901234',
     university: 'Karabük Üniversitesi',
@@ -48,7 +51,7 @@ const POSTS = [
     date: '28-07-2023',
     likes: 50,
     comments: 15,
-    shares: 5,
+    isLiked: false,
     doctor: 'Rahmiye Uslu',
     doctorId: '901234',
     university: 'Karabük Üniversitesi',
@@ -62,7 +65,7 @@ const POSTS = [
     date: '27-07-2023',
     likes: 35,
     comments: 12,
-    shares: 4,
+    isLiked: false,
     doctor: 'Rahmiye Uslu',
     doctorId: '901234',
     university: 'Karabük Üniversitesi',
@@ -76,7 +79,7 @@ const POSTS = [
     date: '26-07-2023',
     likes: 42,
     comments: 18,
-    shares: 7,
+    isLiked: false,
     doctor: 'Rahmiye Uslu',
     doctorId: '901234',
     university: 'Karabük Üniversitesi',
@@ -90,7 +93,7 @@ const POSTS = [
     date: '25-07-2023',
     likes: 55,
     comments: 25,
-    shares: 9,
+    isLiked: false,
     doctor: 'Rahmiye Uslu',
     doctorId: '901234',
     university: 'Karabük Üniversitesi',

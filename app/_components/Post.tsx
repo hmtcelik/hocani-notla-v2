@@ -1,7 +1,10 @@
-import { Grid, Avatar, Title, Text, Group, Button, Divider } from '@mantine/core';
-import { IconHeart, IconHeartFilled, IconArrowForward, IconMessageCircle, IconShare } from '@tabler/icons-react';
-import Link from 'next/link';
+'use client';
+
+import { useRouter } from 'next/navigation';
+import { Grid, Title, Text, Group, Button, Divider } from '@mantine/core';
+import { IconHeart, IconArrowForward, IconMessageCircle, IconShare } from '@tabler/icons-react';
 import ScoreAvatar from './ScoreAvatar';
+import { useState } from 'react';
 
 interface PostProps {
   id: number;
@@ -10,83 +13,129 @@ interface PostProps {
   text: string;
   date: string;
   likes: number;
+  isLiked: boolean;
   comments: number;
-  shares: number;
   score: number;
   doctor: string | null;
   doctorId: string | null;
   university: string | null;
 }
 
-const cardTitleTextColor = '#595959'
+const cardTitleTextColor = '#595959';
 
 export default function Post(post: PostProps) {
+  const router = useRouter();
+
+  const [like, setLike] = useState<boolean>(post.isLiked);
+  const [likeCount, setLikeCount] = useState<number>(post.likes);
+
   return (
     <>
-        <Grid p={10} py={15} className="post">
-          {post.doctor && post.university && post.doctorId && 
-            <>
-              <Grid.Col span={{base:2, xs:1}}>
-                <Group justify="flex-end" align="center">
-                  <IconArrowForward size={18} color={cardTitleTextColor} />
-                </Group>
-              </Grid.Col>
-              <Grid.Col span={{base:10, xs:11}}>
-                <Group fs={'italic'} justify="flex-start" gap={6} align="center">
-                  <Link href={`/doctor/${post.doctorId}/`}>
-                    <Text fz="sm" lh="sm" fw='bold' style={{ color: cardTitleTextColor }}>
-                      {post.doctor} - {post.university}
-                    </Text>
-                  </Link>
-                </Group>
-              </Grid.Col>
-            </>
-            }
-              <Grid.Col span={{base:2, xs:1}}>
-                <Group justify="flex-end" align="flex-start">
-                  <ScoreAvatar score={post.score} />
-                </Group>
-              </Grid.Col>
-          <Grid.Col span={{base:10, xs:11}}>
-            <Group justify="flex-start" gap={6} align="center">
-              <Title order={4} mb={5}>
-                {post.author}
-              </Title>
-              <Divider orientation="vertical" size="xs" />
-              <Text fz="sm" lh="sm" style={{ color: '#666666' }}>
-                @{post.username}
-              </Text>
-              <Text fz="sm" lh="sm" style={{ color: '#666666' }}>
-                {post.date}
-              </Text>
-            </Group>
-            <Text fz="md" lh="sm">
-              {post.text}
+      <Grid p={10} py={15} className="post">
+        {post.doctor && post.university && post.doctorId && (
+          <>
+            <Grid.Col span={{ base: 2, xs: 1 }}>
+              <Group justify="flex-end" align="center">
+                <IconArrowForward size={18} color={cardTitleTextColor} />
+              </Group>
+            </Grid.Col>
+            <Grid.Col span={{ base: 10, xs: 11 }}>
+              <Group fs={'italic'} justify="flex-start" gap={6} align="center">
+                {/* <Link href={`/doctor/${post.doctorId}/`}> */}
+                <Text
+                  className="doctor-link"
+                  fz="sm"
+                  lh="sm"
+                  fw="bold"
+                  c={cardTitleTextColor}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    router.push(`/doctor/${post.doctorId}/`);
+                  }}
+                >
+                  {post.doctor} - {post.university}
+                </Text>
+                {/* </Link> */}
+              </Group>
+            </Grid.Col>
+          </>
+        )}
+        <Grid.Col span={{ base: 2, xs: 1 }}>
+          <Group justify="flex-end" align="flex-start">
+            <ScoreAvatar score={post.score} />
+          </Group>
+        </Grid.Col>
+        <Grid.Col span={{ base: 10, xs: 11 }}>
+          <Group justify="flex-start" gap={6} align="center">
+            <Title order={4} mb={5} c="black">
+              {post.author}
+            </Title>
+            <Divider orientation="vertical" size="xs" />
+            <Text fz="sm" lh="sm" c="#666666">
+              @{post.username}
             </Text>
+            <Text fz="sm" lh="sm" c="#666666">
+              {post.date}
+            </Text>
+          </Group>
+          <Text fz="md" lh="sm" c="black">
+            {post.text}
+          </Text>
 
-            <Group justify="flex-start" gap={'xs'} mt={15}>
-              <Button variant="light" color="gray" radius="xl" size="xs">
-                <Group justify="flex-start" gap={'xs'} style={{ color: '#666666' }}>
-                  <IconHeart size={20} />
-                  {post.likes}
-                </Group>
-              </Button>
-              <Button variant="light" color="gray" radius="xl" size="xs">
-                <Group justify="flex-start" gap={'xs'} style={{ color: '#666666' }}>
-                  <IconMessageCircle size={20} />
+          <Group justify="flex-start" gap="xs" mt={15}>
+            <Button
+              className="like"
+              variant="light"
+              color="gray"
+              radius="xl"
+              size="xs"
+              onClick={(e) => {
+                e.preventDefault();
+                setLike(!like);
+                setLikeCount(like ? likeCount - 1 : likeCount + 1);
+              }}
+            >
+              <Group justify="flex-start" gap="xs">
+                {like ? (
+                  <>
+                    <IconHeart size={20} fill="#ed111a" color="#ed111a" />{' '}
+                    <Text fz={13} fw="bold" c="#ed111a" className="text">
+                      {likeCount}
+                    </Text>
+                  </>
+                ) : (
+                  <>
+                    <IconHeart size={20} />
+                    <Text fz={13} fw="bold" className="text">
+                      {likeCount}
+                    </Text>
+                  </>
+                )}
+              </Group>
+            </Button>
+            <Button className="comment" variant="light" color="gray" radius="xl" size="xs">
+              <Group justify="flex-start" gap="xs">
+                <IconMessageCircle size={20} />
+                <Text fz={13} fw="bold" className="text">
                   {post.comments}
-                </Group>
-              </Button>
-              <Button variant="light" color="gray" radius="xl" size="xs">
-                <Group justify="flex-start" gap={'xs'} style={{ color: '#666666' }}>
-                  <IconShare size={20} />
-                  {post.shares}
-                </Group>
-              </Button>
-            </Group>
-          </Grid.Col>
-
-        </Grid>
+                </Text>
+              </Group>
+            </Button>
+            <Button
+              className="share"
+              variant="light"
+              color="gray"
+              radius="xl"
+              size="xs"
+              onClick={(e) => e.preventDefault()}
+            >
+              <Group justify="flex-start" gap="xs">
+                <IconShare size={18} />
+              </Group>
+            </Button>
+          </Group>
+        </Grid.Col>
+      </Grid>
       <Divider my="sm" color={'#0000001a'} />
     </>
   );
