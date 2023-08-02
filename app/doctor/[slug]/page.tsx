@@ -23,7 +23,7 @@ export default function Doctor() {
               date={post.date}
               likes={post.likes}
               comments={post.comments}
-              shares={post.shares}
+              isLiked={post.isLiked}
               score={post.score}
               doctor={null}
               doctorId={null}
@@ -51,7 +51,7 @@ const POSTS = [
     date: '29-07-2023',
     likes: 25,
     comments: 8,
-    shares: 3,
+    isLiked: false,
     doctor: 'Rahmiye Uslu',
     doctorId: '901234',
     university: 'Karabük Üniversitesi',
@@ -65,7 +65,7 @@ const POSTS = [
     date: '28-07-2023',
     likes: 50,
     comments: 15,
-    shares: 5,
+    isLiked: false,
     doctor: 'Rahmiye Uslu',
     doctorId: '901234',
     university: 'Karabük Üniversitesi',
@@ -79,7 +79,7 @@ const POSTS = [
     date: '27-07-2023',
     likes: 35,
     comments: 12,
-    shares: 4,
+    isLiked: false,
     doctor: 'Rahmiye Uslu',
     doctorId: '901234',
     university: 'Karabük Üniversitesi',
@@ -93,7 +93,7 @@ const POSTS = [
     date: '26-07-2023',
     likes: 42,
     comments: 18,
-    shares: 7,
+    isLiked: false,
     doctor: 'Rahmiye Uslu',
     doctorId: '901234',
     university: 'Karabük Üniversitesi',
@@ -107,7 +107,7 @@ const POSTS = [
     date: '25-07-2023',
     likes: 55,
     comments: 25,
-    shares: 9,
+    isLiked: false,
     doctor: 'Rahmiye Uslu',
     doctorId: '901234',
     university: 'Karabük Üniversitesi',

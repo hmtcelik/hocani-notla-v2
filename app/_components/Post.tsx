@@ -5,6 +5,7 @@ import { Grid, Title, Text, Group, Button, Divider } from '@mantine/core';
 import { IconHeart, IconArrowForward, IconMessageCircle, IconShare } from '@tabler/icons-react';
 import ScoreAvatar from './ScoreAvatar';
 import { useState } from 'react';
+import Link from 'next/link';
 
 interface PostProps {
   id: number;
@@ -31,6 +32,7 @@ export default function Post(post: PostProps) {
 
   return (
     <>
+    <Link key={post.id} href={`/post/${post.id}`} className='non-decoration'>
       <Grid p={10} py={15} className="post">
         {post.doctor && post.university && post.doctorId && (
           <>
@@ -137,6 +139,7 @@ export default function Post(post: PostProps) {
         </Grid.Col>
       </Grid>
       <Divider my="sm" color={'#0000001a'} />
+    </Link>
     </>
   );
 }
