@@ -11,9 +11,7 @@ export default function Home() {
     <Grid grow>
       <Grid.Col span={{ base: 12, md: 8, lg:8.8 }}>
         {POSTS.map((post) => (
-          <Link key={post.id} href={`/post/${post.id}`} className='non-decoration'>
-            <Post {...post} />
-          </Link>
+            <Post key={post.id} {...post} />
         ))}
       </Grid.Col>
       <Grid.Col
