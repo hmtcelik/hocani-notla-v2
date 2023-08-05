@@ -52,11 +52,6 @@ a{
     button:hover{
         background-color: #e0e4e6;
     }
-    .doctor-link{
-        &:hover{
-            text-decoration: underline;
-        }
-    }
     .like{
         color:#666666;
         &:hover{
@@ -93,6 +88,20 @@ a{
         color: #888888;
     }
     .info{
+        cursor: pointer;
+    }
+}
+
+.reply{
+    &:hover{
+        background-color: transparent;
+        cursor: default;
+    }    
+}
+
+.doctor-link{
+    &:hover{
+        text-decoration: underline;
         cursor: pointer;
     }
 }

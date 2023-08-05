@@ -1,19 +1,19 @@
-import "@mantine/core/styles.css";
-import type { Metadata } from 'next'
-import { MantineProvider, ColorSchemeScript } from "@mantine/core";
+import '@mantine/core/styles.css';
+import type { Metadata } from 'next';
+import { MantineProvider, ColorSchemeScript } from '@mantine/core';
 
-import "./style.scss";
-import BaseLayout from "./_layouts/BaseLayout";
+import './style.scss';
+import BaseLayout from './_layouts/BaseLayout';
 
 export const metadata: Metadata = {
   title: 'Hocani Notla v2',
   description: 'A new version of Hocani Notla',
-}
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
@@ -21,12 +21,10 @@ export default function RootLayout({
         <ColorSchemeScript color="light" />
       </head>
       <body>
-          <MantineProvider>
-              <BaseLayout>
-                  {children}
-              </BaseLayout>
-          </MantineProvider>
+        <MantineProvider defaultColorScheme="light">
+          <BaseLayout>{children}</BaseLayout>
+        </MantineProvider>
       </body>
     </html>
-  )
+  );
 }
