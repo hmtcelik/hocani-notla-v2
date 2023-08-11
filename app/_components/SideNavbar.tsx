@@ -8,7 +8,7 @@ const menuItems = [
   { icon: <IconHome />, label: 'Ana Sayfa', href: '/' },
   { icon: <IconSearch />, label: 'Ara', href: '#' },
   { icon: <IconMessageCircle />, label: 'Mesajlar', href: '#' },
-  { icon: <IconSettings />, label: 'Ayarlar', href: '#' },
+  { icon: <IconSettings />, label: 'Ayarlar', href: '/settings' },
 ];
 
 export default function SideNavbar() {

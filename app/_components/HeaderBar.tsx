@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Burger, Group, Button, Grid } from '@mantine/core';
+import { Burger, Group, Container, Grid } from '@mantine/core';
 import { IconSettings } from '@tabler/icons-react';
 
 import DoctorSearch from './DoctorSearch';
@@ -8,6 +8,7 @@ import AuthModal from './AuthModal';
 
 export default function HeaderBar() {
   return (
+    // <Container size={1480}>
     <Grid align="center" justify="center" px={20}>
       <Grid.Col span={{ base: 0, xs: 4, md: 4, lg: 2.5 }}>
         <Group justify="start">
@@ -32,11 +33,10 @@ export default function HeaderBar() {
       <Grid.Col display={{ base: 'none', lg: 'block' }} span={{ base: 0, lg: 3 }}>
         <Group justify="flex-end">
           <AuthModal />
-          <Button variant="light" radius="lg">
-            <IconSettings />
-          </Button>
         </Group>
       </Grid.Col>
     </Grid>
+    // </Container>
+
   );
 }
