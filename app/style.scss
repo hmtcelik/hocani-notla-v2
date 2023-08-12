@@ -1,7 +1,8 @@
 a{
     text-decoration: none;
-    &:hover{
-        text-decoration: underline;
+        &:hover{
+        text-decoration: none;
+
     }
 }
 
@@ -13,7 +14,7 @@ a{
     .item{
         &:hover{
             background-color: #f0f3f4;
-            border-radius: 8px;
+            border-radius: 10px;
         }
     }
 }
@@ -103,5 +104,24 @@ a{
     &:hover{
         text-decoration: underline;
         cursor: pointer;
+    }
+}
+
+
+.settings{
+    .card{
+        border-radius: 20px;
+        color: black;
+        background-color: #f5f7f7;
+        &:hover{
+            background-color: #eaedee;
+        }        
+    }
+    .logout{
+        color: white;
+        background-color: #e66559;
+        &:hover{
+            background-color: #e95447 ;
+        }
     }
 }

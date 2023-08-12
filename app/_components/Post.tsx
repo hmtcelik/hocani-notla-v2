@@ -105,7 +105,7 @@ export default function Post(post: PostProps) {
               >
                 <Group justify="flex-start" gap="xs">
                   {like ? (
-                    <>
+                    <>  
                       <IconHeart size={20} fill="#ed111a" color="#ed111a" />{' '}
                       <Text fz={13} fw="bold" c="#ed111a" className="text">
                         {likeCount}
