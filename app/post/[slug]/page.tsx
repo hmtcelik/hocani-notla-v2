@@ -2,15 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import {
-  Button,
-  Grid,
-  Container,
-  Divider,
-  Group,
-  Stack,
-  Title,
-} from '@mantine/core';
+import { Button, Grid, Group, Stack, Text, Title } from '@mantine/core';
 import { IconArrowLeft } from '@tabler/icons-react';
 
 import PostDetailCard from '@/app/_components/PostDetailCard';
@@ -28,7 +20,7 @@ export default function PostDetail() {
                 <IconArrowLeft />
               </Button>
             </Link>
-            <Title order={4}>Yorum Detayı</Title>
+            <Text fz={20}>Yanıtlar</Text>
           </Group>
           <PostDetailCard {...post} />
           <Title my={15} order={3}>
