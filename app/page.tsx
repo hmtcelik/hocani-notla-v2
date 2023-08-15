@@ -1,10 +1,10 @@
 'use client';
 
-import { Grid, Group, Stack } from '@mantine/core';
-import Link from 'next/link';
+import { Grid, Stack } from '@mantine/core';
 
-import AsideDoctors from './_components/AsideDoctors';
-import Post from './_components/Post';
+import './_services/InitService';
+import AsideDoctors from './_components/doctor/AsideDoctors';
+import Post from './_components/post/Post';
 
 export default function Home() {
   return (

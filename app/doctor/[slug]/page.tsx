@@ -2,9 +2,9 @@
 
 import { Divider, Grid, Stack } from '@mantine/core';
 
-import Post from '@/app/_components/Post';
-import DoctorCard from '@/app/_components/DoctorCard';
-import AsideDoctors from '@/app/_components/AsideDoctors';
+import Post from '@/app/_components/post/Post';
+import DoctorCard from '@/app/_components/doctor/DoctorCard';
+import AsideDoctors from '@/app/_components/doctor/AsideDoctors';
 
 export default function Doctor() {
   return (

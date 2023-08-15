@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { Burger, Group, Container, Grid } from '@mantine/core';
 import { IconSettings } from '@tabler/icons-react';
 
-import DoctorSearch from './DoctorSearch';
-import AuthModal from './AuthModal';
+import DoctorSearch from '../doctor/DoctorSearch';
+import AuthModal from '../auth/AuthModal';
 
 export default function HeaderBar() {
   return (

@@ -25,29 +25,29 @@ const AccountSettings = () => {
       </Group>
       <Divider my={20} />
       <Stack gap="lg">
-        <Title order={3}>Eposta</Title>
+        <Title order={4}>Eposta</Title>
         <TextInput
           variant="unstyled"
-          size="lg"
+          size="md"
           radius="md"
           readOnly
           value="abdulhamitcelik@gmail.com"
           leftSection={<IconMail />}
         />
-        <Divider my={10} />
-        <Title order={3}>Şifre</Title>
-        <Button variant="outline" color="gray" size="lg" radius="md">
+        <Divider />
+        <Title order={4}>Şifre</Title>
+        <Button variant="outline" color="gray" size="md" radius="md">
           Şifreyi Değiştir
         </Button>
-        <Divider mt={30} mb={10} />
-        <Title order={3}>Politikalar</Title>
-        <Button variant="light" color="gray" size="lg" radius="md">
+        <Divider mt={20} mb={10} />
+        <Title order={4}>Politikalar</Title>
+        <Button variant="light" color="gray" size="md" radius="md">
           Gizlilik Politikası
         </Button>
-        <Button variant="light" color="gray" size="lg" radius="md">
+        <Button variant="light" color="gray" size="md" radius="md">
           Kullanıcı Koşulları
         </Button>
-        <Button variant="light" color="gray" size="lg" radius="md">
+        <Button variant="light" color="gray" size="md" radius="md">
           Çerez Politikası
         </Button>
       </Stack>

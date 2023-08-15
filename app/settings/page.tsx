@@ -11,19 +11,19 @@ import {
 
 const Groups = [
   {
-    icon: <IconUser size={28} />,
+    icon: <IconUser size={24} />,
     title: 'Hesap',
     link: '/settings/account/',
   },
   {
-    icon: <IconLock size={28} />,
+    icon: <IconLock size={24} />,
     title: 'Güvenlik ve Gizlilik',
     link: '/settings/privacy',
   },
 ];
 
 const LogoutGroup = {
-  icon: <IconLogout size={28} />,
+  icon: <IconLogout size={24} />,
   title: 'Çıkış',
   link: '#',
 };
@@ -54,14 +54,14 @@ const SettingGroup = ({ group, className }: GroupProps) => {
   return (
     <Link href={group.link}>
       <Group
-        p={20}
+        p={18}
         className={`${className ? className : ''} card`}
         align="center"
         justify="space-between"
       >
         <Group align="center">
           {group.icon}
-          <Text fz={22}>{group.title}</Text>
+          <Text fz={18}>{group.title}</Text>
         </Group>
         <IconChevronRight />
       </Group>

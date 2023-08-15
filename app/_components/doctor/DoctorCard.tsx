@@ -2,7 +2,7 @@
 
 import { Badge, Title, Text, Grid, Group } from '@mantine/core';
 import { IconSchool, IconBuilding, IconBinaryTree2 } from '@tabler/icons-react';
-import ScoreAvatar from './ScoreAvatar';
+import ScoreAvatar from '../post/ScoreAvatar';
 
 export default function DoctorCard() {
   const infoTexts = [

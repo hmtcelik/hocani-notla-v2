@@ -18,7 +18,7 @@ export default function AppFooter() {
     { icon: <IconHome size={26} fill={homeFill} color='black'/>, label: 'Ana Sayfa', href: '/' },
     { icon: <IconSearch size={26} color='black' />, label: 'Ara', href: '#' },
     { icon: <IconMessageCircle size={26} color='black' />, label: 'Mesajlar', href: '#' },
-    { icon: <IconSettings size={26} color='black' />, label: 'Ayarlar', href: '#' },
+    { icon: <IconSettings size={26} color='black' />, label: 'Ayarlar', href: '/settings/' },
   ];
 
   return (

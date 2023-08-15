@@ -26,7 +26,7 @@ const AccountSettings = () => {
       </Group>
       <Divider my={20} />
       <Stack gap="lg">
-        <Title order={3}>Profil</Title>
+        <Title order={4}>Profil</Title>
         <Group>
           <Avatar size={128} />
           <Text
@@ -41,7 +41,7 @@ const AccountSettings = () => {
         </Group>
         <TextInput
           variant="filled"
-          size="lg"
+          size="md"
           radius="md"
           value="abdulhamit"
           leftSection={<IconAt />}
@@ -49,7 +49,7 @@ const AccountSettings = () => {
         />
         <TextInput
           variant="filled"
-          size="lg"
+          size="md"
           radius="md"
           value="abdulhamitcelik@gmail.com"
           label="Eposta"
@@ -57,18 +57,18 @@ const AccountSettings = () => {
         />
         <Textarea
           variant="filled"
-          size="lg"
+          size="md"
           radius="md"
           label="Bio"
           value="Merhaba, ben Abdulhamit Çelik. 20 yaşındayım ve İstanbul Üniversitesi Bilgisayar Mühendisliği 2. sınıf öğrencisiyim. Yazılım geliştirme ve tasarım alanlarında kendimi geliştirmeye çalışıyorum."
           maxLength={200}
         />
         <Divider />
-        <Title order={3}>Hesap</Title>
-        <Button variant="outline" color="gray" size="lg" radius="md">
+        <Title order={4}>Hesap</Title>
+        <Button variant="outline" color="gray" size="md" radius="md">
           Şifreyi Değiştir
         </Button>
-        <Button variant="light" color="red" size="lg" radius="md">
+        <Button variant="light" color="red" size="md" radius="md">
           Hesabı Sil
         </Button>
       </Stack>

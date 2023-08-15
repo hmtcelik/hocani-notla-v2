@@ -6,9 +6,9 @@ import { useWindowScroll } from '@mantine/hooks';
 import { usePathname } from 'next/navigation';
 import { AppProgressBar as ProgressBar } from 'next-nprogress-bar';
 
-import SideNavbar from '../_components/SideNavbar';
-import HeaderBar from '../_components/HeaderBar';
-import AppFooter from '../_components/AppFooter';
+import SideNavbar from '../_components/navigation/SideNavbar';
+import HeaderBar from '../_components/navigation/HeaderBar';
+import AppFooter from '../_components/navigation/AppFooter';
 interface BaseLayoutProps {
   children: React.ReactNode;
 }
