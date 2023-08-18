@@ -9,27 +9,50 @@ import initFirebase from './InitService';
 initFirebase();
 const auth = getAuth();
 
-const signUp = (email: string, password: string) => {
-  let errorMsg = '';
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-      console.log(user);
-    })
-    .catch((error) => {
-      if (error.code === 'auth/email-already-in-use') {
-        errorMsg = 'Bu email adresi zaten kullanımda';
-      } else if (error.code === 'auth/invalid-email') {
-        errorMsg = 'Geçersiz email adresi';
-      } else if (error.code === 'auth/weak-password') {
-        errorMsg = 'Şifre en az 6 karakter olmalıdır';
-      } else {
-        errorMsg = 'Bir hata oluştu';
-      }
-      console.log(error.code);
-      console.log(error.message);
-    });
-  return errorMsg;
+const signUp = (email: string, password: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        resolve('Kayıt Başarılı');
+      })
+      .catch((error) => {
+        let errorMsg = '';
+        if (error.code === 'auth/email-already-in-use') {
+          errorMsg = 'Bu email adresi zaten kullanımda';
+        } else if (error.code === 'auth/invalid-email') {
+          errorMsg = 'Geçersiz email adresi';
+        } else if (error.code === 'auth/weak-password') {
+          errorMsg = 'Şifre en az 6 karakter olmalıdır';
+        } else {
+          errorMsg = 'Bir hata oluştu';
+        }
+        reject(errorMsg);
+      });
+  });
 };
 
-export default { signUp };
+const signIn = (email: string, password: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    signInWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        resolve('Giriş Başarılı');
+      })
+      .catch((error) => {
+        let errorMsg = '';
+        if (error.code === 'auth/invalid-email') {
+          errorMsg = 'Geçersiz email adresi';
+        } else if (error.code === 'auth/user-disabled') {
+          errorMsg = 'Bu kullanıcı banlanmıştır';
+        } else if (error.code === 'auth/user-not-found') {
+          errorMsg = 'Bu email adresi ile kayıtlı kullanıcı bulunmamaktadır';
+        } else if (error.code === 'auth/wrong-password') {
+          errorMsg = 'Şifre yanlış';
+        } else {
+          errorMsg = 'Bir hata oluştu';
+        }
+        reject(errorMsg);
+      });
+  });
+};
+
+export default { signUp, signIn };

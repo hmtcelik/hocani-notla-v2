@@ -13,6 +13,7 @@ import {
   Divider,
   Group,
   PasswordInput,
+  Loader,
 } from '@mantine/core';
 import { GoogleLogin } from '@react-oauth/google';
 
@@ -56,12 +57,14 @@ export default function LoginModal() {
           <LoginForm
             setLoginOpen={setLoginOpen}
             setRegisterOpen={setRegisterOpen}
+            windowCloser={close}
           />
         )}
         {registerOpen && (
           <RegisterForm
             setLoginOpen={setLoginOpen}
             setRegisterOpen={setRegisterOpen}
+            windowCloser={close}
           />
         )}
       </Modal>
@@ -72,10 +75,46 @@ export default function LoginModal() {
 function LoginForm({
   setLoginOpen,
   setRegisterOpen,
+  windowCloser,
 }: {
   setLoginOpen: Function;
   setRegisterOpen: Function;
+  windowCloser: () => void;
 }) {
+  const [email, setEmail] = useState<string>('');
+  const [passwd, setPasswd] = useState<string>('');
+  const [emailError, setEmailError] = useState<string>('');
+  const [passwdError, setPasswdError] = useState<string>('');
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!(emailError === '' && passwdError === '')) {
+      return;
+    }
+
+    setIsLoading(true);
+    AuthService.signIn(email, passwd)
+      .then((signInMessage) => {
+        notifications.show({
+          message: signInMessage,
+          color: 'teal',
+        });
+        windowCloser();
+      })
+      .catch((signInError) => {
+        notifications.show({
+          message: signInError,
+          color: 'red',
+        });
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
   return (
     <Stack p={40} pt={10} className="login-form">
       <Title order={4}>Giriş Yap</Title>
@@ -91,20 +130,55 @@ function LoginForm({
         text="signin_with"
       />
       <Divider my="xs" label="veya" fz={20} fw="bold" labelPosition="center" />
-      <TextInput variant="filled" size="md" radius="xl" placeholder="Email" />
-      <TextInput variant="filled" size="md" radius="xl" placeholder="Şifre" />
-      <Group>
-        <Link href="#">
-          <Text fz={13} c="black" td="underline">
-            Şifreni mi unuttun ?
-          </Text>
-        </Link>
-      </Group>
-      <Link href="#">
-        <Button radius="xl" size="md" fz={15} fullWidth>
-          Giriş Yap
-        </Button>
-      </Link>
+      <form onSubmit={handleSubmit}>
+        <Stack>
+          <TextInput
+            variant="filled"
+            size="md"
+            radius="xl"
+            placeholder="Email"
+            onChange={(e) => {
+              e.target.value === ''
+                ? setEmailError('Email girmen lazım')
+                : setEmailError('');
+              setEmail(e.target.value);
+            }}
+            error={emailError}
+            required
+          />
+          <TextInput
+            variant="filled"
+            size="md"
+            radius="xl"
+            placeholder="Şifre"
+            type="password"
+            onChange={(e) => {
+              e.target.value === ''
+                ? setPasswdError('Şifre girmen lazım')
+                : setPasswdError('');
+              setPasswd(e.target.value);
+            }}
+            error={passwdError}
+            required
+          />
+          <Group>
+            <Link href="#">
+              <Text fz={13} c="black" td="underline">
+                Şifreni mi unuttun ?
+              </Text>
+            </Link>
+          </Group>
+          <Button type="submit" radius="xl" size="md" fz={15} fullWidth>
+            {isLoading ? (
+              <Loader size="sm" color="white" />
+            ) : (
+              <Text fw="bold" fz="sm">
+                Giriş Yap
+              </Text>
+            )}
+          </Button>
+        </Stack>
+      </form>
       <Group gap={5}>
         <Text fz={13} c="black">
           Hesabın yok mu?
@@ -129,9 +203,11 @@ function LoginForm({
 function RegisterForm({
   setLoginOpen,
   setRegisterOpen,
+  windowCloser,
 }: {
   setLoginOpen: Function;
   setRegisterOpen: Function;
+  windowCloser: () => void;
 }) {
   const [email, setEmail] = useState<string>('');
   const [passwd, setPasswd] = useState<string>('');
@@ -141,39 +217,40 @@ function RegisterForm({
   const [passwdError, setPasswdError] = useState<string>('');
   const [passwdAgainError, setPasswdAgainError] = useState<string>('');
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    let isFormValid = false;
+    e.preventDefault();
 
     if (passwd !== passwdAgain) {
       setPasswdError('Şifreler Uyuşmadı');
+      return;
     } else {
       setPasswdError('');
     }
 
-    if (emailError === '' && passwdError === '' && passwdAgainError === '') {
-      isFormValid = true;
-    } else {
-      isFormValid = false;
+    if (!(emailError === '' && passwdError === '' && passwdAgainError === '')) {
+      return;
     }
 
-    if (isFormValid) {
-      let signUpError = AuthService.signUp(email, passwd);
-      if (signUpError === '') {
-        setLoginOpen(true);
-        setRegisterOpen(false);
+    setIsLoading(true);
+    AuthService.signUp(email, passwd)
+      .then((signUpMessage) => {
         notifications.show({
-          message: 'Kayıt Başarılı',
+          message: signUpMessage,
           color: 'teal',
         });
-      } else {
+        windowCloser();
+      })
+      .catch((signUpError) => {
         notifications.show({
           message: signUpError,
           color: 'red',
         });
-      }
-    } else {
-      e.preventDefault();
-    }
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -244,7 +321,13 @@ function RegisterForm({
           />
 
           <Button type="submit" radius="xl" size="md" fz={15} fullWidth>
-            Kayıt Ol
+            {isLoading ? (
+              <Loader size="sm" color="white" />
+            ) : (
+              <Text fw="bold" fz="sm">
+                Kayıt Ol
+              </Text>
+            )}
           </Button>
         </Stack>
       </form>
