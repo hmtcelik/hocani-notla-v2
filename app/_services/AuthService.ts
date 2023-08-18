@@ -1,19 +1,35 @@
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from 'firebase/auth';
 
+import initFirebase from './InitService';
+
+initFirebase();
 const auth = getAuth();
 
-const signUp = (email: string, password: string) =>
+const signUp = (email: string, password: string) => {
+  let errorMsg = '';
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user;
-      console.log("user: " + user)
+      console.log(user);
     })
     .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log(errorCode)
-      console.log(errorMessage)
+      if (error.code === 'auth/email-already-in-use') {
+        errorMsg = 'Bu email adresi zaten kullanımda';
+      } else if (error.code === 'auth/invalid-email') {
+        errorMsg = 'Geçersiz email adresi';
+      } else if (error.code === 'auth/weak-password') {
+        errorMsg = 'Şifre en az 6 karakter olmalıdır';
+      } else {
+        errorMsg = 'Bir hata oluştu';
+      }
+      console.log(error.code);
+      console.log(error.message);
     });
-  
-  
-export default {signUp};
+  return errorMsg;
+};
+
+export default { signUp };

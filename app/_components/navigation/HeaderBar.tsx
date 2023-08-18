@@ -14,13 +14,7 @@ export default function HeaderBar() {
         <Group justify="start">
           <Group display={{ base: 'none', xs: 'block' }}>
             <Link href={'/'}>
-              <Image
-                key={'defaultlogo'}
-                src={`/defaultlogo.png?${new Date().getTime()}`}
-                width={120}
-                height={30}
-                alt="logo"
-              />
+              <p>Logo</p>
             </Link>
           </Group>
         </Group>
@@ -30,13 +24,15 @@ export default function HeaderBar() {
           <DoctorSearch />
         </Group>
       </Grid.Col>
-      <Grid.Col display={{ base: 'none', lg: 'block' }} span={{ base: 0, lg: 3 }}>
+      <Grid.Col
+        display={{ base: 'none', lg: 'block' }}
+        span={{ base: 0, lg: 3 }}
+      >
         <Group justify="flex-end">
           <AuthModal />
         </Group>
       </Grid.Col>
     </Grid>
     // </Container>
-
   );
 }

@@ -43,7 +43,6 @@ const AccountSettings = () => {
           variant="filled"
           size="md"
           radius="md"
-          value="abdulhamit"
           leftSection={<IconAt />}
           label="Kullanıcı Adı"
         />
@@ -51,7 +50,6 @@ const AccountSettings = () => {
           variant="filled"
           size="md"
           radius="md"
-          value="abdulhamitcelik@gmail.com"
           label="Eposta"
           leftSection={<IconMail />}
         />
@@ -60,7 +58,6 @@ const AccountSettings = () => {
           size="md"
           radius="md"
           label="Bio"
-          value="Merhaba, ben Abdulhamit Çelik. 20 yaşındayım ve İstanbul Üniversitesi Bilgisayar Mühendisliği 2. sınıf öğrencisiyim. Yazılım geliştirme ve tasarım alanlarında kendimi geliştirmeye çalışıyorum."
           maxLength={200}
         />
         <Divider />

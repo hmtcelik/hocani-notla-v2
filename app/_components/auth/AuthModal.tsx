@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { notifications } from '@mantine/notifications';
 import { useDisclosure } from '@mantine/hooks';
 import {
   Modal,
@@ -140,10 +141,8 @@ function RegisterForm({
   const [passwdError, setPasswdError] = useState<string>('');
   const [passwdAgainError, setPasswdAgainError] = useState<string>('');
 
-  const [isFormValid, setIsFormValid] = useState<boolean>(false);
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    let isFormValid = false;
 
     if (passwd !== passwdAgain) {
       setPasswdError('Şifreler Uyuşmadı');
@@ -152,13 +151,28 @@ function RegisterForm({
     }
 
     if (emailError === '' && passwdError === '' && passwdAgainError === '') {
-      setIsFormValid(true);
+      isFormValid = true;
     } else {
-      setIsFormValid(false);
+      isFormValid = false;
     }
 
     if (isFormValid) {
-      AuthService.signUp(email, passwd);
+      let signUpError = AuthService.signUp(email, passwd);
+      if (signUpError === '') {
+        setLoginOpen(true);
+        setRegisterOpen(false);
+        notifications.show({
+          message: 'Kayıt Başarılı',
+          color: 'teal',
+        });
+      } else {
+        notifications.show({
+          message: signUpError,
+          color: 'red',
+        });
+      }
+    } else {
+      e.preventDefault();
     }
   };
 

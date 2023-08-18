@@ -2,9 +2,9 @@
 
 import { Grid, Stack } from '@mantine/core';
 
-import './_services/InitService';
 import AsideDoctors from './_components/doctor/AsideDoctors';
 import Post from './_components/post/Post';
+import initFirebase from './_services/InitService';
 
 export default function Home() {
   return (
