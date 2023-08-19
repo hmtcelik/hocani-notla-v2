@@ -3,13 +3,28 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
-
-import initFirebase from './InitService';
+import initFirebase from '../_services/InitService';
 
 initFirebase();
-const auth = getAuth();
+
+const logout = (): Promise<string> => {
+  const auth = getAuth();
+
+  return new Promise((resolve, reject) => {
+    auth
+      .signOut()
+      .then(() => {
+        resolve('Çıkış Başarılı');
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
 
 const signUp = (email: string, password: string): Promise<string> => {
+  const auth = getAuth();
+
   return new Promise((resolve, reject) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then(() => {
@@ -32,6 +47,8 @@ const signUp = (email: string, password: string): Promise<string> => {
 };
 
 const signIn = (email: string, password: string): Promise<string> => {
+  const auth = getAuth();
+
   return new Promise((resolve, reject) => {
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
@@ -55,4 +72,4 @@ const signIn = (email: string, password: string): Promise<string> => {
   });
 };
 
-export default { signUp, signIn };
+export default { signUp, signIn, logout };

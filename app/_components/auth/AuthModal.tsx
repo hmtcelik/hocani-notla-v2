@@ -137,6 +137,7 @@ function LoginForm({
             size="md"
             radius="xl"
             placeholder="Email"
+            type="email"
             onChange={(e) => {
               e.target.value === ''
                 ? setEmailError('Email girmen lazım')
@@ -274,14 +275,8 @@ function RegisterForm({
             variant="filled"
             size="md"
             radius="xl"
-            placeholder="Kullanıcı Adı"
-            onChange={(e) => {}}
-          />
-          <TextInput
-            variant="filled"
-            size="md"
-            radius="xl"
             placeholder="Email"
+            type="email"
             required
             error={emailError}
             onChange={(e) => {

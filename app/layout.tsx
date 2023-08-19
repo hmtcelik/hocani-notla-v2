@@ -25,7 +25,7 @@ export default function RootLayout({
       </head>
       <body>
         <MantineProvider defaultColorScheme="light">
-          <Notifications />
+          <Notifications position="top-right" />
           <BaseLayout>{children}</BaseLayout>
         </MantineProvider>
       </body>
