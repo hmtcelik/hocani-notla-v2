@@ -2,6 +2,7 @@ import {
   and,
   endAt,
   getFirestore,
+  limit,
   orderBy,
   query,
   startAt,
@@ -67,12 +68,7 @@ const getAll = async (name: string) => {
 
 const getRandom5Doctor = async () => {
   const collection_ref = collection(db, collectionName);
-  const q = query(
-    collection_ref,
-    orderBy('id'),
-    startAt(Math.floor(Math.random() * 1000)),
-    endAt(Math.floor(Math.random() * 1000) + 5)
-  );
+  const q = query(collection_ref, limit(5));
   const doctors = await getDocs(q);
 
   const res = Array();

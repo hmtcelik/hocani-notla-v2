@@ -7,6 +7,7 @@ import AsideDoctors from './_components/doctor/AsideDoctors';
 import initFirebase from './_services/InitService';
 import DoctorService from './_services/DoctorService';
 import { Doctor } from './_models/Doctor';
+import Link from 'next/link';
 
 initFirebase();
 
@@ -14,16 +15,28 @@ export default function Home() {
   const [data, setData] = useState<Doctor[] | null>(null);
 
   useEffect(() => {
-    DoctorService.getRandom5Doctor().then((data) => {
-      console.log('data: ', data);
-      setData(data);
-    });
+    console.log('Fetching data...');
+    DoctorService.getRandom5Doctor()
+      .then((data) => {
+        console.log('Fetched data: ', data);
+        setData(data);
+      })
+      .catch((err) => {
+        console.log('Error fetching data: ', err);
+      });
   }, []);
+
+  console.log(data);
 
   return (
     <Grid grow>
       <Grid.Col span={{ base: 12, md: 8, lg: 8.8 }}>
-        {data && data.map((doctor) => <div>{doctor.fullname}</div>)}
+        {data &&
+          data.map((doctor) => (
+            <div key={doctor.id}>
+              <Link href="#">{doctor.fullname}</Link>
+            </div>
+          ))}
       </Grid.Col>
       <Grid.Col
         display={{ base: 'none', md: 'block' }}
