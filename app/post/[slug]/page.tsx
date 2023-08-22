@@ -7,7 +7,7 @@ import { IconArrowLeft } from '@tabler/icons-react';
 
 import PostDetailCard from '@/app/_components/post/PostDetailCard';
 import PostReply from '@/app/_components/post/PostReply';
-import AsideDoctors from '@/app/_components/doctor/AsideDoctors';
+import AsideDoctors from '@/app/_components/hoca/AsideDoctors';
 
 export default function PostDetail() {
   return (

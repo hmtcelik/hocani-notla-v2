@@ -5,20 +5,11 @@ import { useEffect, useState } from 'react';
 import { Autocomplete } from '@mantine/core';
 import { useRouter } from 'next/navigation';
 
-import DoctorService from '@/app/_services/DoctorService';
+import DoctorService from '@/app/_services/HocaService';
 
 export default function DoctorSearch() {
   const [search, setSearch] = useState<string>('');
   const router = useRouter();
-
-  const handleSearch = (newValue: string) => {
-    setSearch(newValue);
-    if (newValue.trim() !== '') {
-      DoctorService.findByName(newValue).then((data) => {
-        console.log('data: ', data);
-      });
-    }
-  };
 
   return (
     <Autocomplete
@@ -29,7 +20,7 @@ export default function DoctorSearch() {
       className="navbar-search"
       data={data}
       value={search}
-      onChange={handleSearch}
+      onChange={() => {}}
       onOptionSubmit={(newVal) => {
         setSearch('');
         router.push('/doctor/' + newVal + '/');

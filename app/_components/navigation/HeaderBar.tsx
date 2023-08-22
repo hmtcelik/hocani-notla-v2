@@ -5,7 +5,7 @@ import { Group, Grid, Button, Image } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useContext } from 'react';
 
-import DoctorSearch from '../doctor/DoctorSearch';
+import DoctorSearch from '../hoca/DoctorSearch';
 import AuthModal from '../auth/AuthModal';
 import AuthService from '@/app/_services/AuthService';
 import { AuthContext } from '@/app/_providers/AuthProvider';

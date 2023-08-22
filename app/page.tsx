@@ -2,23 +2,21 @@
 import React, { useState, useEffect, createContext } from 'react';
 import { Grid, Stack } from '@mantine/core';
 
-import AsideDoctors from './_components/doctor/AsideDoctors';
+import AsideDoctors from './_components/hoca/AsideDoctors';
 
 import initFirebase from './_services/InitService';
-import DoctorService from './_services/DoctorService';
-import { Doctor } from './_models/Doctor';
+import HocaService from './_services/HocaService';
+import { HocaType } from './_models/Hoca';
 import Link from 'next/link';
 
 initFirebase();
 
 export default function Home() {
-  const [data, setData] = useState<Doctor[] | null>(null);
+  const [data, setData] = useState<HocaType[] | null>(null);
 
   useEffect(() => {
-    console.log('Fetching data...');
-    DoctorService.getRandom5Doctor()
+    HocaService.getRandom5Hoca()
       .then((data) => {
-        console.log('Fetched data: ', data);
         setData(data);
       })
       .catch((err) => {
@@ -32,9 +30,11 @@ export default function Home() {
     <Grid grow>
       <Grid.Col span={{ base: 12, md: 8, lg: 8.8 }}>
         {data &&
-          data.map((doctor) => (
-            <div key={doctor.id}>
-              <Link href="#">{doctor.fullname}</Link>
+          data.map((hoca, index) => (
+            <div key={index}>
+              <Link key={index} href={`/hoca/${hoca.id}`}>
+                {hoca.name}
+              </Link>
             </div>
           ))}
       </Grid.Col>
