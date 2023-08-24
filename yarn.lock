@@ -553,10 +553,10 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@mantine/core@7.0.0-beta.0":
-  version "7.0.0-beta.0"
-  resolved "https://registry.yarnpkg.com/@mantine/core/-/core-7.0.0-beta.0.tgz#c6e80508880313fb3ff3e6e11d75ba555b89f6cb"
-  integrity sha512-JRn3zrVneVZ7bMeE4w0rbT4RaXvVsLz4Kg687zUKufgsZ0hEu4jG/wqy6P5t8ph7tGY0/vLmbpXxxcPMCOa9FA==
+"@mantine/core@7.0.0-beta.1":
+  version "7.0.0-beta.1"
+  resolved "https://registry.yarnpkg.com/@mantine/core/-/core-7.0.0-beta.1.tgz#d0685e08191987d7d3aefec2832eabb14ff41aaf"
+  integrity sha512-5sqmKakoffvNIqIyn9jJQVINkX6Rg1Lk/KigJofubOxhM7B+cSjbdqR2WAoADt7Gmf9xdF7VGjptBKHqoJl8wQ==
   dependencies:
     "@floating-ui/react" "^0.24.8"
     clsx "2.0.0"
@@ -565,23 +565,23 @@
     react-textarea-autosize "8.5.2"
     type-fest "^4.0.0"
 
-"@mantine/hooks@7.0.0-beta.0":
-  version "7.0.0-beta.0"
-  resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-7.0.0-beta.0.tgz#97c37c3ebd269951b6c85cd9f7dcabd40e83d0a5"
-  integrity sha512-1/9D6astxgD5W1cEPB+of7ETViCn2MPy4DR9URqdSld827OA1HeLh405HWwlQCvrWfpoiNqeMjo/a4gj+11d/w==
+"@mantine/hooks@7.0.0-beta.1":
+  version "7.0.0-beta.1"
+  resolved "https://registry.yarnpkg.com/@mantine/hooks/-/hooks-7.0.0-beta.1.tgz#3c9f6da42918d244c4387934bbaba1226779df05"
+  integrity sha512-pf4k8q8bjIFsnb6sGaFySReG+TgmNJRE03WuwGiM9AD7nqnw6JEWH45M5RjGWIjo/j2iq7DDyu2mgifzLeQkKA==
 
-"@mantine/notifications@7.0.0-beta.0":
-  version "7.0.0-beta.0"
-  resolved "https://registry.yarnpkg.com/@mantine/notifications/-/notifications-7.0.0-beta.0.tgz#7a524e4b718f2af754bb92665adfa31bcdbbff75"
-  integrity sha512-NTcbCLvunb0aI4Q+ajO+8E9CkwSXDTtkyof7E7/zgaovuQk5ldavLvu9Bi8H8ptkdy5jFlppSYYCr6vOMUGpkA==
+"@mantine/notifications@7.0.0-beta.1":
+  version "7.0.0-beta.1"
+  resolved "https://registry.yarnpkg.com/@mantine/notifications/-/notifications-7.0.0-beta.1.tgz#01f82d87b167934c23fa3a7641b674cdf05fa056"
+  integrity sha512-KwbJueqMdmyLxTm/gTrDSN5TGvTKY2klbhf1sFgamdJYe26aFmE6DOEdWKLeit0LSZEgvl+3VeOT44SyK2ecGQ==
   dependencies:
-    "@mantine/store" "7.0.0-beta.0"
+    "@mantine/store" "7.0.0-beta.1"
     react-transition-group "4.4.5"
 
-"@mantine/store@7.0.0-beta.0":
-  version "7.0.0-beta.0"
-  resolved "https://registry.yarnpkg.com/@mantine/store/-/store-7.0.0-beta.0.tgz#8f2757d48694ddf954e11665ee562585153c9c90"
-  integrity sha512-uZk94KZTenJZ72jrYL/Vun3LTLZwPbW3y5C0U1q9dkYEzDYzLr+TVS0ZEDgf2zyLNxQCfM6JEhbWe1hCa2RtCQ==
+"@mantine/store@7.0.0-beta.1":
+  version "7.0.0-beta.1"
+  resolved "https://registry.yarnpkg.com/@mantine/store/-/store-7.0.0-beta.1.tgz#f43fe900d1a141235c618d1dfe72b6743731bf36"
+  integrity sha512-IT+5mVEMRyK2fZqFDX/3BbvaMbrkLQxUV9dRYpT+Tii5UfI2ImYAn95DtmbFQzF6mHsmSZi8puWa/J3qa6ed9w==
 
 "@next/env@13.4.10":
   version "13.4.10"

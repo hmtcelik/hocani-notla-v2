@@ -6,8 +6,12 @@ import {
   getDocs,
   collection,
   getDoc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
 } from 'firebase/firestore';
 import initFirebase from './InitService';
+import { CommentType } from '../_models/Comment';
 
 initFirebase();
 
@@ -20,7 +24,7 @@ const getHoca = async (uid: string) => {
   const docSnapshot = await getDoc(doc_ref);
 
   if (docSnapshot.exists()) {
-    return docSnapshot.data();
+    return { id: docSnapshot.id, ...docSnapshot.data() };
   }
 
   return null;
@@ -43,4 +47,12 @@ const getRandom5Hoca = async () => {
   return res;
 };
 
-export default { getHoca, getRandom5Hoca };
+const createComment = async (hocaUid: string, newComment: CommentType) => {
+  const doc_ref = doc(collection(db, collectionName), hocaUid);
+
+  await updateDoc(doc_ref, {
+    comments: arrayUnion(newComment),
+  });
+};
+
+export default { getHoca, getRandom5Hoca, createComment };

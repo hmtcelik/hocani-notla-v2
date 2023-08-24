@@ -1,6 +1,6 @@
 'use client';
 
-import { Divider, Grid, Stack } from '@mantine/core';
+import { Divider, Grid, Group, Stack, Text } from '@mantine/core';
 import { useContext, useEffect, useState } from 'react';
 
 import HocaCard from '@/app/_components/hoca/HocaCard';
@@ -8,6 +8,12 @@ import AsideDoctors from '@/app/_components/hoca/AsideDoctors';
 import HocaService from '@/app/_services/HocaService';
 import { HocaType } from '@/app/_models/Hoca';
 import { AuthContext } from '@/app/_providers/AuthProvider';
+import { CommentType } from '@/app/_models/Comment';
+import {
+  IconStarFilled,
+  IconThumbDown,
+  IconThumbUp,
+} from '@tabler/icons-react';
 
 export default function Hoca({ params }: { params: { slug: string } }) {
   const user = useContext(AuthContext);
@@ -30,6 +36,33 @@ export default function Hoca({ params }: { params: { slug: string } }) {
         <Grid.Col span={{ base: 12, md: 8, lg: 8.8 }}>
           <HocaCard data={data} />
           <Divider my={20} size={'xs'} />
+          {data?.comments.map((comment: CommentType, index) => (
+            <>
+              <Stack style={{ fontSize: 18 }} gap={3}>
+                <div>
+                  <IconStarFilled /> {comment.rate}
+                </div>
+                <div>{comment.date.slice(0, 10)}</div>
+                <div>Course: {comment.course}</div>
+                <div>Again: {comment.again ? 'yes' : 'no'}</div>
+                <div>Attandance: {comment.attandance ? 'yes' : 'no'}</div>
+                <div>Grade: {comment.grade}</div>
+                <div>Online: {comment.online}</div>
+                <div style={{ marginTop: 10 }}>{comment.comment}</div>
+                <Group>
+                  <Group gap={2} align="center" justify="center">
+                    <IconThumbUp />
+                    <Text>{comment.like}</Text>
+                  </Group>
+                  <Group gap={2} align="center" justify="center">
+                    <IconThumbUp />
+                    <Text>{comment.dislike}</Text>
+                  </Group>
+                </Group>
+                <Divider my={20} size={'xs'} />
+              </Stack>
+            </>
+          ))}
         </Grid.Col>
         <Grid.Col
           display={{ base: 'none', md: 'block' }}

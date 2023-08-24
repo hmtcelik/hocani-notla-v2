@@ -1,5 +1,5 @@
 export interface HocaType {
-  id: number;
+  id: string;
   title: string;
   name: string;
   university: string;

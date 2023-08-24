@@ -5,6 +5,7 @@ import { IconSchool, IconBuilding, IconEdit } from '@tabler/icons-react';
 import ScoreAvatar from '../post/ScoreAvatar';
 
 import { HocaType } from '@/app/_models/Hoca';
+import Link from 'next/link';
 
 interface HocaCardProps {
   data: HocaType | null;
@@ -15,6 +16,10 @@ export default function HocaCard({ data }: HocaCardProps) {
     { icon: <IconBuilding />, text: data?.university || '' },
     { icon: <IconSchool />, text: data?.department || '' },
   ];
+
+  if (!data) {
+    return <></>;
+  }
 
   return (
     <Grid
@@ -36,14 +41,16 @@ export default function HocaCard({ data }: HocaCardProps) {
             </Group>
           ))}
           <div>
-            <Button
-              variant="filled"
-              size="md"
-              radius="xl"
-              leftSection={<IconEdit />}
-            >
-              Not Ver
-            </Button>
+            <Link href={`/hoca/${data?.id}/rate/`}>
+              <Button
+                variant="filled"
+                size="md"
+                radius="xl"
+                leftSection={<IconEdit />}
+              >
+                Not Ver
+              </Button>
+            </Link>
           </div>
         </Stack>
       </Grid.Col>
