@@ -98,10 +98,6 @@ function LoginForm({
     setIsLoading(true);
     AuthService.signIn(email, passwd)
       .then((signInMessage) => {
-        notifications.show({
-          message: signInMessage,
-          color: 'teal',
-        });
         windowCloser();
       })
       .catch((signInError) => {

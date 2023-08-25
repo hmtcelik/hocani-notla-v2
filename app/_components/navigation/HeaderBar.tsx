@@ -44,19 +44,12 @@ export default function HeaderBar() {
             <Button
               radius="lg"
               onClick={() => {
-                AuthService.logout()
-                  .then(() => {
-                    notifications.show({
-                      message: 'Çıkış yapıldı',
-                      color: 'teal',
-                    });
-                  })
-                  .catch((error) => {
-                    notifications.show({
-                      message: 'Çıkış yapılırken bir hata oluştu',
-                      color: 'red',
-                    });
+                AuthService.logout().catch((error) => {
+                  notifications.show({
+                    message: 'Çıkış yapılırken bir hata oluştu',
+                    color: 'red',
                   });
+                });
               }}
             >
               Logout

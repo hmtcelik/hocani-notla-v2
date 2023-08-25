@@ -1,3 +1,5 @@
+import { CommentType } from "./Comment";
+
 export interface HocaType {
   id: string;
   title: string;
@@ -5,5 +7,5 @@ export interface HocaType {
   university: string;
   faculty: string;
   department: string;
-  comments: any[];
+  comments: CommentType[];
 }

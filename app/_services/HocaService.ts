@@ -12,6 +12,7 @@ import {
 } from 'firebase/firestore';
 import initFirebase from './InitService';
 import { CommentType } from '../_models/Comment';
+import { HocaType } from '../_models/Hoca';
 
 initFirebase();
 
@@ -32,7 +33,7 @@ const getHoca = async (uid: string) => {
 
 const getRandom5Hoca = async () => {
   const collection_ref = collection(db, collectionName);
-  const q = query(collection_ref, limit(2));
+  const q = query(collection_ref, limit(10));
   const hocas = await getDocs(q);
 
   const res = Array();
@@ -55,4 +56,14 @@ const createComment = async (hocaUid: string, newComment: CommentType) => {
   });
 };
 
-export default { getHoca, getRandom5Hoca, createComment };
+
+const updateHocaComments = async (hocaUid:string, newComments: CommentType[]) => {
+  const doc_ref = doc(collection(db, collectionName), hocaUid);
+
+  await updateDoc(doc_ref, {
+    comments: newComments,
+  });
+};
+
+
+export default { getHoca, getRandom5Hoca, createComment, updateHocaComments };
