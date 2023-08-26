@@ -20,7 +20,7 @@ import useNotification from '@/app/_hooks/useNotification';
 import { CommentType } from '@/app/_models/Comment';
 import { AuthContext } from '@/app/_providers/AuthProvider';
 
-const page = ({ params }: { params: { slug: string } }) => {
+const Page = ({ params }: { params: { slug: string } }) => {
   const user = useContext(AuthContext);
 
   const hocaUid = params.slug;
@@ -185,4 +185,4 @@ const page = ({ params }: { params: { slug: string } }) => {
   );
 };
 
-export default page;
+export default Page;
