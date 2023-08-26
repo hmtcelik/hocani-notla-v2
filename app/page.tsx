@@ -12,9 +12,11 @@ import {
 } from '@mantine/core';
 
 import initFirebase from './_services/InitService';
-import HeaderBar from './_components/navigation/HeaderBar';
+import IndexHeaderBar from './_components/navigation/IndexHeaderBar';
 import { IconSchool } from '@tabler/icons-react';
 import Link from 'next/link';
+import HocaSearch from './_components/hoca/HocaSearch';
+import Footer from './_components/navigation/Footer';
 
 initFirebase();
 
@@ -39,15 +41,8 @@ const illusts = [
 export default function Home() {
   return (
     <>
-      <HeaderBar />
-      <div
-      // style={{
-      //   backgroundImage: `linear-gradient(250deg, rgba(130, 201, 30, 0) 0%, #062343 70%),
-      //   url(https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1080&q=80)`,
-      //   backgroundSize: 'cover',
-      //   backgroundPosition: 'center',
-      // }}
-      >
+      <IndexHeaderBar />
+      <div>
         <Container size="xl">
           <Stack align="center" gap={20} py={80}>
             <Image
@@ -58,24 +53,7 @@ export default function Home() {
             <Text fz={36}>
               <b>Hocanı</b> Ara
             </Text>
-            <TextInput
-              size="lg"
-              radius="xl"
-              w="100%"
-              maw={650}
-              placeholder="Örn: Can Alkan"
-              leftSection={<IconSchool color="black" />}
-              styles={{
-                section: {
-                  marginLeft: 7,
-                },
-                input: {
-                  paddingLeft: 60,
-                  height: 60,
-                  border: 'solid 2px',
-                },
-              }}
-            />
+            <HocaSearch />
           </Stack>
         </Container>
       </div>
@@ -138,18 +116,7 @@ export default function Home() {
           </Stack>
         </Container>
       </BackgroundImage>
-      <Container py={30} size="xl">
-        <Group justify="space-between">
-          <Text>© Hocanı Notla</Text>
-          <Group>
-            {['Gizlilik', 'Şartlar', 'Yardım'].map((item) => (
-              <Link href="#">
-                <Text>{item}</Text>
-              </Link>
-            ))}
-          </Group>
-        </Group>
-      </Container>
+      <Footer />
     </>
   );
 }

@@ -7,6 +7,8 @@ import './style.scss';
 import '@mantine/notifications/styles.css';
 
 import BaseLayout from './_layouts/BaseLayout';
+import Footer from './_components/navigation/Footer';
+import NProgress from './_components/navigation/NProgress';
 
 export const metadata: Metadata = {
   title: 'Hocani Notla v2',
@@ -30,6 +32,7 @@ export default function RootLayout({
             fontFamily: 'Poppins, sans-serif',
           }}
         >
+          <NProgress />
           <Notifications position="top-right" />
           {children}
         </MantineProvider>

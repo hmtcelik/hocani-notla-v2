@@ -1,30 +1,35 @@
-import {
-  BackgroundImage,
-  Button,
-  Container,
-  Group,
-  Title,
-} from '@mantine/core';
-import { IconBrandInstagram, IconBrandTwitter } from '@tabler/icons-react';
+import { Button, Container, Group, Image } from '@mantine/core';
+import HocaSearch from '../hoca/HocaSearch';
+import Link from 'next/link';
+// import HocaSearch from '../hoca/HocaSearch';
 
-export default function HeaderBar() {
+const HeaderBar = () => {
   return (
     <>
-      <BackgroundImage src="/bg/rrrepeat.svg">
-        <Container size="xl">
-          <Group py={30} justify="space-between">
+      <div
+        style={{
+          backgroundColor: 'black',
+        }}
+      >
+        <Container size="xl" py={15}>
+          <Group justify="space-between" align="center">
+            <Link href="/">
+              <Image
+                maw={200}
+                src="https://www.ratemyprofessors.com/static/media/big_rmp_logo_black.41f961d6.svg"
+              />
+            </Link>
+            <HocaSearch size="md" inputHeight={30} maxW={500} />
             <Group>
-              <IconBrandInstagram />
-              <IconBrandTwitter />
-            </Group>
-            <Group>
-              <Button px={25} radius="xl" color="black">
+              <Button px={20} radius="xl" color="white" variant="outline">
                 Giriş Yap
               </Button>
             </Group>
           </Group>
         </Container>
-      </BackgroundImage>
+      </div>
     </>
   );
-}
+};
+
+export default HeaderBar;
