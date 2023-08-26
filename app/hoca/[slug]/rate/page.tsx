@@ -11,19 +11,26 @@ import {
   Radio,
 } from '@mantine/core';
 import { IconStar, IconStarFilled, IconArrowLeft } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-import { CommentType } from '@/app/_models/Comment';
 import HocaService from '@/app/_services/HocaService';
 import useNotification from '@/app/_hooks/useNotification';
+import { CommentType } from '@/app/_models/Comment';
+import { AuthContext } from '@/app/_providers/AuthProvider';
 
 const page = ({ params }: { params: { slug: string } }) => {
+  const user = useContext(AuthContext);
+
   const hocaUid = params.slug;
-  const showNotification = useNotification();
   const router = useRouter();
 
+  if (!user) {
+    router.push(`/hoca/${hocaUid}/`);
+  }
+
+  const showNotification = useNotification();
   const [rate, setRate] = useState(0);
   const [comment, setComment] = useState('');
   const [again, setAgain] = useState('');
@@ -51,10 +58,10 @@ const page = ({ params }: { params: { slug: string } }) => {
       rate,
       comment,
       date: new Date().toISOString(),
-      commenter: '', // TODO: get from auth context
+      commenter: user?.uid || '',
       course,
-      like: 0,
-      dislike: 0,
+      likes: [],
+      dislikes: [],
       again: again === 'yes' ? true : false,
       attandance: attandance === 'yes' ? true : false,
       grade,

@@ -4,8 +4,8 @@ export interface CommentType {
   date: string; // should be in this format "dd/mm/yyyy"
   commenter: string;
   course: string;
-  like: number;
-  dislike: number;
+  likes: string[];
+  dislikes: string[];
   again: boolean | null;
   attandance: boolean | null;
   grade: string | null;

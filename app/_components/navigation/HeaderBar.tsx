@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Group, Grid, Button, Image } from '@mantine/core';
+import { Group, Grid, Button, Image, Avatar, ActionIcon } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useContext } from 'react';
 
@@ -9,6 +9,7 @@ import DoctorSearch from '../hoca/DoctorSearch';
 import AuthModal from '../auth/AuthModal';
 import AuthService from '@/app/_services/AuthService';
 import { AuthContext } from '@/app/_providers/AuthProvider';
+import { IconSettings } from '@tabler/icons-react';
 
 export default function HeaderBar() {
   const user = useContext(AuthContext);
@@ -41,19 +42,29 @@ export default function HeaderBar() {
       >
         <Group justify="flex-end">
           {user ? (
-            <Button
-              radius="lg"
-              onClick={() => {
-                AuthService.logout().catch((error) => {
-                  notifications.show({
-                    message: 'Çıkış yapılırken bir hata oluştu',
-                    color: 'red',
+            <>
+              <Button
+                radius="lg"
+                onClick={() => {
+                  AuthService.logout().catch((error) => {
+                    notifications.show({
+                      message: 'Çıkış yapılırken bir hata oluştu',
+                      color: 'red',
+                    });
                   });
-                });
-              }}
-            >
-              Logout
-            </Button>
+                }}
+              >
+                Logout
+              </Button>
+              <ActionIcon
+                variant="light"
+                size="xl"
+                radius="xl"
+                aria-label="Settings"
+              >
+                <IconSettings />
+              </ActionIcon>
+            </>
           ) : (
             <AuthModal />
           )}

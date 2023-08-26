@@ -6,12 +6,21 @@ function useNotification() {
     message: string,
     color?: string
   ) => {
-    let c = color || (type === 'error' ? 'red' : 'green');
-    if (type === 'custom') c = color || 'blue';
-
+    let c;
+    switch (type) {
+      case 'error':
+        c = 'red';
+        break;
+      case 'success':
+        c = 'green';
+        break;
+      default:
+        c = color || 'blue';
+        break;
+    }
     notifications.show({
       message,
-      color,
+      color: c,
     });
   };
 

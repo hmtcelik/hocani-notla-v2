@@ -12,7 +12,9 @@ import { CommentType } from '@/app/_models/Comment';
 import {
   IconStarFilled,
   IconThumbDown,
+  IconThumbDownFilled,
   IconThumbUp,
+  IconThumbUpFilled,
 } from '@tabler/icons-react';
 import useNotification from '@/app/_hooks/useNotification';
 
@@ -34,28 +36,64 @@ export default function Hoca({ params }: { params: { slug: string } }) {
   }, []);
 
   const handleLike = (index: number) => {
-    if (data) {
+    if (user && data) {
       let newComment = data.comments;
-      newComment[index].like += 1;
+      let likes = newComment[index].likes;
+      let dislikes = newComment[index].dislikes;
 
+      if (likes.includes(user.uid)) {
+        likes = likes.filter((item) => item !== user.uid);
+      } else {
+        likes.push(user.uid);
+      }
+
+      if (dislikes.includes(user.uid)) {
+        dislikes = dislikes.filter((item) => item !== user.uid);
+      }
+
+      newComment[index].likes = likes;
+      newComment[index].dislikes = dislikes;
+
+      // update dom
       setData({ ...data, comments: newComment });
 
+      // update db
       HocaService.updateHocaComments(data.id, newComment).catch((err) => {
         console.log('Error when updating hoca: ', err);
       });
+    } else {
+      showNotification('error', 'Giriş yapınız.');
     }
   };
 
   const handleDislike = (index: number) => {
-    if (data) {
+    if (user && data) {
       let newComment = data.comments;
-      newComment[index].dislike += 1;
+      let dislikes = newComment[index].dislikes;
+      let likes = newComment[index].likes;
 
+      if (dislikes.includes(user.uid)) {
+        dislikes = dislikes.filter((item) => item !== user.uid);
+      } else {
+        dislikes.push(user.uid);
+      }
+
+      if (likes.includes(user.uid)) {
+        likes = likes.filter((item) => item !== user.uid);
+      }
+
+      newComment[index].dislikes = dislikes;
+      newComment[index].likes = likes;
+
+      // update dom
       setData({ ...data, comments: newComment });
 
+      // update db
       HocaService.updateHocaComments(data.id, newComment).catch((err) => {
         console.log('Error when updating hoca: ', err);
       });
+    } else {
+      showNotification('error', 'Giriş yapınız.');
     }
   };
 
@@ -71,13 +109,24 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                 <IconStarFilled /> {comment.rate}
               </div>
               <div>{comment.date.slice(0, 10)}</div>
-              <div>Course: {comment.course}</div>
-              <div>Again: {comment.again ? 'yes' : 'no'}</div>
-              <div>Attandance: {comment.attandance ? 'yes' : 'no'}</div>
-              <div>Grade: {comment.grade}</div>
-              <div>Online: {comment.online}</div>
+              <div>
+                Aldığım kurs <b>{comment.course}</b>
+              </div>
+              <div>
+                Tekrar Alır mıydım? <b>{comment.again ? 'Evet' : 'Hayır'}</b>
+              </div>
+              <div>
+                Yoklama Zorunlu mu?{' '}
+                <b>{comment.attandance ? 'Evet' : 'Hayır'}</b>
+              </div>
+              <div>
+                Notum <b>{comment.grade}</b>
+              </div>
+              <div>
+                Eğitim Şekli <b>{comment.online}</b>
+              </div>
               <div style={{ marginTop: 10 }}>{comment.comment}</div>
-              <Group>
+              <Group mt={5}>
                 <Group
                   gap={2}
                   align="center"
@@ -85,8 +134,12 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                   justify="center"
                 >
                   <Button variant="light">
-                    <IconThumbUp />
-                    <Text>{comment.like}</Text>
+                    {comment.likes.includes(user?.uid || '') ? (
+                      <IconThumbUpFilled />
+                    ) : (
+                      <IconThumbUp />
+                    )}
+                    <Text>{comment.likes.length}</Text>
                   </Button>
                 </Group>
                 <Group
@@ -96,8 +149,12 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                   justify="center"
                 >
                   <Button variant="light">
-                    <IconThumbDown />
-                    <Text>{comment.dislike}</Text>
+                    {comment.dislikes.includes(user?.uid || '') ? (
+                      <IconThumbDownFilled />
+                    ) : (
+                      <IconThumbDown />
+                    )}
+                    <Text>{comment.dislikes.length}</Text>
                   </Button>
                 </Group>
               </Group>
