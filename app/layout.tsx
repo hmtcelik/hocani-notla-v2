@@ -1,8 +1,11 @@
 import '@mantine/core/styles.css';
 import type { Metadata } from 'next';
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
 
 import './style.scss';
+import '@mantine/notifications/styles.css';
+
 import BaseLayout from './_layouts/BaseLayout';
 
 export const metadata: Metadata = {
@@ -22,6 +25,7 @@ export default function RootLayout({
       </head>
       <body>
         <MantineProvider defaultColorScheme="light">
+          <Notifications position="top-right" />
           <BaseLayout>{children}</BaseLayout>
         </MantineProvider>
       </body>

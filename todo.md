@@ -1,3 +1,1 @@
-- return back button href in post detail
-
-- detayda ve anasayfada grid 
+- check user infos and other stuffs in firebase, its not enought to here check

@@ -5,9 +5,9 @@ import { useRouter } from 'next/router';
 import { Button, Grid, Group, Stack, Text, Title } from '@mantine/core';
 import { IconArrowLeft } from '@tabler/icons-react';
 
-import PostDetailCard from '@/app/_components/PostDetailCard';
-import PostReply from '@/app/_components/PostReply';
-import AsideDoctors from '@/app/_components/AsideDoctors';
+import PostDetailCard from '@/app/_components/post/PostDetailCard';
+import PostReply from '@/app/_components/post/PostReply';
+import AsideDoctors from '@/app/_components/hoca/AsideDoctors';
 
 export default function PostDetail() {
   return (
