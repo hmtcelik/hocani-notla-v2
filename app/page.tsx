@@ -63,7 +63,7 @@ export default function Home() {
             {illusts.map((item, index) => {
               if (index % 2 === 0)
                 return (
-                  <SimpleGrid cols={{ base: 1, sm: 2 }}>
+                  <SimpleGrid cols={{ base: 1, sm: 2 }} key={index}>
                     <Stack ta="center" align="center" justify="center" gap={5}>
                       <Title order={2} fw={800}>
                         {item.title}
@@ -77,6 +77,7 @@ export default function Home() {
                 return (
                   <>
                     <SimpleGrid
+                      key={index}
                       display={{ base: 'none', sm: 'grid' }}
                       cols={{ base: 1, sm: 2 }}
                     >

@@ -8,7 +8,7 @@ const SearchPage = () => {
     <>
       <Container py={60} maw={1000}>
         <Text fz={18}>
-          <b>"Can Alkan"</b> ile ilgili <b>3</b> sonuç bulundu.
+          <b>&quot;Can Alkan&quot;</b> ile ilgili <b>3</b> sonuç bulundu.
         </Text>
         <Stack py={30}>
           <HocaResultCard

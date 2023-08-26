@@ -7,8 +7,8 @@ const Footer = () => {
       <Group justify="space-between">
         <Text>© Hocanı Notla</Text>
         <Group>
-          {['Gizlilik', 'Şartlar', 'Yardım'].map((item) => (
-            <Link href="#">
+          {['Gizlilik', 'Şartlar', 'Yardım'].map((item, index) => (
+            <Link href="#" key={index}>
               <Text>{item}</Text>
             </Link>
           ))}
