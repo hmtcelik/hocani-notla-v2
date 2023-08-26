@@ -1,58 +1,62 @@
-'use client';
-import React, { useState, useEffect, createContext } from 'react';
-import { Grid, Stack } from '@mantine/core';
-
-import AsideDoctors from './_components/hoca/AsideDoctors';
+import {
+  BackgroundImage,
+  Center,
+  Container,
+  Group,
+  Image,
+  Stack,
+  Text,
+  TextInput,
+  Title,
+} from '@mantine/core';
 
 import initFirebase from './_services/InitService';
-import HocaService from './_services/HocaService';
-import { HocaType } from './_models/Hoca';
-import Link from 'next/link';
+import HeaderBar from './_components/navigation/HeaderBar';
+import { IconSchool } from '@tabler/icons-react';
 
 initFirebase();
 
 export default function Home() {
-  const [data, setData] = useState<HocaType[] | null>(null);
-
-  useEffect(() => {
-    HocaService.getRandom5Hoca()
-      .then((data) => {
-        setData(data);
-      })
-      .catch((err) => {
-        console.log('Error fetching data: ', err);
-      });
-  }, []);
-
-  console.log(data);
-
   return (
-    <Grid grow>
-      <Grid.Col span={{ base: 12, md: 8, lg: 8.8 }}>
-        {data &&
-          data.map((hoca, index) => (
-            <div key={index}>
-              <Link key={index} href={`/hoca/${hoca.id}`}>
-                {hoca.name}
-              </Link>
-            </div>
-          ))}
-      </Grid.Col>
-      <Grid.Col
-        display={{ base: 'none', md: 'block' }}
-        span={{ base: 12, md: 4, lg: 3.2 }}
+    <>
+      <HeaderBar />
+      <div
+        style={{
+          backgroundImage: `linear-gradient(250deg, rgba(130, 201, 30, 0) 0%, #062343 70%), 
+            url(https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1080&q=80)`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
       >
-        <Stack style={{ position: 'fixed', maxWidth: 260, width: '100%' }}>
-          <AsideDoctors title="Popüler Hocalar" data={POPULAR_DOCTORS} />
-        </Stack>
-      </Grid.Col>
-    </Grid>
+        <Container size="xl" mt={50}>
+          <Stack align="center" gap={40} py={100}>
+            <Image
+              maw={400}
+              src="https://www.ratemyprofessors.com/static/media/big_rmp_logo_black.41f961d6.svg"
+            />
+            <Text fz={36} c="white">
+              <b>Hocanı</b> Ara
+            </Text>
+            <TextInput
+              size="lg"
+              radius="xl"
+              w="100%"
+              maw={550}
+              placeholder="Örn: Can Alkan"
+              leftSection={<IconSchool color="black" />}
+              styles={{
+                section: {
+                  marginLeft: 7,
+                },
+                input: {
+                  paddingLeft: 55,
+                  height: 55,
+                },
+              }}
+            />
+          </Stack>
+        </Container>
+      </div>
+    </>
   );
 }
-const POPULAR_DOCTORS = [
-  { score: 4.6, label: 'İlker Türker', value: '123456' },
-  { score: 2.6, label: 'Fehmi Akyol', value: '789012' },
-  { score: 3.2, label: 'Ali Vural', value: '345678' },
-  { score: 1.8, label: 'Rahmiye Uslu', value: '901234' },
-  { score: 5, label: 'Tekin Özdemir', value: '567890' },
-];

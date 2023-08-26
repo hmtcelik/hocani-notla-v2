@@ -24,9 +24,14 @@ export default function RootLayout({
         <ColorSchemeScript color="light" />
       </head>
       <body>
-        <MantineProvider defaultColorScheme="light">
+        <MantineProvider
+          defaultColorScheme="light"
+          theme={{
+            fontFamily: 'Poppins, sans-serif',
+          }}
+        >
           <Notifications position="top-right" />
-          <BaseLayout>{children}</BaseLayout>
+          {children}
         </MantineProvider>
       </body>
     </html>

@@ -1,76 +1,22 @@
-'use client';
-
-import Link from 'next/link';
-import { Group, Grid, Button, Image, Avatar, ActionIcon } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
-import { useContext } from 'react';
-
-import DoctorSearch from '../hoca/DoctorSearch';
-import AuthModal from '../auth/AuthModal';
-import AuthService from '@/app/_services/AuthService';
-import { AuthContext } from '@/app/_providers/AuthProvider';
-import { IconSettings } from '@tabler/icons-react';
+import { Button, Container, Group, Title } from '@mantine/core';
+import { IconBrandInstagram, IconBrandTwitter } from '@tabler/icons-react';
 
 export default function HeaderBar() {
-  const user = useContext(AuthContext);
-
   return (
-    // <Container size={1480}>
-    <Grid align="center" justify="center" px={20}>
-      <Grid.Col span={{ base: 0, xs: 4, md: 4, lg: 2.5 }}>
-        <Group justify="start">
-          <Group display={{ base: 'none', xs: 'block' }}>
-            <Link href={'/'}>
-              <Image
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/F%C3%BCr_Dummies_logo.svg/2560px-F%C3%BCr_Dummies_logo.svg.png"
-                alt="logo"
-                width={80}
-                height={30}
-              />
-            </Link>
+    <>
+      <Container size="xl">
+        <Group py={30} justify="space-between">
+          <Group>
+            <IconBrandInstagram />
+            <IconBrandTwitter />
+          </Group>
+          <Group>
+            <Button px={25} radius="xl" color="black">
+              Giriş Yap
+            </Button>
           </Group>
         </Group>
-      </Grid.Col>
-      <Grid.Col span={{ base: 11, xs: 8, md: 8, lg: 6.5 }}>
-        <Group grow>
-          <DoctorSearch />
-        </Group>
-      </Grid.Col>
-      <Grid.Col
-        display={{ base: 'none', lg: 'block' }}
-        span={{ base: 0, lg: 3 }}
-      >
-        <Group justify="flex-end">
-          {user ? (
-            <>
-              <Button
-                radius="lg"
-                onClick={() => {
-                  AuthService.logout().catch((error) => {
-                    notifications.show({
-                      message: 'Çıkış yapılırken bir hata oluştu',
-                      color: 'red',
-                    });
-                  });
-                }}
-              >
-                Logout
-              </Button>
-              <ActionIcon
-                variant="light"
-                size="xl"
-                radius="xl"
-                aria-label="Settings"
-              >
-                <IconSettings />
-              </ActionIcon>
-            </>
-          ) : (
-            <AuthModal />
-          )}
-        </Group>
-      </Grid.Col>
-    </Grid>
-    // </Container>
+      </Container>
+    </>
   );
 }
