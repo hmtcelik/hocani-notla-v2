@@ -1,21 +1,20 @@
 'use client';
 
-import { Button, Divider, Grid, Group, Stack, Text } from '@mantine/core';
+import {
+  Container,
+  Grid,
+  Group,
+  SimpleGrid,
+  Slider,
+  Stack,
+  Text,
+  Title,
+} from '@mantine/core';
 import { useContext, useEffect, useState } from 'react';
 
-import HocaCard from '@/app/_components/hoca/HocaCard';
-import AsideDoctors from '@/app/_components/hoca/AsideDoctors';
 import HocaService from '@/app/_services/HocaService';
 import { HocaType } from '@/app/_models/Hoca';
 import { AuthContext } from '@/app/_providers/AuthProvider';
-import { CommentType } from '@/app/_models/Comment';
-import {
-  IconStarFilled,
-  IconThumbDown,
-  IconThumbDownFilled,
-  IconThumbUp,
-  IconThumbUpFilled,
-} from '@tabler/icons-react';
 import useNotification from '@/app/_hooks/useNotification';
 
 export default function Hoca({ params }: { params: { slug: string } }) {
@@ -99,95 +98,39 @@ export default function Hoca({ params }: { params: { slug: string } }) {
 
   return (
     <>
-      <Grid grow>
-        <Grid.Col span={{ base: 12, md: 8, lg: 8.8 }}>
-          <HocaCard data={data} />
-          <Divider my={20} size={'xs'} />
-          {data?.comments.map((comment: CommentType, index) => (
-            <Stack style={{ fontSize: 18 }} gap={3} key={index}>
-              <div>
-                <IconStarFilled /> {comment.rate}
-              </div>
-              <div>{comment.date.slice(0, 10)}</div>
-              <div>
-                Aldığım kurs <b>{comment.course}</b>
-              </div>
-              <div>
-                Tekrar Alır mıydım? <b>{comment.again ? 'Evet' : 'Hayır'}</b>
-              </div>
-              <div>
-                Yoklama Zorunlu mu?{' '}
-                <b>{comment.attandance ? 'Evet' : 'Hayır'}</b>
-              </div>
-              <div>
-                Notum <b>{comment.grade}</b>
-              </div>
-              <div>
-                Eğitim Şekli <b>{comment.online}</b>
-              </div>
-              <div style={{ marginTop: 10 }}>{comment.comment}</div>
-              <Group mt={5}>
-                <Group
-                  gap={2}
-                  align="center"
-                  onClick={() => handleLike(index)}
-                  justify="center"
-                >
-                  <Button variant="light">
-                    {comment.likes.includes(user?.uid || '') ? (
-                      <IconThumbUpFilled />
-                    ) : (
-                      <IconThumbUp />
-                    )}
-                    <Text>{comment.likes.length}</Text>
-                  </Button>
-                </Group>
-                <Group
-                  gap={2}
-                  align="center"
-                  onClick={() => handleDislike(index)}
-                  justify="center"
-                >
-                  <Button variant="light">
-                    {comment.dislikes.includes(user?.uid || '') ? (
-                      <IconThumbDownFilled />
-                    ) : (
-                      <IconThumbDown />
-                    )}
-                    <Text>{comment.dislikes.length}</Text>
-                  </Button>
-                </Group>
-              </Group>
-              <Divider my={20} size={'xs'} />
-            </Stack>
-          ))}
-        </Grid.Col>
-        <Grid.Col
-          display={{ base: 'none', md: 'block' }}
-          span={{ base: 12, md: 4, lg: 3.2 }}
-        >
-          <Stack style={{ position: 'fixed', maxWidth: 300, width: '100%' }}>
-            <AsideDoctors title="Bu Bölümden" data={RELATED_DOCTORS} />
-            <AsideDoctors
-              title="Bu Üniversiteden"
-              data={MORE_DOCTORS_FROM_UNI}
-            />
+      <Container py={60} maw={1000}>
+        <SimpleGrid cols={{ base: 1, sm: 2 }} spacing={20}>
+          <Stack>
+            <Group>
+              <SimpleGrid cols={2} spacing={10}>
+                <Title order={1} fw={900} fz={72}>
+                  2.3
+                </Title>
+                <Text c="gray" mt={20} fw="bold" fz={18}>
+                  / 5
+                </Text>
+              </SimpleGrid>
+            </Group>
           </Stack>
-        </Grid.Col>
-      </Grid>
+          <Stack>
+            <Grid>
+              <Grid.Col span={{ base: 4, sm: 2 }}>
+                <Text>Cok iyi</Text>
+              </Grid.Col>
+              <Grid.Col span={{ base: 8, sm: 10 }}>
+                <Slider
+                  color="blue"
+                  label="Slider"
+                  size="lg"
+                  showLabelOnHover={false}
+                  value={50}
+                  styles={{ thumb: { display: 'none' } }}
+                />
+              </Grid.Col>
+            </Grid>
+          </Stack>
+        </SimpleGrid>
+      </Container>
     </>
   );
 }
-
-const RELATED_DOCTORS = [
-  { score: 3.2, label: 'Ali Vural', value: '345678' },
-  { score: 1.8, label: 'Rahmiye Uslu', value: '901234' },
-  { score: 5, label: 'Tekin Özdemir', value: '567890' },
-];
-
-const MORE_DOCTORS_FROM_UNI = [
-  { score: 4.6, label: 'İlker Türker', value: '123456' },
-  { score: 3.2, label: 'Ali Vural', value: '345678' },
-  { score: 1.8, label: 'Rahmiye Uslu', value: '901234' },
-  { score: 5, label: 'Tekin Özdemir', value: '567890' },
-];

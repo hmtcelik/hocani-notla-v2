@@ -4,6 +4,7 @@ import ScoreAvatar from '../post/ScoreAvatar';
 import Link from 'next/link';
 
 interface HocaResultCardProps {
+  hocaUid: string;
   score: number;
   name: string;
   university: string;
@@ -11,6 +12,7 @@ interface HocaResultCardProps {
 }
 
 const HocaResultCard = ({
+  hocaUid,
   score,
   name,
   university,
@@ -18,7 +20,7 @@ const HocaResultCard = ({
 }: HocaResultCardProps) => {
   return (
     <Link
-      href="#"
+      href={`/hoca/${hocaUid}`}
       style={{
         textDecoration: 'none',
       }}

@@ -12,18 +12,21 @@ const SearchPage = () => {
         </Text>
         <Stack py={30}>
           <HocaResultCard
+            hocaUid="iqjuewf92"
             score={5}
             name="Can Alkan"
             rateCount={20}
             university="Boğaziçi Üniversitesi"
           />
           <HocaResultCard
+            hocaUid="iqjuewf92"
             score={2}
             name="Abdulhamit Çelik"
             rateCount={3}
             university="Ortadoğu Teknik Üniversitesi"
           />
           <HocaResultCard
+            hocaUid="iqjuewf92"
             score={3}
             name="Caner Özcan"
             rateCount={79}
