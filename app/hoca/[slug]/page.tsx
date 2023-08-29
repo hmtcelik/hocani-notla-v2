@@ -5,7 +5,7 @@ import {
   Grid,
   Group,
   SimpleGrid,
-  Slider,
+  Progress,
   Stack,
   Text,
   Title,
@@ -100,10 +100,10 @@ export default function Hoca({ params }: { params: { slug: string } }) {
     <>
       <Container py={60} maw={1000}>
         <SimpleGrid cols={{ base: 1, sm: 2 }} spacing={20}>
-          <Stack>
+          <Stack gap={0}>
             <Group>
               <SimpleGrid cols={2} spacing={10}>
-                <Title order={1} fw={900} fz={72}>
+                <Title order={1} fw={900} fz={76}>
                   2.3
                 </Title>
                 <Text c="gray" mt={20} fw="bold" fz={18}>
@@ -111,26 +111,64 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                 </Text>
               </SimpleGrid>
             </Group>
+            <Text fz={14} fw={500}>
+              <span style={{ textDecoration: 'underline' }}>20 oy</span> bazında
+              genel ortalaması
+            </Text>
+            <Title order={1} mt={20} fw={900} fz={42}>
+              Can Alkan
+            </Title>
           </Stack>
-          <Stack>
-            <Grid>
-              <Grid.Col span={{ base: 4, sm: 2 }}>
-                <Text>Cok iyi</Text>
-              </Grid.Col>
-              <Grid.Col span={{ base: 8, sm: 10 }}>
-                <Slider
-                  color="blue"
-                  label="Slider"
-                  size="lg"
-                  showLabelOnHover={false}
+          <Stack p={25} pb={40} bg={'#F7F7F7'}>
+            <Text fw={500} fz={18}>
+              Verilen Notlar
+            </Text>
+            {rates.map((item, index) => (
+              <Group key={index} wrap="nowrap">
+                <Text miw={80} ta="right">
+                  {item.label}
+                  {`\u00A0`}
+                  <b>{item.value}</b>
+                </Text>
+                <Progress
+                  style={{ flexGrow: 1 }}
+                  radius="xs"
+                  color="#0255FD"
+                  bg="#E4E4E4"
+                  size="xl"
+                  h={35}
+                  w={300}
                   value={50}
-                  styles={{ thumb: { display: 'none' } }}
                 />
-              </Grid.Col>
-            </Grid>
+                <Text fw="bold">20</Text>
+              </Group>
+            ))}
           </Stack>
         </SimpleGrid>
       </Container>
     </>
   );
 }
+
+const rates = [
+  {
+    label: 'Çok iyi',
+    value: 5,
+  },
+  {
+    label: 'İyi',
+    value: 4,
+  },
+  {
+    label: 'Orta',
+    value: 3,
+  },
+  {
+    label: 'Kötü',
+    value: 2,
+  },
+  {
+    label: 'Çok kötü',
+    value: 1,
+  },
+];

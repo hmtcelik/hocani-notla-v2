@@ -13,7 +13,7 @@ const SearchPage = () => {
         <Stack py={30}>
           <HocaResultCard
             hocaUid="iqjuewf92"
-            score={5}
+            score={0}
             name="Can Alkan"
             rateCount={20}
             university="Boğaziçi Üniversitesi"
@@ -34,7 +34,7 @@ const SearchPage = () => {
           />
         </Stack>
         <Stack ta="center" gap={3}>
-          <Text>Aradığını bulamadın mı?</Text>
+          <Text>Hocan burda yok mu?</Text>
           <Link href="#">
             <Text td={'underline'}>Kendin ekle</Text>
           </Link>
