@@ -1,6 +1,8 @@
 import { BackgroundImage, Button, Container, Group } from '@mantine/core';
 import { IconBrandInstagram, IconBrandTwitter } from '@tabler/icons-react';
 
+import AuthModal from '../auth/AuthModal';
+
 export default function IndexHeaderBar() {
   return (
     <>
@@ -12,9 +14,13 @@ export default function IndexHeaderBar() {
               <IconBrandTwitter />
             </Group>
             <Group>
-              <Button px={25} radius="xl" color="black">
-                Giriş Yap
-              </Button>
+              <AuthModal
+                button={{
+                  color: 'black',
+                  label: 'Giriş Yap',
+                  variant: 'filled',
+                }}
+              />
             </Group>
           </Group>
         </Container>

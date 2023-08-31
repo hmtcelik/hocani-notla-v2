@@ -21,7 +21,15 @@ import GoogleAuthProvider from '../../_providers/GoogleAuthProvider';
 import React, { useState } from 'react';
 import AuthService from '@/app/_services/AuthService';
 
-export default function LoginModal() {
+interface AuthModalProps {
+  button: {
+    label: string;
+    variant: 'filled' | 'outline' | 'light' | 'gradient' | 'link' | 'default';
+    color: string;
+  };
+}
+
+export default function LoginModal(props: AuthModalProps) {
   const [opened, { open, close }] = useDisclosure(false);
 
   const [loginOpen, setLoginOpen] = useState<boolean>(false);
@@ -30,14 +38,16 @@ export default function LoginModal() {
   return (
     <GoogleAuthProvider>
       <Button
-        variant="filled"
-        radius="lg"
+        px={20}
+        radius="xl"
+        color={props.button.color}
+        variant={props.button.variant}
         onClick={() => {
           open();
           setLoginOpen(true);
         }}
       >
-        Giriş Yap
+        {props.button.label}
       </Button>
       <Modal
         opened={opened}
@@ -47,11 +57,12 @@ export default function LoginModal() {
           setRegisterOpen(false);
         }}
         title=""
-        radius="xl"
+        radius={0}
         size="sm"
         centered
         closeOnClickOutside={false}
         transitionProps={{ duration: 0 }}
+        closeButtonProps={{ color: 'black' }}
       >
         {loginOpen && (
           <LoginForm

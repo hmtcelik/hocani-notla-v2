@@ -1,8 +1,8 @@
 import { Button, Container, Group, Image } from '@mantine/core';
 import HocaSearch from '../hoca/HocaSearch';
 import Link from 'next/link';
+import AuthModal from '../auth/AuthModal';
 // import HocaSearch from '../hoca/HocaSearch';
-
 const HeaderBar = () => {
   return (
     <>
@@ -21,9 +21,13 @@ const HeaderBar = () => {
             </Link>
             <HocaSearch size="md" inputHeight={30} maxW={500} />
             <Group>
-              <Button px={20} radius="xl" color="white" variant="outline">
-                Giriş Yap
-              </Button>
+              <AuthModal
+                button={{
+                  color: 'white',
+                  label: 'Giriş Yap',
+                  variant: 'outline',
+                }}
+              />
             </Group>
           </Group>
         </Container>
