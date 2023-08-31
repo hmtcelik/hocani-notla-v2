@@ -9,6 +9,8 @@ import {
   Stack,
   Text,
   Title,
+  Button,
+  Tabs,
 } from '@mantine/core';
 import { useContext, useEffect, useState } from 'react';
 
@@ -100,24 +102,46 @@ export default function Hoca({ params }: { params: { slug: string } }) {
     <>
       <Container py={60} maw={1000}>
         <SimpleGrid cols={{ base: 1, sm: 2 }} spacing={20}>
-          <Stack gap={0}>
-            <Group>
-              <SimpleGrid cols={2} spacing={10}>
-                <Title order={1} fw={900} fz={76}>
-                  2.3
-                </Title>
-                <Text c="gray" mt={20} fw="bold" fz={18}>
-                  / 5
-                </Text>
-              </SimpleGrid>
-            </Group>
-            <Text fz={14} fw={500}>
-              <span style={{ textDecoration: 'underline' }}>20 oy</span> bazında
-              genel ortalaması
-            </Text>
-            <Title order={1} mt={20} fw={900} fz={42}>
-              Can Alkan
-            </Title>
+          <Stack gap={0} justify="space-around">
+            <Stack gap={0}>
+              <Group>
+                <SimpleGrid cols={2} spacing={10}>
+                  <Title order={1} fw={900} fz={76}>
+                    2.3
+                  </Title>
+                  <Text c="gray" mt={20} fw="bold" fz={18}>
+                    / 5
+                  </Text>
+                </SimpleGrid>
+              </Group>
+              <Text fz={14} fw={500}>
+                <span style={{ textDecoration: 'underline' }}>20 oy</span>{' '}
+                bazında genel ortalaması
+              </Text>
+              <Title order={1} mt={18} fw={900} fz={42}>
+                Can Alkan
+              </Title>
+              <Text fz={14}>
+                <span style={{ textDecoration: 'underline', fontWeight: 600 }}>
+                  Boğaziçi Üniversitesi
+                </span>
+                'nde{' '}
+                <span style={{ textDecoration: 'underline', fontWeight: 600 }}>
+                  Bilgisayar Mühendisliği
+                </span>{' '}
+                bölümünde öğretim görevlisi
+              </Text>
+            </Stack>
+            <Button
+              color="#0255FD"
+              radius="xl"
+              mr="auto"
+              px={50}
+              size="lg"
+              fz="sm"
+            >
+              Can Alkan'a Not Ver
+            </Button>
           </Stack>
           <Stack p={25} pb={40} bg={'#F7F7F7'}>
             <Text fw={500} fz={18}>
@@ -125,7 +149,7 @@ export default function Hoca({ params }: { params: { slug: string } }) {
             </Text>
             {rates.map((item, index) => (
               <Group key={index} wrap="nowrap">
-                <Text miw={80} ta="right">
+                <Text fz={14} miw={80} ta="right">
                   {item.label}
                   {`\u00A0`}
                   <b>{item.value}</b>
@@ -140,11 +164,18 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                   w={300}
                   value={50}
                 />
-                <Text fw="bold">20</Text>
+                <Text fz={14} fw="bold">
+                  20
+                </Text>
               </Group>
             ))}
           </Stack>
         </SimpleGrid>
+        <Tabs mt={30} color="black" defaultValue="first">
+          <Tabs.List>
+            <Tabs.Tab value="first">21 yorum</Tabs.Tab>
+          </Tabs.List>
+        </Tabs>
       </Container>
     </>
   );
