@@ -18,6 +18,7 @@ import HocaService from '@/app/_services/HocaService';
 import { HocaType } from '@/app/_models/Hoca';
 import { AuthContext } from '@/app/_providers/AuthProvider';
 import useNotification from '@/app/_hooks/useNotification';
+import RatePost from '@/app/_components/post/RatePost';
 
 export default function Hoca({ params }: { params: { slug: string } }) {
   const user = useContext(AuthContext);
@@ -143,7 +144,7 @@ export default function Hoca({ params }: { params: { slug: string } }) {
               Can Alkan'a Not Ver
             </Button>
           </Stack>
-          <Stack p={25} pb={40} bg={'#F7F7F7'}>
+          <Stack p={20} pb={30} bg={'#F7F7F7'}>
             <Text fw={500} fz={18}>
               Verilen Notlar
             </Text>
@@ -171,10 +172,17 @@ export default function Hoca({ params }: { params: { slug: string } }) {
             ))}
           </Stack>
         </SimpleGrid>
-        <Tabs mt={30} color="black" defaultValue="first">
+        <Tabs mt={30} color="black" defaultValue="rates">
           <Tabs.List>
-            <Tabs.Tab value="first">21 yorum</Tabs.Tab>
+            <Tabs.Tab value="rates">21 yorum</Tabs.Tab>
           </Tabs.List>
+          <Tabs.Panel value="rates">
+            <Stack mt={20} gap={20}>
+              <RatePost />
+              <RatePost />
+              <RatePost />
+            </Stack>
+          </Tabs.Panel>
         </Tabs>
       </Container>
     </>
