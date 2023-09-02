@@ -124,7 +124,9 @@ function LoginForm({
 
   return (
     <Stack p={40} pt={10} className="login-form">
-      <Title order={4}>Giriş Yap</Title>
+      <Title order={3} fw={800}>
+        Giriş Yap
+      </Title>
       <GoogleLogin
         onSuccess={(credentialResponse) => {
           console.log(credentialResponse);
@@ -195,6 +197,8 @@ function LoginForm({
           fz={13}
           c="indigo"
           td="underline"
+          fw="bold"
+          style={{ cursor: 'pointer' }}
           onClick={() => {
             setLoginOpen(false);
             setRegisterOpen(true);
@@ -263,7 +267,9 @@ function RegisterForm({
 
   return (
     <Stack p={40} pt={10} className="login-form">
-      <Title order={4}>Kayıt Ol</Title>
+      <Title order={3} fw={800}>
+        Kayıt Ol
+      </Title>
       <GoogleLogin
         onSuccess={(credentialResponse) => {
           console.log(credentialResponse);
@@ -340,7 +346,9 @@ function RegisterForm({
         <Text
           fz={13}
           c="indigo"
+          fw="bold"
           td="underline"
+          style={{ cursor: 'pointer' }}
           onClick={() => {
             setLoginOpen(true);
             setRegisterOpen(false);

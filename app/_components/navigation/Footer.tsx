@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 const Footer = () => {
   return (
-    <Container py={30} size="xl">
+    <Container py={20} size="xl">
       <Group justify="space-between">
         <Text>© Hocanı Notla</Text>
         <Group>

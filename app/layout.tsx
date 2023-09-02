@@ -35,6 +35,7 @@ export default function RootLayout({
           <NProgress />
           <Notifications position="top-right" />
           {children}
+          <Footer />
         </MantineProvider>
       </body>
     </html>

@@ -141,7 +141,7 @@ export default function Hoca({ params }: { params: { slug: string } }) {
               size="lg"
               fz="sm"
             >
-              Can Alkan'a Not Ver
+              Bu Hocaya Not Ver
             </Button>
           </Stack>
           <Stack p={20} pb={30} bg={'#F7F7F7'}>
@@ -163,7 +163,7 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                   size="xl"
                   h={35}
                   w={300}
-                  value={50}
+                  value={item.value * 20}
                 />
                 <Text fz={14} fw="bold">
                   20

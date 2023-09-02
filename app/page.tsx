@@ -117,7 +117,6 @@ export default function Home() {
           </Stack>
         </Container>
       </BackgroundImage>
-      <Footer />
     </>
   );
 }
