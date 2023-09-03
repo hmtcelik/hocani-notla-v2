@@ -19,6 +19,7 @@ import { HocaType } from '@/app/_models/Hoca';
 import { AuthContext } from '@/app/_providers/AuthProvider';
 import useNotification from '@/app/_hooks/useNotification';
 import RatePost from '@/app/_components/post/RatePost';
+import Link from 'next/link';
 
 export default function Hoca({ params }: { params: { slug: string } }) {
   const user = useContext(AuthContext);
@@ -133,16 +134,18 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                 bölümünde öğretim görevlisi
               </Text>
             </Stack>
-            <Button
-              color="#0255FD"
-              radius="xl"
-              mr="auto"
-              px={50}
-              size="lg"
-              fz="sm"
-            >
-              Bu Hocaya Not Ver
-            </Button>
+            <Link href={`/hoca/${params.slug}/rate`}>
+              <Button
+                color="#0255FD"
+                radius="xl"
+                mr="auto"
+                px={50}
+                size="lg"
+                fz="sm"
+              >
+                Bu Hocaya Not Ver
+              </Button>
+            </Link>
           </Stack>
           <Stack p={20} pb={30} bg={'#F7F7F7'}>
             <Text fw={500} fz={18}>
