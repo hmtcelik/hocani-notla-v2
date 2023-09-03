@@ -22,6 +22,7 @@ import useNotification from '@/app/_hooks/useNotification';
 import RatePost from '@/app/_components/post/RatePost';
 import Config from '@/app/_services/Config';
 import { useFirestoreDocument } from '@react-query-firebase/firestore';
+import { IconStar } from '@tabler/icons-react';
 
 export default function Hoca({ params }: { params: { slug: string } }) {
   const user = useContext(AuthContext);
@@ -84,7 +85,7 @@ export default function Hoca({ params }: { params: { slug: string } }) {
 
   const rates = [
     {
-      label: 'Çok iyi',
+      label: <IconStar fill="#f5b237" color="#f5b237" size={15} />,
       value: 5,
       count: fiveCt,
       ratio: (fiveCt / comments.length) * 100,
@@ -181,24 +182,8 @@ export default function Hoca({ params }: { params: { slug: string } }) {
     <>
       <Container py={60} maw={1000}>
         <SimpleGrid cols={{ base: 1, sm: 2 }} spacing={20}>
-          <Stack gap={0} justify="space-around">
+          <Stack gap={20} justify="flex-start">
             <Stack gap={0}>
-              <Group>
-                <SimpleGrid cols={2} spacing={10}>
-                  <Title order={1} fw={900} fz={76}>
-                    {averageRate.toFixed(1)}
-                  </Title>
-                  <Text c="gray" mt={20} fw="bold" fz={18}>
-                    / 5
-                  </Text>
-                </SimpleGrid>
-              </Group>
-              <Text fz={14} fw={500}>
-                <span style={{ textDecoration: 'underline' }}>
-                  {comments.length} oy
-                </span>{' '}
-                bazında genel ortalaması
-              </Text>
               <Title order={1} mt={18} fw={900} fz={42}>
                 {data.name}
               </Title>
@@ -227,31 +212,40 @@ export default function Hoca({ params }: { params: { slug: string } }) {
             </Link>
           </Stack>
           <Stack p={20} pb={30} bg={'#F7F7F7'}>
-            <Text fw={500} fz={18}>
-              Verilen Notlar
-            </Text>
-            {rates.map((item, index) => (
-              <Group key={index} wrap="nowrap">
-                <Text fz={14} miw={80} ta="right">
-                  {item.label}
-                  {`\u00A0`}
-                  <b>{item.value}</b>
-                </Text>
-                <Progress
-                  style={{ flexGrow: 1 }}
-                  radius="xs"
-                  color="#0255FD"
-                  bg="#E4E4E4"
-                  size="xl"
-                  h={35}
-                  w={300}
-                  value={item.ratio}
-                />
-                <Text fz={14} fw="bold">
-                  {item.count}
-                </Text>
-              </Group>
-            ))}
+            <Group>
+              <Title order={1} fw={900} fz={76}>
+                {averageRate.toFixed(1)}
+              </Title>
+              <Text c="gray" mt={20} fw="bold" fz={18}>
+                / 5
+              </Text>
+              <Stack gap={4}>
+                {rates.map((item, index) => (
+                  <Group key={index} wrap="nowrap">
+                    <Group gap={0}>
+                      <IconStar fill="#f5b237" color="#f5b237" size={15} />
+                      <IconStar fill="#f5b237" color="#f5b237" size={15} />
+                      <IconStar fill="#f5b237" color="#f5b237" size={15} />
+                      <IconStar fill="#f5b237" color="#f5b237" size={15} />
+                      <IconStar fill="#f5b237" color="#f5b237" size={15} />
+                    </Group>
+                    <Progress
+                      style={{ flexGrow: 1 }}
+                      radius="xs"
+                      color="#0255FD"
+                      bg="#E4E4E4"
+                      size="xl"
+                      h={15}
+                      w={130}
+                      value={item.ratio}
+                    />
+                    <Text fz={14} fw="bold">
+                      {item.count}
+                    </Text>
+                  </Group>
+                ))}
+              </Stack>
+            </Group>
           </Stack>
         </SimpleGrid>
         <Tabs mt={30} color="black" defaultValue="rates">

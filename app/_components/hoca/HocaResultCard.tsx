@@ -8,6 +8,7 @@ interface HocaResultCardProps {
   score: number;
   name: string;
   university: string;
+  depart: string;
   rateCount: number;
 }
 
@@ -16,6 +17,7 @@ const HocaResultCard = ({
   score,
   name,
   university,
+  depart,
   rateCount,
 }: HocaResultCardProps) => {
   return (
@@ -25,7 +27,7 @@ const HocaResultCard = ({
         textDecoration: 'none',
       }}
     >
-      <Group p={30} bg="#f7f7f7" gap={30} align="flex-start">
+      <Group p={10} px={20} bg="#f7f7f7" gap={30} align="center">
         <Stack gap={6} align="center">
           <ScoreAvatar score={score} size={70} fz={32} />
           <Text fz={14} c="#4e4e4e">
@@ -36,6 +38,9 @@ const HocaResultCard = ({
           <Title order={3} fw={900}>
             {name}
           </Title>
+          <Text fz={14} c="#4e4e4e">
+            {depart}
+          </Text>
           <Text fz={14} c="#4e4e4e">
             {university}
           </Text>

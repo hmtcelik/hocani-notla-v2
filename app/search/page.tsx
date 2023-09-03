@@ -71,6 +71,7 @@ const SearchPage = ({ searchParams }: SearchPageProps) => {
                 <HocaResultCard
                   hocaUid={item.id}
                   score={averageRate}
+                  depart={item.department}
                   name={item.name}
                   rateCount={comments.length}
                   university={item.university}
@@ -78,12 +79,6 @@ const SearchPage = ({ searchParams }: SearchPageProps) => {
               </div>
             );
           })}
-        </Stack>
-        <Stack ta="center" gap={3}>
-          <Text>Hocan burda yok mu?</Text>
-          <Link href="#">
-            <Text td={'underline'}>Kendin ekle</Text>
-          </Link>
         </Stack>
       </Container>
     </>
