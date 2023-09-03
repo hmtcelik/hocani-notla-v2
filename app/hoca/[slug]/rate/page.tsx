@@ -10,19 +10,33 @@ import {
   TextInput,
   Radio,
   Container,
+  Loader,
 } from '@mantine/core';
 import { IconStar, IconStarFilled, IconArrowLeft } from '@tabler/icons-react';
 import { useContext, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import {
+  useFirestoreDocument,
+  useFirestoreDocumentMutation,
+} from '@react-query-firebase/firestore';
+import { collection, doc, getFirestore } from 'firebase/firestore';
 
-import HocaService from '@/app/_services/HocaService';
 import useNotification from '@/app/_hooks/useNotification';
+import Config from '@/app/_services/Config';
 import { CommentType } from '@/app/_models/Comment';
 import { AuthContext } from '@/app/_providers/AuthProvider';
+import { HocaType } from '@/app/_models/Hoca';
 
 const Page = ({ params }: { params: { slug: string } }) => {
   const user = useContext(AuthContext);
+
+  const ref = doc(
+    collection(getFirestore(), Config.collections.hoca),
+    params.slug
+  );
+  const mutation = useFirestoreDocumentMutation(ref);
+  const queryData = useFirestoreDocument([`/hoca/${params.slug}`], ref, {});
 
   const hocaUid = params.slug;
   const router = useRouter();
@@ -35,6 +49,33 @@ const Page = ({ params }: { params: { slug: string } }) => {
   const [online, setOnline] = useState('');
   const [grade, setGrade] = useState('');
   const [course, setCourse] = useState('');
+
+  if (queryData.isLoading) {
+    return (
+      <Container py={20} maw={1000}>
+        <Group justify="center">
+          <Loader />
+        </Group>
+      </Container>
+    );
+  }
+
+  const docSnap = queryData.data;
+
+  if (!docSnap?.exists()) {
+    return (
+      <Container py={60} maw={1000}>
+        <Group justify="center">
+          <Text c="red">Hoca Bulunamadı.</Text>
+        </Group>
+      </Container>
+    );
+  }
+
+  const hocaData: HocaType = {
+    id: docSnap.id,
+    ...docSnap.data(),
+  } as HocaType;
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -68,15 +109,19 @@ const Page = ({ params }: { params: { slug: string } }) => {
       survey_id: '',
     };
 
-    HocaService.createComment(hocaUid, newComment)
-      .then((res) => {
-        showNotification('success', 'Yorumunuz kaydedildi.');
-        router.push(`/hoca/${hocaUid}/`);
-      })
-      .catch((err) => {
-        console.log(err);
-        showNotification('error', 'Hata Oluştu.');
-      });
+    mutation.mutate({
+      ...hocaData,
+      comments: [...hocaData.comments, newComment],
+    });
+
+    if (mutation.isSuccess) {
+      showNotification('success', 'Yorumunuz başarıyla eklendi.');
+      router.push(`/hoca/${hocaUid}/`);
+    }
+
+    if (mutation.isError) {
+      showNotification('error', 'Bir hata oluştu.');
+    }
   };
 
   return (

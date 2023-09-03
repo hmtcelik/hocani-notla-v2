@@ -56,14 +56,15 @@ const createComment = async (hocaUid: string, newComment: CommentType) => {
   });
 };
 
-
-const updateHocaComments = async (hocaUid:string, newComments: CommentType[]) => {
+const updateHocaComments = async (
+  hocaUid: string,
+  newComments: CommentType[]
+) => {
   const doc_ref = doc(collection(db, collectionName), hocaUid);
 
   await updateDoc(doc_ref, {
     comments: newComments,
   });
 };
-
 
 export default { getHoca, getRandom5Hoca, createComment, updateHocaComments };

@@ -2,7 +2,6 @@
 
 import {
   Container,
-  Grid,
   Group,
   SimpleGrid,
   Progress,
@@ -11,94 +10,172 @@ import {
   Title,
   Button,
   Tabs,
+  Loader,
 } from '@mantine/core';
-import { useContext, useEffect, useState } from 'react';
+import Link from 'next/link';
+import { useContext } from 'react';
+import { collection, doc, getFirestore } from 'firebase/firestore';
 
-import HocaService from '@/app/_services/HocaService';
 import { HocaType } from '@/app/_models/Hoca';
 import { AuthContext } from '@/app/_providers/AuthProvider';
 import useNotification from '@/app/_hooks/useNotification';
 import RatePost from '@/app/_components/post/RatePost';
-import Link from 'next/link';
+import Config from '@/app/_services/Config';
+import { useFirestoreDocument } from '@react-query-firebase/firestore';
 
 export default function Hoca({ params }: { params: { slug: string } }) {
   const user = useContext(AuthContext);
 
-  const showNotification = useNotification();
+  const ref = doc(
+    collection(getFirestore(), Config.collections.hoca),
+    params.slug
+  );
 
-  const [data, setData] = useState<HocaType | null>(null);
+  const queryData = useFirestoreDocument([`/hoca/${params.slug}`], ref, {}, {});
+  if (queryData.isLoading) {
+    return (
+      <Container py={60} maw={1000}>
+        <Group justify="center">
+          <Loader />
+        </Group>
+      </Container>
+    );
+  }
 
-  useEffect(() => {
-    HocaService.getHoca(params.slug)
-      .then((d) => {
-        setData(d as HocaType);
-      })
-      .catch((err) => {
-        console.log('Error fetching data: ', err);
-      });
-  }, []);
+  if (queryData.isError) {
+    return (
+      <Container py={60} maw={1000}>
+        <Group justify="center">
+          <Text c="red">Bir hata oluştu.</Text>
+        </Group>
+      </Container>
+    );
+  }
 
-  const handleLike = (index: number) => {
-    if (user && data) {
-      let newComment = data.comments;
-      let likes = newComment[index].likes;
-      let dislikes = newComment[index].dislikes;
+  const docSnap = queryData.data;
 
-      if (likes.includes(user.uid)) {
-        likes = likes.filter((item) => item !== user.uid);
-      } else {
-        likes.push(user.uid);
-      }
+  if (!docSnap?.exists()) {
+    return (
+      <Container py={60} maw={1000}>
+        <Group justify="center">
+          <Text c="red">Hoca Bulunamadı.</Text>
+        </Group>
+      </Container>
+    );
+  }
 
-      if (dislikes.includes(user.uid)) {
-        dislikes = dislikes.filter((item) => item !== user.uid);
-      }
+  const data: HocaType = {
+    id: docSnap.id,
+    ...docSnap.data(),
+  } as HocaType;
 
-      newComment[index].likes = likes;
-      newComment[index].dislikes = dislikes;
+  const comments = data.comments;
+  const averageRate =
+    comments.length > 0
+      ? comments.reduce((acc, comment) => acc + comment.rate, 0) /
+        comments.length
+      : 0;
 
-      // update dom
-      setData({ ...data, comments: newComment });
+  const fiveCt = comments.filter((item) => item.rate === 5).length;
+  const fourCt = comments.filter((item) => item.rate === 4).length;
+  const threeCt = comments.filter((item) => item.rate === 3).length;
+  const twoCt = comments.filter((item) => item.rate === 2).length;
+  const oneCt = comments.filter((item) => item.rate === 1).length;
 
-      // update db
-      HocaService.updateHocaComments(data.id, newComment).catch((err) => {
-        console.log('Error when updating hoca: ', err);
-      });
-    } else {
-      showNotification('error', 'Giriş yapınız.');
-    }
-  };
+  const rates = [
+    {
+      label: 'Çok iyi',
+      value: 5,
+      count: fiveCt,
+      ratio: (fiveCt / comments.length) * 100,
+    },
+    {
+      label: 'İyi',
+      value: 4,
+      count: fourCt,
+      ratio: (fourCt / comments.length) * 100,
+    },
+    {
+      label: 'Orta',
+      value: 3,
+      count: threeCt,
+      ratio: (threeCt / comments.length) * 100,
+    },
+    {
+      label: 'Kötü',
+      value: 2,
+      count: twoCt,
+      ratio: (twoCt / comments.length) * 100,
+    },
+    {
+      label: 'Çok kötü',
+      value: 1,
+      count: oneCt,
+      ratio: (oneCt / comments.length) * 100,
+    },
+  ];
 
-  const handleDislike = (index: number) => {
-    if (user && data) {
-      let newComment = data.comments;
-      let dislikes = newComment[index].dislikes;
-      let likes = newComment[index].likes;
+  // const handleLike = (index: number) => {
+  //   if (user && data) {
+  //     let newComment = data.comments;
+  //     let likes = newComment[index].likes;
+  //     let dislikes = newComment[index].dislikes;
 
-      if (dislikes.includes(user.uid)) {
-        dislikes = dislikes.filter((item) => item !== user.uid);
-      } else {
-        dislikes.push(user.uid);
-      }
+  //     if (likes.includes(user.uid)) {
+  //       likes = likes.filter((item) => item !== user.uid);
+  //     } else {
+  //       likes.push(user.uid);
+  //     }
 
-      if (likes.includes(user.uid)) {
-        likes = likes.filter((item) => item !== user.uid);
-      }
+  //     if (dislikes.includes(user.uid)) {
+  //       dislikes = dislikes.filter((item) => item !== user.uid);
+  //     }
 
-      newComment[index].dislikes = dislikes;
-      newComment[index].likes = likes;
+  //     newComment[index].likes = likes;
+  //     newComment[index].dislikes = dislikes;
 
-      // update dom
-      setData({ ...data, comments: newComment });
+  //     // update dom
+  //     setData({ ...data, comments: newComment });
 
-      // update db
-      HocaService.updateHocaComments(data.id, newComment).catch((err) => {
-        console.log('Error when updating hoca: ', err);
-      });
-    } else {
-      showNotification('error', 'Giriş yapınız.');
-    }
-  };
+  //     // update db
+  //     HocaService.updateHocaComments(data.id, newComment).catch((err) => {
+  //       console.log('Error when updating hoca: ', err);
+  //     });
+  //   } else {
+  //     showNotification('error', 'Giriş yapınız.');
+  //   }
+  // };
+
+  // const handleDislike = (index: number) => {
+  //   if (user && data) {
+  //     let newComment = data.comments;
+  //     let dislikes = newComment[index].dislikes;
+  //     let likes = newComment[index].likes;
+
+  //     if (dislikes.includes(user.uid)) {
+  //       dislikes = dislikes.filter((item) => item !== user.uid);
+  //     } else {
+  //       dislikes.push(user.uid);
+  //     }
+
+  //     if (likes.includes(user.uid)) {
+  //       likes = likes.filter((item) => item !== user.uid);
+  //     }
+
+  //     newComment[index].dislikes = dislikes;
+  //     newComment[index].likes = likes;
+
+  //     // update dom
+  //     setData({ ...data, comments: newComment });
+
+  //     // update db
+  //     HocaService.updateHocaComments(data.id, newComment).catch((err) => {
+  //       console.log('Error when updating hoca: ', err);
+  //     });
+  //   } else {
+  //     showNotification('error', 'Giriş yapınız.');
+  //   }
+  // };
 
   return (
     <>
@@ -109,7 +186,7 @@ export default function Hoca({ params }: { params: { slug: string } }) {
               <Group>
                 <SimpleGrid cols={2} spacing={10}>
                   <Title order={1} fw={900} fz={76}>
-                    2.3
+                    {averageRate.toFixed(1)}
                   </Title>
                   <Text c="gray" mt={20} fw="bold" fz={18}>
                     / 5
@@ -117,19 +194,21 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                 </SimpleGrid>
               </Group>
               <Text fz={14} fw={500}>
-                <span style={{ textDecoration: 'underline' }}>20 oy</span>{' '}
+                <span style={{ textDecoration: 'underline' }}>
+                  {comments.length} oy
+                </span>{' '}
                 bazında genel ortalaması
               </Text>
               <Title order={1} mt={18} fw={900} fz={42}>
-                Can Alkan
+                {data.name}
               </Title>
               <Text fz={14}>
                 <span style={{ textDecoration: 'underline', fontWeight: 600 }}>
-                  Boğaziçi Üniversitesi
+                  {data.university}
                 </span>
                 'nde{' '}
                 <span style={{ textDecoration: 'underline', fontWeight: 600 }}>
-                  Bilgisayar Mühendisliği
+                  {data.department}
                 </span>{' '}
                 bölümünde öğretim görevlisi
               </Text>
@@ -166,10 +245,10 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                   size="xl"
                   h={35}
                   w={300}
-                  value={item.value * 20}
+                  value={item.ratio}
                 />
                 <Text fz={14} fw="bold">
-                  20
+                  {item.count}
                 </Text>
               </Group>
             ))}
@@ -177,13 +256,15 @@ export default function Hoca({ params }: { params: { slug: string } }) {
         </SimpleGrid>
         <Tabs mt={30} color="black" defaultValue="rates">
           <Tabs.List>
-            <Tabs.Tab value="rates">21 yorum</Tabs.Tab>
+            <Tabs.Tab value="rates">{comments.length} yorum</Tabs.Tab>
           </Tabs.List>
           <Tabs.Panel value="rates">
             <Stack mt={20} gap={20}>
-              <RatePost />
-              <RatePost />
-              <RatePost />
+              {comments.map((item, index) => (
+                <div key={index}>
+                  <RatePost rate={item} />
+                </div>
+              ))}
             </Stack>
           </Tabs.Panel>
         </Tabs>
@@ -191,26 +272,3 @@ export default function Hoca({ params }: { params: { slug: string } }) {
     </>
   );
 }
-
-const rates = [
-  {
-    label: 'Çok iyi',
-    value: 5,
-  },
-  {
-    label: 'İyi',
-    value: 4,
-  },
-  {
-    label: 'Orta',
-    value: 3,
-  },
-  {
-    label: 'Kötü',
-    value: 2,
-  },
-  {
-    label: 'Çok kötü',
-    value: 1,
-  },
-];

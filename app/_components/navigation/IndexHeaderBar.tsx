@@ -1,5 +1,5 @@
 import { BackgroundImage, Button, Container, Group } from '@mantine/core';
-import { IconBrandInstagram, IconBrandTwitter } from '@tabler/icons-react';
+import { IconBrandInstagram, IconBrandX } from '@tabler/icons-react';
 
 import AuthModal from '../auth/AuthModal';
 
@@ -11,7 +11,7 @@ export default function IndexHeaderBar() {
           <Group py={30} justify="space-between">
             <Group>
               <IconBrandInstagram />
-              <IconBrandTwitter />
+              <IconBrandX />
             </Group>
             <Group>
               <AuthModal

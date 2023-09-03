@@ -6,7 +6,6 @@ import { Notifications } from '@mantine/notifications';
 import './style.scss';
 import '@mantine/notifications/styles.css';
 
-import BaseLayout from './_layouts/BaseLayout';
 import Footer from './_components/navigation/Footer';
 import NProgress from './_components/navigation/NProgress';
 
