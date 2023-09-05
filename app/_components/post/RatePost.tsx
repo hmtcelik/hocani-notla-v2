@@ -2,16 +2,19 @@
 
 import { Button, Grid, Group, SimpleGrid, Stack, Text } from '@mantine/core';
 import {
-  IconCar,
-  IconChalkboard,
+  Icon360,
+  IconAbc,
+  IconAlphabetCyrillic,
   IconCheck,
-  IconCross,
+  IconCurrencyRupeeNepalese,
   IconDeviceLaptop,
   IconFlag,
-  IconShare,
-  IconShare2,
+  IconH1,
+  IconMathSymbols,
+  IconRecycle,
+  IconRecycleOff,
+  IconRun,
   IconStar,
-  IconStarFilled,
   IconThumbDown,
   IconThumbUp,
   IconUsers,
@@ -19,6 +22,7 @@ import {
 } from '@tabler/icons-react';
 import ScoreAvatar from './ScoreAvatar';
 import { CommentType } from '@/app/_models/Comment';
+import { IconReceipt } from '@tabler/icons-react';
 
 interface RatePostProps {
   rate: CommentType;
@@ -31,16 +35,20 @@ const RatePost = ({ rate }: RatePostProps) => {
         <Stack gap={20}>
           <Stack gap={20}>
             <Group justify="space-between">
-              <Group gap={3}>
-                <IconStar fill="#f5b237" color="#f5b237" />
-                <IconStar fill="#f5b237" color="#f5b237" />
-                <IconStar fill="#f5b237" color="#f5b237" />
-                <IconStar color="#bebebe" />
-                <IconStar color="#bebebe" />
+              <Group gap={15}>
+                <Group gap={0}>
+                  {[...Array(rate.rate)].map((_, index) => (
+                    <IconStar size={22} fill="#f5b237" color="#f5b237" />
+                  ))}
+                  {[...Array(5 - rate.rate)].map((_, index) => (
+                    <IconStar size={22} color="#bebebe" />
+                  ))}
+                </Group>
+                {/* <Text>{rate.rate}</Text> */}
               </Group>
               <Group gap={10}>
                 {rate.again !== null && (
-                  <Text>
+                  <Text fz={14}>
                     Tekrar Alır mıydın?:{' '}
                     <span style={{ fontWeight: 'bold' }}>
                       {rate.again ? (
@@ -52,27 +60,26 @@ const RatePost = ({ rate }: RatePostProps) => {
                   </Text>
                 )}
                 {rate.attandance !== null && (
-                  <Text>
+                  <Text fz={14}>
                     Yoklama:{' '}
                     <span style={{ fontWeight: 'bold' }}>
                       {rate.attandance ? (
-                        <IconCheck color="green" />
+                        <IconCheck color="green" stroke={4} />
                       ) : (
-                        <IconX color="red" />
+                        <IconX color="red" stroke={4} />
                       )}
                     </span>
                   </Text>
                 )}
                 {rate.online !== null && (
-                  <Text>
+                  <Text fz={14}>
                     Eğitim:{' '}
                     <span style={{ fontWeight: 'bold' }}>
                       {rate.online === 'online' ? (
                         <IconDeviceLaptop />
                       ) : rate.online === 'hybrid' ? (
                         <>
-                          <IconUsers />
-                          <IconDeviceLaptop />
+                          <Icon360 />
                         </>
                       ) : (
                         <IconUsers />
@@ -80,9 +87,9 @@ const RatePost = ({ rate }: RatePostProps) => {
                     </span>
                   </Text>
                 )}
-                <Text>
+                <Text fz={14}>
                   Not:{' '}
-                  <span style={{ color: 'green', fontWeight: 'bold' }}>
+                  <span style={{ color: 'green', fontWeight: 900 }}>
                     {rate.grade}
                   </span>
                 </Text>
