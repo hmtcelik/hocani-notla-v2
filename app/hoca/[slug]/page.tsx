@@ -11,6 +11,7 @@ import {
   Button,
   Tabs,
   Loader,
+  Flex,
 } from '@mantine/core';
 import Link from 'next/link';
 import { useContext } from 'react';
@@ -85,7 +86,7 @@ export default function Hoca({ params }: { params: { slug: string } }) {
 
   const rates = [
     {
-      label: <IconStar fill="#f5b237" color="#f5b237" size={15} />,
+      label: 'Cok Kötü',
       value: 5,
       count: fiveCt,
       ratio: (fiveCt / comments.length) * 100,
@@ -211,23 +212,29 @@ export default function Hoca({ params }: { params: { slug: string } }) {
               </Button>
             </Link>
           </Stack>
-          <Stack p={20} pb={30} bg={'#F7F7F7'}>
-            <Group>
-              <Title order={1} fw={900} fz={76}>
-                {averageRate.toFixed(1)}
-              </Title>
-              <Text c="gray" mt={20} fw="bold" fz={18}>
-                / 5
-              </Text>
-              <Stack gap={4}>
+          <Stack p={20} pb={30} bg={'#F7F7F7'} justify="center" align="center">
+            <Flex
+              wrap="nowrap"
+              w="100%"
+              gap={10}
+              direction={{ base: 'column', xs: 'row' }}
+              justify="center"
+            >
+              <Group align="flex-start" gap={5}>
+                <Title order={1} fw={900} fz={72}>
+                  {averageRate.toFixed(1)}
+                </Title>
+                <Text c="gray" mt={20} fw="bold" fz={18}>
+                  / 5
+                </Text>
+              </Group>
+              <Stack gap={4} style={{ flexGrow: 1 }}>
                 {rates.map((item, index) => (
-                  <Group key={index} wrap="nowrap">
-                    <Group gap={0}>
-                      <IconStar fill="#f5b237" color="#f5b237" size={15} />
-                      <IconStar fill="#f5b237" color="#f5b237" size={15} />
-                      <IconStar fill="#f5b237" color="#f5b237" size={15} />
-                      <IconStar fill="#f5b237" color="#f5b237" size={15} />
-                      <IconStar fill="#f5b237" color="#f5b237" size={15} />
+                  <Group key={index} gap={10}>
+                    <Group gap={0} w={60}>
+                      {[...Array(item.value)].map((_, index) => (
+                        <IconStar fill="#f5b237" color="#f5b237" size={12} />
+                      ))}
                     </Group>
                     <Progress
                       style={{ flexGrow: 1 }}
@@ -236,16 +243,15 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                       bg="#E4E4E4"
                       size="xl"
                       h={15}
-                      w={130}
                       value={item.ratio}
                     />
-                    <Text fz={14} fw="bold">
+                    <Text fz={14} fw="bold" w={20}>
                       {item.count}
                     </Text>
                   </Group>
                 ))}
               </Stack>
-            </Group>
+            </Flex>
           </Stack>
         </SimpleGrid>
         <Tabs mt={30} color="black" defaultValue="rates">
