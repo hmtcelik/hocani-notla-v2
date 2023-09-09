@@ -233,7 +233,12 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                   <Group key={index} gap={10}>
                     <Group gap={0} w={60}>
                       {[...Array(item.value)].map((_, index) => (
-                        <IconStar fill="#f5b237" color="#f5b237" size={12} />
+                        <IconStar
+                          key={index}
+                          fill="#f5b237"
+                          color="#f5b237"
+                          size={12}
+                        />
                       ))}
                     </Group>
                     <Progress

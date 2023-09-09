@@ -27,8 +27,11 @@ import Config from '@/app/_services/Config';
 import { CommentType } from '@/app/_models/Comment';
 import { AuthContext } from '@/app/_providers/AuthProvider';
 import { HocaType } from '@/app/_models/Hoca';
+import { useQueryClient } from 'react-query';
 
 const Page = ({ params }: { params: { slug: string } }) => {
+  const client = useQueryClient();
+
   const user = useContext(AuthContext);
 
   const ref = doc(
@@ -116,6 +119,7 @@ const Page = ({ params }: { params: { slug: string } }) => {
 
     if (mutation.isSuccess) {
       showNotification('success', 'Yorumunuz başarıyla eklendi.');
+      client.resetQueries(`/hoca/${params.slug}`);
       router.push(`/hoca/${hocaUid}/`);
     }
 
@@ -338,7 +342,7 @@ const Page = ({ params }: { params: { slug: string } }) => {
                 withAsterisk
                 onChange={(e) => setComment(e.currentTarget.value)}
                 maxLength={1000}
-                styles={{ input: { border: '1px solid gray' } }}
+                styles={{ input: { border: '1px solid gray', height: 200 } }}
               />
             </Stack>
 

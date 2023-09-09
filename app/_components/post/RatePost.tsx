@@ -38,58 +38,57 @@ const RatePost = ({ rate }: RatePostProps) => {
               <Group gap={15}>
                 <Group gap={0}>
                   {[...Array(rate.rate)].map((_, index) => (
-                    <IconStar size={22} fill="#f5b237" color="#f5b237" />
+                    <IconStar
+                      key={index}
+                      size={22}
+                      fill="#f5b237"
+                      color="#f5b237"
+                    />
                   ))}
                   {[...Array(5 - rate.rate)].map((_, index) => (
-                    <IconStar size={22} color="#bebebe" />
+                    <IconStar key={index} size={22} color="#bebebe" />
                   ))}
                 </Group>
                 {/* <Text>{rate.rate}</Text> */}
               </Group>
               <Group gap={10}>
                 {rate.again !== null && (
-                  <Text fz={14}>
-                    Tekrar Alır mıydın?:{' '}
-                    <span style={{ fontWeight: 'bold' }}>
-                      {rate.again ? (
-                        <IconCheck color="green" stroke={4} />
-                      ) : (
-                        <IconX color="red" stroke={4} />
-                      )}
-                    </span>
-                  </Text>
+                  <Group gap={5} justify="center" align="flex-end">
+                    <Text fz={14}>Tekrar Alır mıydın?: </Text>
+                    {rate.again ? (
+                      <IconCheck color="green" stroke={3} />
+                    ) : (
+                      <IconX color="red" stroke={3} />
+                    )}
+                  </Group>
                 )}
                 {rate.attandance !== null && (
-                  <Text fz={14}>
-                    Yoklama:{' '}
-                    <span style={{ fontWeight: 'bold' }}>
-                      {rate.attandance ? (
-                        <IconCheck color="green" stroke={4} />
-                      ) : (
-                        <IconX color="red" stroke={4} />
-                      )}
-                    </span>
-                  </Text>
+                  <Group gap={5} justify="center" align="flex-end">
+                    <Text fz={14}>Yoklama: </Text>
+                    {rate.attandance ? (
+                      <IconCheck color="green" stroke={3} />
+                    ) : (
+                      <IconX color="red" stroke={3} />
+                    )}
+                  </Group>
                 )}
                 {rate.online !== null && (
-                  <Text fz={14}>
-                    Eğitim:{' '}
-                    <span style={{ fontWeight: 'bold' }}>
-                      {rate.online === 'online' ? (
-                        <IconDeviceLaptop />
-                      ) : rate.online === 'hybrid' ? (
-                        <>
-                          <Icon360 />
-                        </>
-                      ) : (
-                        <IconUsers />
-                      )}
-                    </span>
-                  </Text>
+                  <Group gap={5} justify="center" align="flex-end">
+                    <Text fz={14}>Eğitim: </Text>
+                    {rate.online === 'online' ? (
+                      <IconDeviceLaptop />
+                    ) : rate.online === 'hybrid' ? (
+                      <>
+                        <Icon360 />
+                      </>
+                    ) : (
+                      <IconUsers />
+                    )}
+                  </Group>
                 )}
                 <Text fz={14}>
                   Not:{' '}
-                  <span style={{ color: 'green', fontWeight: 900 }}>
+                  <span style={{ color: 'green', fontWeight: 700 }}>
                     {rate.grade}
                   </span>
                 </Text>
