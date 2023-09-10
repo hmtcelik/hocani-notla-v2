@@ -28,7 +28,7 @@ const HocaResultCard = ({
       }}
     >
       <Group p={10} px={20} bg="#f7f7f7" gap={30} align="center">
-        <Stack gap={6} align="center">
+        <Stack gap={6} align="center" miw={90}>
           <ScoreAvatar score={score} size={70} fz={32} />
           <Text fz={14} c="#4e4e4e">
             {rateCount} Not
