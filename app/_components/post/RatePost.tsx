@@ -3,17 +3,9 @@
 import { Button, Grid, Group, SimpleGrid, Stack, Text } from '@mantine/core';
 import {
   Icon360,
-  IconAbc,
-  IconAlphabetCyrillic,
   IconCheck,
-  IconCurrencyRupeeNepalese,
   IconDeviceLaptop,
   IconFlag,
-  IconH1,
-  IconMathSymbols,
-  IconRecycle,
-  IconRecycleOff,
-  IconRun,
   IconStar,
   IconThumbDown,
   IconThumbUp,
@@ -72,7 +64,7 @@ const RatePost = ({ rate }: RatePostProps) => {
                     )}
                   </Group>
                 )}
-                {rate.online !== null && (
+                {rate.online && (
                   <Group gap={5} justify="center" align="flex-end">
                     <Text fz={14}>Eğitim: </Text>
                     {rate.online === 'online' ? (
@@ -86,12 +78,14 @@ const RatePost = ({ rate }: RatePostProps) => {
                     )}
                   </Group>
                 )}
-                <Text fz={14}>
-                  Not:{' '}
-                  <span style={{ color: 'green', fontWeight: 700 }}>
-                    {rate.grade}
-                  </span>
-                </Text>
+                {rate.grade && (
+                  <Text fz={14}>
+                    Not:{' '}
+                    <span style={{ color: 'green', fontWeight: 700 }}>
+                      {rate.grade}
+                    </span>
+                  </Text>
+                )}
               </Group>
             </Group>
 
