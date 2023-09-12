@@ -9,9 +9,15 @@ interface HocaSearchProps {
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   inputHeight?: number;
   maxW?: number;
+  borderColor?: string;
 }
 
-const HocaSearch = ({ size, inputHeight, maxW }: HocaSearchProps) => {
+const HocaSearch = ({
+  size,
+  inputHeight,
+  maxW,
+  borderColor,
+}: HocaSearchProps) => {
   const router = useRouter();
   const [search, setSearch] = useState<string>('');
 
@@ -52,7 +58,7 @@ const HocaSearch = ({ size, inputHeight, maxW }: HocaSearchProps) => {
           input: {
             paddingLeft: 60,
             height: `${inputHeight || '60'}`,
-            border: 'solid 2px',
+            border: `solid 2px ${borderColor || 'black'}`,
           },
         }}
       />

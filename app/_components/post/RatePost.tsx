@@ -58,7 +58,7 @@ const RatePost = ({ rate }: RatePostProps) => {
                       variant="light"
                       color="gray"
                       size="lg"
-                      radius="sm"
+                      radius="lg"
                       rightSection={
                         rate.again ? (
                           <IconCheck color="gray" stroke={3} size={18} />
@@ -77,7 +77,7 @@ const RatePost = ({ rate }: RatePostProps) => {
                       variant="light"
                       color="gray"
                       size="lg"
-                      radius="sm"
+                      radius="lg"
                       rightSection={
                         rate.attandance ? (
                           <IconCheck color="gray" stroke={3} size={18} />
@@ -96,7 +96,7 @@ const RatePost = ({ rate }: RatePostProps) => {
                       variant="light"
                       color="gray"
                       size="lg"
-                      radius="sm"
+                      radius="lg"
                       rightSection={
                         rate.online === 'online' ? (
                           <IconDeviceLaptop color="gray" stroke={3} size={18} />
@@ -118,7 +118,7 @@ const RatePost = ({ rate }: RatePostProps) => {
                     variant="light"
                     color="gray"
                     size="lg"
-                    radius="sm"
+                    radius="lg"
                     rightSection={
                       <span style={{ color: 'gray', fontWeight: 700 }}>
                         {rate.grade}

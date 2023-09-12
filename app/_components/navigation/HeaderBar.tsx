@@ -8,7 +8,7 @@ const HeaderBar = () => {
     <>
       <div
         style={{
-          backgroundColor: 'black',
+          backgroundColor: '#303841',
         }}
       >
         <Container size="xl" py={15}>

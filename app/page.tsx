@@ -15,7 +15,7 @@ import initFirebase from './_services/InitService';
 import IndexHeaderBar from './_components/navigation/IndexHeaderBar';
 import HocaSearch from './_components/hoca/HocaSearch';
 
-initFirebase();
+export const firebaseApp = initFirebase();
 
 const illusts = [
   {
