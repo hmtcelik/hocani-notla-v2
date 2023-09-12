@@ -1,6 +1,14 @@
 'use client';
 
-import { Button, Grid, Group, SimpleGrid, Stack, Text } from '@mantine/core';
+import {
+  Badge,
+  Button,
+  Grid,
+  Group,
+  SimpleGrid,
+  Stack,
+  Text,
+} from '@mantine/core';
 import {
   Icon360,
   IconCheck,
@@ -25,7 +33,7 @@ const RatePost = ({ rate }: RatePostProps) => {
     <>
       <Stack p={20} gap={5} bg="#f1f1f166">
         <Stack gap={20}>
-          <Stack gap={20}>
+          <Stack gap={15}>
             <Group justify="space-between">
               <Group gap={15}>
                 <Group gap={0}>
@@ -46,45 +54,79 @@ const RatePost = ({ rate }: RatePostProps) => {
               <Group gap={10}>
                 {rate.again !== null && (
                   <Group gap={5} justify="center" align="flex-end">
-                    <Text fz={14}>Tekrar Alır mıydın?: </Text>
-                    {rate.again ? (
-                      <IconCheck color="green" stroke={3} />
-                    ) : (
-                      <IconX color="red" stroke={3} />
-                    )}
+                    <Badge
+                      variant="light"
+                      color="gray"
+                      size="lg"
+                      radius="sm"
+                      rightSection={
+                        rate.again ? (
+                          <IconCheck color="gray" stroke={3} size={18} />
+                        ) : (
+                          <IconX color="gray" stroke={3} size={18} />
+                        )
+                      }
+                    >
+                      Tekrar Alır mıydın?:
+                    </Badge>
                   </Group>
                 )}
                 {rate.attandance !== null && (
                   <Group gap={5} justify="center" align="flex-end">
-                    <Text fz={14}>Yoklama: </Text>
-                    {rate.attandance ? (
-                      <IconCheck color="green" stroke={3} />
-                    ) : (
-                      <IconX color="red" stroke={3} />
-                    )}
+                    <Badge
+                      variant="light"
+                      color="gray"
+                      size="lg"
+                      radius="sm"
+                      rightSection={
+                        rate.attandance ? (
+                          <IconCheck color="gray" stroke={3} size={18} />
+                        ) : (
+                          <IconX color="gray" stroke={3} size={18} />
+                        )
+                      }
+                    >
+                      Yoklama:
+                    </Badge>
                   </Group>
                 )}
                 {rate.online && (
                   <Group gap={5} justify="center" align="flex-end">
-                    <Text fz={14}>Eğitim: </Text>
-                    {rate.online === 'online' ? (
-                      <IconDeviceLaptop />
-                    ) : rate.online === 'hybrid' ? (
-                      <>
-                        <Icon360 />
-                      </>
-                    ) : (
-                      <IconUsers />
-                    )}
+                    <Badge
+                      variant="light"
+                      color="gray"
+                      size="lg"
+                      radius="sm"
+                      rightSection={
+                        rate.online === 'online' ? (
+                          <IconDeviceLaptop color="gray" stroke={3} size={18} />
+                        ) : rate.online === 'hybrid' ? (
+                          <>
+                            <Icon360 color="gray" stroke={3} size={18} />
+                          </>
+                        ) : (
+                          <IconUsers color="gray" stroke={3} size={18} />
+                        )
+                      }
+                    >
+                      Eğitim:
+                    </Badge>
                   </Group>
                 )}
                 {rate.grade && (
-                  <Text fz={14}>
-                    Not:{' '}
-                    <span style={{ color: 'green', fontWeight: 700 }}>
-                      {rate.grade}
-                    </span>
-                  </Text>
+                  <Badge
+                    variant="light"
+                    color="gray"
+                    size="lg"
+                    radius="sm"
+                    rightSection={
+                      <span style={{ color: 'gray', fontWeight: 700 }}>
+                        {rate.grade}
+                      </span>
+                    }
+                  >
+                    Not:
+                  </Badge>
                 )}
               </Group>
             </Group>
