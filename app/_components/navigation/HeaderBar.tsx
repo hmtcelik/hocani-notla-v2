@@ -1,76 +1,39 @@
-'use client';
-
+import { Button, Container, Group, Image } from '@mantine/core';
+import HocaSearch from '../hoca/HocaSearch';
 import Link from 'next/link';
-import { Group, Grid, Button, Image, Avatar, ActionIcon } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
-import { useContext } from 'react';
-
-import DoctorSearch from '../hoca/DoctorSearch';
 import AuthModal from '../auth/AuthModal';
-import AuthService from '@/app/_services/AuthService';
-import { AuthContext } from '@/app/_providers/AuthProvider';
-import { IconSettings } from '@tabler/icons-react';
-
-export default function HeaderBar() {
-  const user = useContext(AuthContext);
-
+// import HocaSearch from '../hoca/HocaSearch';
+const HeaderBar = () => {
   return (
-    // <Container size={1480}>
-    <Grid align="center" justify="center" px={20}>
-      <Grid.Col span={{ base: 0, xs: 4, md: 4, lg: 2.5 }}>
-        <Group justify="start">
-          <Group display={{ base: 'none', xs: 'block' }}>
-            <Link href={'/'}>
+    <>
+      <div
+        style={{
+          backgroundColor: '#303841',
+        }}
+      >
+        <Container size="xl" py={15}>
+          <Group justify="space-between" align="center">
+            <Link href="/">
               <Image
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/F%C3%BCr_Dummies_logo.svg/2560px-F%C3%BCr_Dummies_logo.svg.png"
-                alt="logo"
-                width={80}
-                height={30}
+                maw={200}
+                src="https://www.ratemyprofessors.com/static/media/big_rmp_logo_black.41f961d6.svg"
               />
             </Link>
-          </Group>
-        </Group>
-      </Grid.Col>
-      <Grid.Col span={{ base: 11, xs: 8, md: 8, lg: 6.5 }}>
-        <Group grow>
-          <DoctorSearch />
-        </Group>
-      </Grid.Col>
-      <Grid.Col
-        display={{ base: 'none', lg: 'block' }}
-        span={{ base: 0, lg: 3 }}
-      >
-        <Group justify="flex-end">
-          {user ? (
-            <>
-              <Button
-                radius="lg"
-                onClick={() => {
-                  AuthService.logout().catch((error) => {
-                    notifications.show({
-                      message: 'Çıkış yapılırken bir hata oluştu',
-                      color: 'red',
-                    });
-                  });
+            <HocaSearch size="md" inputHeight={30} maxW={500} />
+            <Group>
+              <AuthModal
+                button={{
+                  color: 'white',
+                  label: 'Giriş Yap',
+                  variant: 'outline',
                 }}
-              >
-                Logout
-              </Button>
-              <ActionIcon
-                variant="light"
-                size="xl"
-                radius="xl"
-                aria-label="Settings"
-              >
-                <IconSettings />
-              </ActionIcon>
-            </>
-          ) : (
-            <AuthModal />
-          )}
-        </Group>
-      </Grid.Col>
-    </Grid>
-    // </Container>
+              />
+            </Group>
+          </Group>
+        </Container>
+      </div>
+    </>
   );
-}
+};
+
+export default HeaderBar;

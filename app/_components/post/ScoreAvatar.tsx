@@ -7,11 +7,15 @@ interface ScoreProps {
 }
 
 export default function ScoreAvatar({ score, size, fz }: ScoreProps) {
+  let color;
+  if (score >= 4) color = '#158000';
+  else if (score >= 3 && score < 4) color = '#ffc000';
+  else if (score < 3 && score > 0) color = 'red';
+  else color = '#afafaf';
+
   return (
-    <Avatar size={size || 'md'} color="blue" radius="md">
-      <Text fz={fz || 19} fw={'bolder'}>
-        {score.toFixed(1)}
-      </Text>
-    </Avatar>
+    <Text fz={56} fw={'bolder'} c={color}>
+      {score.toFixed(1)}
+    </Text>
   );
 }

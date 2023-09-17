@@ -1,3 +1,5 @@
+'use client';
+
 import React, {
   PropsWithChildren,
   createContext,
@@ -19,7 +21,7 @@ const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
         setUser(null);
       }
     });
-  }, []);
+  }, [user]);
 
   return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
 };

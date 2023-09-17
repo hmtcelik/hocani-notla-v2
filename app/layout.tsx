@@ -6,7 +6,9 @@ import { Notifications } from '@mantine/notifications';
 import './style.scss';
 import '@mantine/notifications/styles.css';
 
-import BaseLayout from './_layouts/BaseLayout';
+import Footer from './_components/navigation/Footer';
+import NProgress from './_components/navigation/NProgress';
+import AuthProvider from './_providers/AuthProvider';
 
 export const metadata: Metadata = {
   title: 'Hocani Notla v2',
@@ -24,9 +26,16 @@ export default function RootLayout({
         <ColorSchemeScript color="light" />
       </head>
       <body>
-        <MantineProvider defaultColorScheme="light">
+        <MantineProvider
+          defaultColorScheme="light"
+          theme={{
+            fontFamily: 'Poppins, sans-serif',
+          }}
+        >
+          <NProgress />
           <Notifications position="top-right" />
-          <BaseLayout>{children}</BaseLayout>
+          <AuthProvider>{children}</AuthProvider>
+          <Footer />
         </MantineProvider>
       </body>
     </html>
