@@ -27,7 +27,7 @@ const SearchPage = ({ searchParams }: SearchPageProps) => {
     where(
       'searchIdx',
       '==',
-      searchParams?.value?.slice(0, 3).toLowerCase() || ''
+      searchParams?.value?.slice(0, 3).toLowerCase() || 'can'
     ),
     limit(5)
   );
