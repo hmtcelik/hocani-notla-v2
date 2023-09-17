@@ -13,10 +13,7 @@ import {
 
 import initFirebase from './_services/InitService';
 import IndexHeaderBar from './_components/navigation/IndexHeaderBar';
-import { IconSchool } from '@tabler/icons-react';
-import Link from 'next/link';
 import HocaSearch from './_components/hoca/HocaSearch';
-import Footer from './_components/navigation/Footer';
 
 initFirebase();
 
@@ -75,9 +72,8 @@ export default function Home() {
                 );
               else
                 return (
-                  <>
+                  <div key={index}>
                     <SimpleGrid
-                      key={index}
                       display={{ base: 'none', sm: 'grid' }}
                       cols={{ base: 1, sm: 2 }}
                     >
@@ -111,7 +107,7 @@ export default function Home() {
                       </Stack>
                       <Image src={item.src} />
                     </SimpleGrid>
-                  </>
+                  </div>
                 );
             })}
           </Stack>

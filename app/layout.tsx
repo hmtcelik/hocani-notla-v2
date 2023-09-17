@@ -8,6 +8,7 @@ import '@mantine/notifications/styles.css';
 
 import Footer from './_components/navigation/Footer';
 import NProgress from './_components/navigation/NProgress';
+import AuthProvider from './_providers/AuthProvider';
 
 export const metadata: Metadata = {
   title: 'Hocani Notla v2',
@@ -33,7 +34,7 @@ export default function RootLayout({
         >
           <NProgress />
           <Notifications position="top-right" />
-          {children}
+          <AuthProvider>{children}</AuthProvider>
           <Footer />
         </MantineProvider>
       </body>

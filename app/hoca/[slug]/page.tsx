@@ -11,6 +11,7 @@ import {
   Button,
   Tabs,
   Loader,
+  Flex,
 } from '@mantine/core';
 import Link from 'next/link';
 import { useContext } from 'react';
@@ -22,6 +23,7 @@ import useNotification from '@/app/_hooks/useNotification';
 import RatePost from '@/app/_components/post/RatePost';
 import Config from '@/app/_services/Config';
 import { useFirestoreDocument } from '@react-query-firebase/firestore';
+import { IconStar } from '@tabler/icons-react';
 
 export default function Hoca({ params }: { params: { slug: string } }) {
   const user = useContext(AuthContext);
@@ -84,7 +86,7 @@ export default function Hoca({ params }: { params: { slug: string } }) {
 
   const rates = [
     {
-      label: 'Çok iyi',
+      label: 'Cok Kötü',
       value: 5,
       count: fiveCt,
       ratio: (fiveCt / comments.length) * 100,
@@ -181,24 +183,8 @@ export default function Hoca({ params }: { params: { slug: string } }) {
     <>
       <Container py={60} maw={1000}>
         <SimpleGrid cols={{ base: 1, sm: 2 }} spacing={20}>
-          <Stack gap={0} justify="space-around">
+          <Stack gap={20} justify="flex-start">
             <Stack gap={0}>
-              <Group>
-                <SimpleGrid cols={2} spacing={10}>
-                  <Title order={1} fw={900} fz={76}>
-                    {averageRate.toFixed(1)}
-                  </Title>
-                  <Text c="gray" mt={20} fw="bold" fz={18}>
-                    / 5
-                  </Text>
-                </SimpleGrid>
-              </Group>
-              <Text fz={14} fw={500}>
-                <span style={{ textDecoration: 'underline' }}>
-                  {comments.length} oy
-                </span>{' '}
-                bazında genel ortalaması
-              </Text>
               <Title order={1} mt={18} fw={900} fz={42}>
                 {data.name}
               </Title>
@@ -206,7 +192,7 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                 <span style={{ textDecoration: 'underline', fontWeight: 600 }}>
                   {data.university}
                 </span>
-                'nde{' '}
+                &apos;nde{' '}
                 <span style={{ textDecoration: 'underline', fontWeight: 600 }}>
                   {data.department}
                 </span>{' '}
@@ -226,32 +212,51 @@ export default function Hoca({ params }: { params: { slug: string } }) {
               </Button>
             </Link>
           </Stack>
-          <Stack p={20} pb={30} bg={'#F7F7F7'}>
-            <Text fw={500} fz={18}>
-              Verilen Notlar
-            </Text>
-            {rates.map((item, index) => (
-              <Group key={index} wrap="nowrap">
-                <Text fz={14} miw={80} ta="right">
-                  {item.label}
-                  {`\u00A0`}
-                  <b>{item.value}</b>
-                </Text>
-                <Progress
-                  style={{ flexGrow: 1 }}
-                  radius="xs"
-                  color="#0255FD"
-                  bg="#E4E4E4"
-                  size="xl"
-                  h={35}
-                  w={300}
-                  value={item.ratio}
-                />
-                <Text fz={14} fw="bold">
-                  {item.count}
+          <Stack p={20} pb={30} bg={'#F7F7F7'} justify="center" align="center">
+            <Flex
+              wrap="nowrap"
+              w="100%"
+              gap={10}
+              direction={{ base: 'column', xs: 'row' }}
+              justify="center"
+            >
+              <Group align="flex-start" gap={5}>
+                <Title order={1} fw={900} fz={72}>
+                  {averageRate.toFixed(1)}
+                </Title>
+                <Text c="gray" mt={20} fw="bold" fz={18}>
+                  / 5
                 </Text>
               </Group>
-            ))}
+              <Stack gap={4} style={{ flexGrow: 1 }}>
+                {rates.map((item, index) => (
+                  <Group key={index} gap={10}>
+                    <Group gap={0} w={60}>
+                      {[...Array(item.value)].map((_, index) => (
+                        <IconStar
+                          key={index}
+                          fill="#f5b237"
+                          color="#f5b237"
+                          size={12}
+                        />
+                      ))}
+                    </Group>
+                    <Progress
+                      style={{ flexGrow: 1 }}
+                      radius="xs"
+                      color="#0255FD"
+                      bg="#E4E4E4"
+                      size="xl"
+                      h={15}
+                      value={item.ratio}
+                    />
+                    <Text fz={14} fw="bold" w={20}>
+                      {item.count}
+                    </Text>
+                  </Group>
+                ))}
+              </Stack>
+            </Flex>
           </Stack>
         </SimpleGrid>
         <Tabs mt={30} color="black" defaultValue="rates">
@@ -265,6 +270,12 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                   <RatePost rate={item} />
                 </div>
               ))}
+              {comments.length <= 0 && (
+                <Text mt={20} ta="center">
+                  İlk Not Veren{' '}
+                  <Link href={`/hoca/${params.slug}/rate`}>Sen Ol!</Link>
+                </Text>
+              )}
             </Stack>
           </Tabs.Panel>
         </Tabs>

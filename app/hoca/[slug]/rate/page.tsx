@@ -21,15 +21,46 @@ import {
   useFirestoreDocumentMutation,
 } from '@react-query-firebase/firestore';
 import { collection, doc, getFirestore } from 'firebase/firestore';
+import { useQueryClient } from 'react-query';
 
 import useNotification from '@/app/_hooks/useNotification';
 import Config from '@/app/_services/Config';
+import { useForm } from '@mantine/form';
 import { CommentType } from '@/app/_models/Comment';
 import { AuthContext } from '@/app/_providers/AuthProvider';
 import { HocaType } from '@/app/_models/Hoca';
 
+interface formValuesType {
+  rate: number;
+  comment: string;
+  again: string;
+  attandance: string;
+  online: string;
+  grade: string;
+  course: string;
+}
+
+const initialValues = {
+  rate: 0,
+  comment: '',
+  again: '',
+  attandance: '',
+  online: '',
+  grade: '',
+  course: '',
+};
+
 const Page = ({ params }: { params: { slug: string } }) => {
+  const client = useQueryClient();
   const user = useContext(AuthContext);
+
+  const form = useForm({
+    initialValues: initialValues,
+    validate: {
+      rate: (value) => (value == 0 ? 'Lütfen bir not veriniz.' : null),
+      course: (value) => (value == '' ? 'Lütfen bir ders kodu giriniz.' : null),
+    },
+  });
 
   const ref = doc(
     collection(getFirestore(), Config.collections.hoca),
@@ -42,13 +73,6 @@ const Page = ({ params }: { params: { slug: string } }) => {
   const router = useRouter();
 
   const showNotification = useNotification();
-  const [rate, setRate] = useState(0);
-  const [comment, setComment] = useState('');
-  const [again, setAgain] = useState('');
-  const [attandance, setAttandance] = useState('');
-  const [online, setOnline] = useState('');
-  const [grade, setGrade] = useState('');
-  const [course, setCourse] = useState('');
 
   if (queryData.isLoading) {
     return (
@@ -77,57 +101,49 @@ const Page = ({ params }: { params: { slug: string } }) => {
     ...docSnap.data(),
   } as HocaType;
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    if (
-      !rate ||
-      !comment ||
-      !again ||
-      !attandance ||
-      !online ||
-      !grade ||
-      !course
-    ) {
-      showNotification('error', 'Lütfen tüm alanları doldurunuz.');
-      return;
-    }
-
+  const handleSubmit = (values: formValuesType) => {
     const newComment: CommentType = {
-      rate,
-      comment,
+      ...values,
+      again:
+        values.again === 'yes' ? true : values.again === 'no' ? false : null,
+      attandance:
+        values.attandance === 'yes'
+          ? true
+          : values.attandance === 'no'
+          ? false
+          : null,
       date: new Date().toISOString(),
       commenter: user?.uid || '',
-      course,
       likes: [],
       dislikes: [],
-      again: again === 'yes' ? true : false,
-      attandance: attandance === 'yes' ? true : false,
-      grade,
-      online,
       flag: false,
       visible: true,
       survey_id: '',
     };
 
-    mutation.mutate({
-      ...hocaData,
-      comments: [...hocaData.comments, newComment],
-    });
-
-    if (mutation.isSuccess) {
-      showNotification('success', 'Yorumunuz başarıyla eklendi.');
-      router.push(`/hoca/${hocaUid}/`);
-    }
-
-    if (mutation.isError) {
-      showNotification('error', 'Bir hata oluştu.');
-    }
+    mutation.mutate(
+      {
+        ...hocaData,
+        comments: [...hocaData.comments, newComment],
+      },
+      {
+        onSuccess() {
+          showNotification('success', 'Yorumunuz başarıyla eklendi.');
+          client.removeQueries(`/hoca/${params.slug}`);
+          router.push(`/hoca/${hocaUid}/`);
+        },
+        onError(error) {
+          console.log(error);
+          showNotification('error', 'Bir hata oluştu.');
+        },
+      }
+    );
   };
 
   return (
     <>
       <Container py={20} maw={1000}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={form.onSubmit(handleSubmit)}>
           <Stack maw={900}>
             <Group>
               <Link href={`/hoca/${hocaUid}/`}>
@@ -151,16 +167,20 @@ const Page = ({ params }: { params: { slug: string } }) => {
               <Group>
                 <Rating
                   defaultValue={0}
-                  onChange={setRate}
+                  inputMode="numeric"
                   emptySymbol={
                     <IconStar color="#cbcbcb" size={40} fill="#cbcbcb" />
                   }
                   fullSymbol={
                     <IconStarFilled size={40} style={{ color: '#f5b237' }} />
                   }
+                  {...form.getInputProps('rate')}
                 />
-                <Text c="gray">{rate}</Text>
+                <Text c="gray">{form.values.rate}</Text>
               </Group>
+              <Text c="red" fz={14}>
+                {form.errors.rate}
+              </Text>
             </Stack>
 
             <Stack
@@ -179,11 +199,10 @@ const Page = ({ params }: { params: { slug: string } }) => {
                 radius="sm"
                 size="md"
                 maxLength={1000}
-                label=""
                 placeholder="Örn: MATH101"
-                onChange={(e) => setCourse(e.currentTarget.value)}
                 withAsterisk
                 styles={{ input: { border: '1px solid gray' } }}
+                {...form.getInputProps('course')}
               />
             </Stack>
 
@@ -197,9 +216,9 @@ const Page = ({ params }: { params: { slug: string } }) => {
               }}
             >
               <Text size="md" fw="bold">
-                Bu Hoca'dan Tekrar Ders alır mıydın ?
+                Bu Hoca&apos;dan Tekrar Ders alır mıydın ?
               </Text>
-              <Radio.Group name="again" withAsterisk onChange={setAgain}>
+              <Radio.Group name="again" {...form.getInputProps('again')}>
                 <Group mt="xs">
                   <Radio
                     styles={{ radio: { borderColor: 'black' } }}
@@ -233,8 +252,7 @@ const Page = ({ params }: { params: { slug: string } }) => {
               </Text>
               <Radio.Group
                 name="attandance"
-                withAsterisk
-                onChange={setAttandance}
+                {...form.getInputProps('attandance')}
               >
                 <Group mt="xs">
                   <Radio
@@ -267,7 +285,7 @@ const Page = ({ params }: { params: { slug: string } }) => {
               <Text size="md" fw="bold">
                 Eğitim Şekli ?
               </Text>
-              <Radio.Group name="online" withAsterisk onChange={setOnline}>
+              <Radio.Group name="online" {...form.getInputProps('online')}>
                 <Group mt="xs">
                   <Radio
                     styles={{ radio: { borderColor: 'black' } }}
@@ -310,11 +328,9 @@ const Page = ({ params }: { params: { slug: string } }) => {
                 radius="sm"
                 size="md"
                 maxLength={1000}
-                label=""
                 placeholder="Örn: AA, BA, CB, CC, DC, DD, FD, FF"
-                onChange={(e) => setGrade(e.currentTarget.value)}
-                withAsterisk
                 styles={{ input: { border: '1px solid gray' } }}
+                {...form.getInputProps('grade')}
               />
             </Stack>
 
@@ -333,12 +349,10 @@ const Page = ({ params }: { params: { slug: string } }) => {
               <Textarea
                 radius="sm"
                 size="md"
-                label=""
                 placeholder="Bir şeyler yaz..."
-                withAsterisk
-                onChange={(e) => setComment(e.currentTarget.value)}
                 maxLength={1000}
-                styles={{ input: { border: '1px solid gray' } }}
+                styles={{ input: { border: '1px solid gray', height: 200 } }}
+                {...form.getInputProps('comment')}
               />
             </Stack>
 
