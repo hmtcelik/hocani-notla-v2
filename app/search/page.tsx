@@ -24,7 +24,11 @@ interface SearchPageProps {
 const SearchPage = ({ searchParams }: SearchPageProps) => {
   const ref = query(
     collection(getFirestore(), Config.collections.hoca),
-    where('searchIdx', '==', searchParams.value.slice(0, 3).toLowerCase()),
+    where(
+      'searchIdx',
+      '==',
+      searchParams?.value.slice(0, 3).toLowerCase() || ''
+    ),
     limit(5)
   );
 
@@ -56,8 +60,6 @@ const SearchPage = ({ searchParams }: SearchPageProps) => {
       ...d.data(),
     });
   });
-
-  console.log(data);
 
   return (
     <>
