@@ -216,7 +216,7 @@ const Page = ({ params }: { params: { slug: string } }) => {
               }}
             >
               <Text size="md" fw="bold">
-                Bu Hoca'dan Tekrar Ders alır mıydın ?
+                Bu Hoca&apos;dan Tekrar Ders alır mıydın ?
               </Text>
               <Radio.Group name="again" {...form.getInputProps('again')}>
                 <Group mt="xs">

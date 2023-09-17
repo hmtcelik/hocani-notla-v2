@@ -1,6 +1,6 @@
 class Config {
   public static collections = {
-    hoca: 'hoca',
+    hoca: 'hocas',
   };
 }
 

@@ -192,7 +192,7 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                 <span style={{ textDecoration: 'underline', fontWeight: 600 }}>
                   {data.university}
                 </span>
-                'nde{' '}
+                &apos;nde{' '}
                 <span style={{ textDecoration: 'underline', fontWeight: 600 }}>
                   {data.department}
                 </span>{' '}
@@ -270,6 +270,12 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                   <RatePost rate={item} />
                 </div>
               ))}
+              {comments.length <= 0 && (
+                <Text mt={20} ta="center">
+                  İlk Not Veren{' '}
+                  <Link href={`/hoca/${params.slug}/rate`}>Sen Ol!</Link>
+                </Text>
+              )}
             </Stack>
           </Tabs.Panel>
         </Tabs>

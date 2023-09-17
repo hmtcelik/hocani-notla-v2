@@ -4,7 +4,13 @@ import { Container, Group, Loader, Stack, Text } from '@mantine/core';
 import HocaResultCard from '../_components/hoca/HocaResultCard';
 import Link from 'next/link';
 import { useFirestoreQuery } from '@react-query-firebase/firestore';
-import { collection, getFirestore, limit, query } from 'firebase/firestore';
+import {
+  collection,
+  getFirestore,
+  limit,
+  query,
+  where,
+} from 'firebase/firestore';
 
 import Config from '../_services/Config';
 import { HocaType } from '@/app/_models/Hoca';
@@ -18,7 +24,8 @@ interface SearchPageProps {
 const SearchPage = ({ searchParams }: SearchPageProps) => {
   const ref = query(
     collection(getFirestore(), Config.collections.hoca),
-    limit(10)
+    where('searchIdx', '==', searchParams.value.slice(0, 3).toLowerCase()),
+    limit(5)
   );
 
   const queryData = useFirestoreQuery([Config.collections.hoca], ref);
@@ -49,6 +56,8 @@ const SearchPage = ({ searchParams }: SearchPageProps) => {
       ...d.data(),
     });
   });
+
+  console.log(data);
 
   return (
     <>

@@ -13,11 +13,12 @@ import {
 import initFirebase from './InitService';
 import { CommentType } from '../_models/Comment';
 import { HocaType } from '../_models/Hoca';
+import Config from './Config';
 
 initFirebase();
 
 const db = getFirestore();
-const collectionName = 'hoca';
+const collectionName = Config.collections.hoca;
 
 const getHoca = async (uid: string) => {
   const collection_ref = collection(db, collectionName);

@@ -14,12 +14,16 @@ import {
   Group,
   PasswordInput,
   Loader,
+  Avatar,
+  ActionIcon,
 } from '@mantine/core';
 import { GoogleLogin } from '@react-oauth/google';
 
 import GoogleAuthProvider from '../../_providers/GoogleAuthProvider';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import AuthService from '@/app/_services/AuthService';
+import { AuthContext } from '@/app/_providers/AuthProvider';
+import { IconAdjustments, IconSettings } from '@tabler/icons-react';
 
 interface AuthModalProps {
   button: {
@@ -30,56 +34,87 @@ interface AuthModalProps {
 }
 
 export default function LoginModal(props: AuthModalProps) {
+  const user = useContext(AuthContext);
   const [opened, { open, close }] = useDisclosure(false);
 
   const [loginOpen, setLoginOpen] = useState<boolean>(false);
   const [registerOpen, setRegisterOpen] = useState<boolean>(false);
 
   return (
-    <GoogleAuthProvider>
-      <Button
-        px={20}
-        radius="xl"
-        color={props.button.color}
-        variant={props.button.variant}
-        onClick={() => {
-          open();
-          setLoginOpen(true);
-        }}
-      >
-        {props.button.label}
-      </Button>
-      <Modal
-        opened={opened}
-        onClose={() => {
-          close();
-          setLoginOpen(false);
-          setRegisterOpen(false);
-        }}
-        title=""
-        radius={0}
-        size="sm"
-        centered
-        closeOnClickOutside={false}
-        transitionProps={{ duration: 0 }}
-        closeButtonProps={{ color: 'black' }}
-      >
-        {loginOpen && (
-          <LoginForm
-            setLoginOpen={setLoginOpen}
-            setRegisterOpen={setRegisterOpen}
-            windowCloser={close}
-          />
-        )}
-        {registerOpen && (
-          <RegisterForm
-            setLoginOpen={setLoginOpen}
-            setRegisterOpen={setRegisterOpen}
-            windowCloser={close}
-          />
-        )}
-      </Modal>
-    </GoogleAuthProvider>
+    <>
+      {!user ? (
+        <GoogleAuthProvider>
+          <Button
+            px={20}
+            radius="xl"
+            color={props.button.color}
+            variant={props.button.variant}
+            onClick={() => {
+              open();
+              setLoginOpen(true);
+            }}
+          >
+            {props.button.label}
+          </Button>
+          <Modal
+            opened={opened}
+            onClose={() => {
+              close();
+              setLoginOpen(false);
+              setRegisterOpen(false);
+            }}
+            title=""
+            radius={0}
+            size="sm"
+            centered
+            closeOnClickOutside={false}
+            transitionProps={{ duration: 0 }}
+            closeButtonProps={{ color: 'black' }}
+          >
+            {loginOpen && (
+              <LoginForm
+                setLoginOpen={setLoginOpen}
+                setRegisterOpen={setRegisterOpen}
+                windowCloser={close}
+              />
+            )}
+            {registerOpen && (
+              <RegisterForm
+                setLoginOpen={setLoginOpen}
+                setRegisterOpen={setRegisterOpen}
+                windowCloser={close}
+              />
+            )}
+          </Modal>
+        </GoogleAuthProvider>
+      ) : (
+        <>
+          <Button
+            px={20}
+            radius="xl"
+            color={props.button.color}
+            variant={props.button.variant}
+            onClick={() => {
+              AuthService.logout().catch((err) => {
+                notifications.show({
+                  message: err,
+                  color: 'red',
+                });
+              });
+            }}
+          >
+            Çıkış Yap
+          </Button>
+          <ActionIcon
+            size={30}
+            color={props.button.color}
+            variant="transparent"
+          >
+            <IconSettings />
+          </ActionIcon>
+        </>
+      )}
+    </>
   );
 }
 
@@ -109,6 +144,10 @@ function LoginForm({
     setIsLoading(true);
     AuthService.signIn(email, passwd)
       .then((signInMessage) => {
+        notifications.show({
+          message: signInMessage,
+          color: 'teal',
+        });
         windowCloser();
       })
       .catch((signInError) => {
