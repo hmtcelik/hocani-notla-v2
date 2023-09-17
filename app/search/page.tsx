@@ -2,7 +2,6 @@
 
 import { Container, Group, Loader, Stack, Text } from '@mantine/core';
 import HocaResultCard from '../_components/hoca/HocaResultCard';
-import Link from 'next/link';
 import { useFirestoreQuery } from '@react-query-firebase/firestore';
 import {
   collection,
@@ -14,21 +13,21 @@ import {
 
 import Config from '../_services/Config';
 import { HocaType } from '@/app/_models/Hoca';
+import { useSearchParams } from 'next/navigation';
 
-interface SearchPageProps {
-  searchParams: {
-    value: string;
-  };
-}
+// interface SearchPageProps {
+//   searchParams: {
+//     value: string;
+//   };
+// }
 
-const SearchPage = ({ searchParams }: SearchPageProps) => {
+const SearchPage = () => {
+  const searchParams = useSearchParams();
+  const searchValue = searchParams.get('value');
+
   const ref = query(
     collection(getFirestore(), Config.collections.hoca),
-    where(
-      'searchIdx',
-      '==',
-      searchParams?.value?.slice(0, 3).toLowerCase() || 'can'
-    ),
+    where('searchIdx', '==', searchValue?.slice(0, 3).toLowerCase() || ''),
     limit(5)
   );
 
@@ -65,8 +64,8 @@ const SearchPage = ({ searchParams }: SearchPageProps) => {
     <>
       <Container py={60} maw={1000}>
         <Text fz={18}>
-          <b>&quot;{searchParams.value}&quot;</b> ile ilgili{' '}
-          <b>{data.length}</b> sonuç bulundu.
+          <b>&quot;{searchValue}&quot;</b> ile ilgili <b>{data.length}</b> sonuç
+          bulundu.
         </Text>
         <Stack py={30}>
           {data.map((item: HocaType, index: number) => {
