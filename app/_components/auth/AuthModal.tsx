@@ -21,6 +21,7 @@ import AuthService from '@/app/_services/AuthService';
 import { IconSettings } from '@tabler/icons-react';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import initFirebase from '@/app/_services/InitService';
+import SettingsMenu from './SettingsMenu';
 
 interface AuthModalProps {
   button: {
@@ -100,13 +101,7 @@ export default function LoginModal(props: AuthModalProps) {
           >
             Çıkış Yap
           </Button>
-          <ActionIcon
-            size={30}
-            color={props.button.color}
-            variant="transparent"
-          >
-            <IconSettings />
-          </ActionIcon>
+          <SettingsMenu color={props.button.color} />
         </>
       )}
     </>

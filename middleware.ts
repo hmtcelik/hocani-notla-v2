@@ -1,5 +1,5 @@
 export { default } from 'next-auth/middleware';
 
 export const config = {
-  matcher: ['/hoca/:slug/rate', '/settings'],
+  matcher: ['/hoca/:slug/rate'],
 };
