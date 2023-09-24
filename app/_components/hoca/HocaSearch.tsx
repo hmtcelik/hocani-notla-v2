@@ -43,14 +43,8 @@ const HocaSearch = ({
   };
 
   return (
-    <Box display={display}>
-      <form
-        onSubmit={(e) => handleSubmit(e)}
-        style={{
-          width: '100%',
-          maxWidth: maxW || 650,
-        }}
-      >
+    <Box w="100%" maw={maxW || 650} display={display}>
+      <form onSubmit={(e) => handleSubmit(e)}>
         <TextInput
           size={size || 'lg'}
           radius="xl"
