@@ -18,15 +18,15 @@ import { useContext } from 'react';
 import { collection, doc, getFirestore } from 'firebase/firestore';
 
 import { HocaType } from '@/app/_models/Hoca';
-import { AuthContext } from '@/app/_providers/AuthProvider';
 import useNotification from '@/app/_hooks/useNotification';
 import RatePost from '@/app/_components/post/RatePost';
 import Config from '@/app/_services/Config';
 import { useFirestoreDocument } from '@react-query-firebase/firestore';
 import { IconStar } from '@tabler/icons-react';
+import initFirebase from '@/app/_services/InitService';
 
 export default function Hoca({ params }: { params: { slug: string } }) {
-  const user = useContext(AuthContext);
+  initFirebase();
 
   const ref = doc(
     collection(getFirestore(), Config.collections.hoca),

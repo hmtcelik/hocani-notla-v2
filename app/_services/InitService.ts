@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app';
+import { getApps, initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
 
 const firebaseConf = {
@@ -12,5 +12,5 @@ const firebaseConf = {
 };
 
 export default function initFirebase() {
-  initializeApp(firebaseConf);
+  getApps()?.length === 0 && initializeApp(firebaseConf);
 }

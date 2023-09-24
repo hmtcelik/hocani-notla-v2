@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { CloseButton, TextInput } from '@mantine/core';
 import { IconSchool } from '@tabler/icons-react';
 
@@ -19,7 +19,11 @@ const HocaSearch = ({
   borderColor,
 }: HocaSearchProps) => {
   const router = useRouter();
-  const [search, setSearch] = useState<string>('');
+
+  const searchParams = useSearchParams();
+  const searchValue = searchParams.get('value');
+
+  const [search, setSearch] = useState<string>(searchValue || '');
 
   const handleSubmit = (e: any) => {
     e.preventDefault();

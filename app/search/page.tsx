@@ -14,14 +14,12 @@ import {
 import Config from '../_services/Config';
 import { HocaType } from '@/app/_models/Hoca';
 import { useSearchParams } from 'next/navigation';
-
-// interface SearchPageProps {
-//   searchParams: {
-//     value: string;
-//   };
-// }
+import initFirebase from '../_services/InitService';
+import { useEffect } from 'react';
 
 const SearchPage = () => {
+  initFirebase();
+
   const searchParams = useSearchParams();
   const searchValue = searchParams.get('value');
 
@@ -32,6 +30,11 @@ const SearchPage = () => {
   );
 
   const queryData = useFirestoreQuery([Config.collections.hoca], ref);
+
+  useEffect(() => {
+    queryData.refetch();
+  }, [searchValue]);
+
   if (queryData.isLoading) {
     return (
       <Container py={60} maw={1000}>

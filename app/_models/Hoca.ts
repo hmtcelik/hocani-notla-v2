@@ -1,4 +1,4 @@
-import { CommentType } from "./Comment";
+import { CommentType } from './Comment';
 
 export interface HocaType {
   id: string;
@@ -8,6 +8,6 @@ export interface HocaType {
   faculty: string;
   department: string;
   comments: CommentType[];
-  userId: string,
-  searchIdx: string,
+  userId: string;
+  searchIdx: string;
 }

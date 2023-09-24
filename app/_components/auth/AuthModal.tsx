@@ -10,20 +10,17 @@ import {
   Title,
   Text,
   Stack,
-  Divider,
   Group,
   PasswordInput,
   Loader,
-  Avatar,
   ActionIcon,
 } from '@mantine/core';
-import { GoogleLogin } from '@react-oauth/google';
 
-import GoogleAuthProvider from '../../_providers/GoogleAuthProvider';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import AuthService from '@/app/_services/AuthService';
-import { AuthContext } from '@/app/_providers/AuthProvider';
-import { IconAdjustments, IconSettings } from '@tabler/icons-react';
+import { IconSettings } from '@tabler/icons-react';
+import { signIn, signOut, useSession } from 'next-auth/react';
+import initFirebase from '@/app/_services/InitService';
 
 interface AuthModalProps {
   button: {
@@ -34,7 +31,10 @@ interface AuthModalProps {
 }
 
 export default function LoginModal(props: AuthModalProps) {
-  const user = useContext(AuthContext);
+  initFirebase();
+
+  const session = useSession();
+  const user = session?.data?.user || null;
   const [opened, { open, close }] = useDisclosure(false);
 
   const [loginOpen, setLoginOpen] = useState<boolean>(false);
@@ -43,7 +43,7 @@ export default function LoginModal(props: AuthModalProps) {
   return (
     <>
       {!user ? (
-        <GoogleAuthProvider>
+        <>
           <Button
             px={20}
             radius="xl"
@@ -86,7 +86,7 @@ export default function LoginModal(props: AuthModalProps) {
               />
             )}
           </Modal>
-        </GoogleAuthProvider>
+        </>
       ) : (
         <>
           <Button
@@ -95,12 +95,7 @@ export default function LoginModal(props: AuthModalProps) {
             color={props.button.color}
             variant={props.button.variant}
             onClick={() => {
-              AuthService.logout().catch((err) => {
-                notifications.show({
-                  message: err,
-                  color: 'red',
-                });
-              });
+              signOut();
             }}
           >
             Çıkış Yap
@@ -142,23 +137,11 @@ function LoginForm({
     }
 
     setIsLoading(true);
-    AuthService.signIn(email, passwd)
-      .then((signInMessage) => {
-        notifications.show({
-          message: signInMessage,
-          color: 'teal',
-        });
-        windowCloser();
-      })
-      .catch((signInError) => {
-        notifications.show({
-          message: signInError,
-          color: 'red',
-        });
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    signIn('credentials', {
+      email,
+      password: passwd,
+      callbackUrl: '/',
+    });
   };
 
   return (
@@ -166,20 +149,8 @@ function LoginForm({
       <Title order={3} fw={800}>
         Giriş Yap
       </Title>
-      <GoogleLogin
-        onSuccess={(credentialResponse) => {
-          console.log(credentialResponse);
-        }}
-        onError={() => {
-          console.log('Login Failed');
-        }}
-        shape="circle"
-        size="large"
-        text="signin_with"
-      />
-      <Divider my="xs" label="veya" fz={20} fw="bold" labelPosition="center" />
       <form onSubmit={handleSubmit}>
-        <Stack>
+        <Stack gap={20}>
           <TextInput
             variant="filled"
             size="md"
@@ -291,6 +262,11 @@ function RegisterForm({
           message: signUpMessage,
           color: 'teal',
         });
+        signIn('credentials', {
+          email,
+          password: passwd,
+          callbackUrl: '/',
+        });
         windowCloser();
       })
       .catch((signUpError) => {
@@ -309,20 +285,8 @@ function RegisterForm({
       <Title order={3} fw={800}>
         Kayıt Ol
       </Title>
-      <GoogleLogin
-        onSuccess={(credentialResponse) => {
-          console.log(credentialResponse);
-        }}
-        onError={() => {
-          console.log('Register Failed');
-        }}
-        shape="circle"
-        size="large"
-        text="signup_with"
-      />
-      <Divider my="xs" label="veya" fz={20} fw="bold" labelPosition="center" />
       <form onSubmit={handleSubmit}>
-        <Stack>
+        <Stack gap={20}>
           <TextInput
             variant="filled"
             size="md"
