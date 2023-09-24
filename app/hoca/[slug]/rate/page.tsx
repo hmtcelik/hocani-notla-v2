@@ -27,8 +27,9 @@ import useNotification from '@/app/_hooks/useNotification';
 import Config from '@/app/_services/Config';
 import { useForm } from '@mantine/form';
 import { CommentType } from '@/app/_models/Comment';
-import { AuthContext } from '@/app/_providers/AuthProvider';
 import { HocaType } from '@/app/_models/Hoca';
+import initFirebase from '@/app/_services/InitService';
+import { User } from 'firebase/auth';
 
 interface formValuesType {
   rate: number;
@@ -51,8 +52,10 @@ const initialValues = {
 };
 
 const Page = ({ params }: { params: { slug: string } }) => {
+  initFirebase();
+
   const client = useQueryClient();
-  const user = useContext(AuthContext);
+  const user = null;
 
   const form = useForm({
     initialValues: initialValues,
@@ -113,7 +116,9 @@ const Page = ({ params }: { params: { slug: string } }) => {
           ? false
           : null,
       date: new Date().toISOString(),
-      commenter: user?.uid || '',
+      commenter:
+        // user?.uid ||
+        '',
       likes: [],
       dislikes: [],
       flag: false,

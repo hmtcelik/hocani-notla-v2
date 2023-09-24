@@ -1,1 +1,1 @@
-- check user infos and other stuffs in firebase, its not enought to here check
+- like dislike

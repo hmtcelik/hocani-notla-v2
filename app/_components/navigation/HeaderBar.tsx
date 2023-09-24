@@ -1,9 +1,27 @@
-import { Button, Container, Group, Image } from '@mantine/core';
+'use client';
+
+import {
+  ActionIcon,
+  Button,
+  Collapse,
+  Container,
+  Flex,
+  Group,
+  Image,
+  Stack,
+  Transition,
+} from '@mantine/core';
 import HocaSearch from '../hoca/HocaSearch';
 import Link from 'next/link';
 import AuthModal from '../auth/AuthModal';
-// import HocaSearch from '../hoca/HocaSearch';
+import { IconMenu, IconMenu2, IconMenuOrder, IconX } from '@tabler/icons-react';
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
+import { IconMenuDeep } from '@tabler/icons-react';
+
 const HeaderBar = () => {
+  const [opened, { toggle }] = useDisclosure(false);
+  const smallerSm = useMediaQuery('(max-width: 767px)');
+
   return (
     <>
       <div
@@ -12,24 +30,66 @@ const HeaderBar = () => {
         }}
       >
         <Container size="xl" py={15}>
-          <Group justify="space-between" align="center">
-            <Link href="/">
-              <Image
-                maw={200}
-                src="https://www.ratemyprofessors.com/static/media/big_rmp_logo_black.41f961d6.svg"
-              />
-            </Link>
-            <HocaSearch size="md" inputHeight={30} maxW={500} />
-            <Group>
-              <AuthModal
-                button={{
-                  color: 'white',
-                  label: 'Giriş Yap',
-                  variant: 'outline',
+          <Stack>
+            <Group justify="space-between" align="center">
+              <Link href="/">
+                <Image
+                  maw={175}
+                  src="https://www.ratemyprofessors.com/static/media/big_rmp_logo_black.41f961d6.svg"
+                />
+              </Link>
+              <ActionIcon
+                display={{ base: 'block', sm: 'none' }}
+                variant="transparent"
+                color="white"
+                size="md"
+                onClick={() => {
+                  toggle();
                 }}
+              >
+                {opened ? <IconX /> : <IconMenu2 />}
+              </ActionIcon>
+              <HocaSearch
+                size="md"
+                inputHeight={30}
+                maxW={500}
+                display={{ base: 'none', sm: 'block' }}
               />
+              <Group display={{ base: 'none', sm: 'block' }}>
+                <AuthModal
+                  button={{
+                    color: 'white',
+                    label: 'Giriş Yap',
+                    variant: 'outline',
+                  }}
+                />
+              </Group>
             </Group>
-          </Group>
+            {smallerSm && (
+              <Collapse
+                in={opened}
+                transitionDuration={100}
+                transitionTimingFunction="linear"
+              >
+                <Flex
+                  direction={{ base: 'column', xs: 'row' }}
+                  gap={10}
+                  justify="space-between"
+                >
+                  <HocaSearch size="md" inputHeight={30} maxW={500} />
+                  <Group>
+                    <AuthModal
+                      button={{
+                        color: 'white',
+                        label: 'Giriş Yap',
+                        variant: 'outline',
+                      }}
+                    />
+                  </Group>
+                </Flex>
+              </Collapse>
+            )}
+          </Stack>
         </Container>
       </div>
     </>

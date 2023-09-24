@@ -8,18 +8,21 @@ import '@mantine/notifications/styles.css';
 
 import Footer from './_components/navigation/Footer';
 import NProgress from './_components/navigation/NProgress';
-import AuthProvider from './_providers/AuthProvider';
+import { getServerSession } from 'next-auth';
+import { authOptions } from './api/auth/[...nextauth]/route';
+import SessionProvider from './_providers/SessionProvider';
 
 export const metadata: Metadata = {
   title: 'Hocani Notla v2',
   description: 'A new version of Hocani Notla',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerSession(authOptions);
   return (
     <html lang="en">
       <head>
@@ -34,7 +37,7 @@ export default function RootLayout({
         >
           <NProgress />
           <Notifications position="top-right" />
-          <AuthProvider>{children}</AuthProvider>
+          <SessionProvider session={session}>{children}</SessionProvider>
           <Footer />
         </MantineProvider>
       </body>

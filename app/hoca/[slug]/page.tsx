@@ -18,15 +18,15 @@ import { useContext } from 'react';
 import { collection, doc, getFirestore } from 'firebase/firestore';
 
 import { HocaType } from '@/app/_models/Hoca';
-import { AuthContext } from '@/app/_providers/AuthProvider';
 import useNotification from '@/app/_hooks/useNotification';
 import RatePost from '@/app/_components/post/RatePost';
 import Config from '@/app/_services/Config';
 import { useFirestoreDocument } from '@react-query-firebase/firestore';
 import { IconStar } from '@tabler/icons-react';
+import initFirebase from '@/app/_services/InitService';
 
 export default function Hoca({ params }: { params: { slug: string } }) {
-  const user = useContext(AuthContext);
+  initFirebase();
 
   const ref = doc(
     collection(getFirestore(), Config.collections.hoca),
@@ -179,6 +179,8 @@ export default function Hoca({ params }: { params: { slug: string } }) {
   //   }
   // };
 
+  console.log(rates);
+
   return (
     <>
       <Container py={60} maw={1000}>
@@ -230,7 +232,7 @@ export default function Hoca({ params }: { params: { slug: string } }) {
               </Group>
               <Stack gap={4} style={{ flexGrow: 1 }}>
                 {rates.map((item, index) => (
-                  <Group key={index} gap={10}>
+                  <Group key={index} gap={10} w="100%">
                     <Group gap={0} w={60}>
                       {[...Array(item.value)].map((_, index) => (
                         <IconStar
