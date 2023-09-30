@@ -1,12 +1,15 @@
 import CredentialsProvider from 'next-auth/providers/credentials';
 import NextAuth from 'next-auth';
 import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import initFirebase from '@/app/_services/InitService';
+
+initFirebase();
 
 export const authOptions = {
   pages: {
     signIn: '/',
-    signOut: '/logout',
-    error: '/error',
+    signOut: '/',
+    error: '/',
   },
   providers: [
     CredentialsProvider({
