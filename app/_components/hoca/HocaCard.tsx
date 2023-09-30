@@ -7,7 +7,6 @@ import { useContext } from 'react';
 
 import ScoreAvatar from '../post/ScoreAvatar';
 import { HocaType } from '@/app/_models/Hoca';
-import { AuthContext } from '@/app/_providers/AuthProvider';
 import useNotification from '@/app/_hooks/useNotification';
 
 interface HocaCardProps {
@@ -15,8 +14,6 @@ interface HocaCardProps {
 }
 
 export default function HocaCard({ data }: HocaCardProps) {
-  const user = useContext(AuthContext);
-
   const showNotification = useNotification();
 
   const infoTexts = [
@@ -52,30 +49,16 @@ export default function HocaCard({ data }: HocaCardProps) {
             </Group>
           ))}
           <div>
-            {user ? (
-              <Link href={`/hoca/${data?.id}/rate/`}>
-                <Button
-                  variant="filled"
-                  size="md"
-                  radius="xl"
-                  leftSection={<IconEdit />}
-                >
-                  Not Ver
-                </Button>
-              </Link>
-            ) : (
+            <Link href={`/hoca/${data?.id}/rate/`}>
               <Button
                 variant="filled"
                 size="md"
                 radius="xl"
                 leftSection={<IconEdit />}
-                onClick={() =>
-                  showNotification('error', 'Lütfen giriş yapınız.')
-                }
               >
                 Not Ver
               </Button>
-            )}
+            </Link>
           </div>
         </Stack>
       </Grid.Col>
