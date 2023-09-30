@@ -89,7 +89,7 @@ export default function LoginModal(props: AuthModalProps) {
           </Modal>
         </>
       ) : (
-        <>
+        <Group>
           <Button
             px={20}
             radius="xl"
@@ -102,7 +102,7 @@ export default function LoginModal(props: AuthModalProps) {
             Çıkış Yap
           </Button>
           <SettingsMenu color={props.button.color} />
-        </>
+        </Group>
       )}
     </>
   );
