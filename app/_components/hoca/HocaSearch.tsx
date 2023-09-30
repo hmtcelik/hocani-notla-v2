@@ -43,19 +43,18 @@ const HocaSearch = ({
   };
 
   return (
-    <Box display={display}>
-      <form
-        onSubmit={(e) => handleSubmit(e)}
-        style={{
-          width: '100%',
-          maxWidth: maxW || 650,
-        }}
-      >
+    <Box
+      display={display}
+      style={{
+        width: '100%',
+        maxWidth: maxW || 650,
+      }}
+    >
+      <form onSubmit={(e) => handleSubmit(e)}>
         <TextInput
           size={size || 'lg'}
           radius="xl"
           value={search}
-          w="100%"
           placeholder="Örn: Can Alkan"
           onChange={(e) => setSearch(e.currentTarget.value)}
           leftSection={<IconSchool color="black" />}
