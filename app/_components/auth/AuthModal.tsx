@@ -31,6 +31,24 @@ interface AuthModalProps {
   };
 }
 
+let openModalFunction: (() => void) | null = null;
+let closeModalFunction: (() => void) | null = null;
+
+const setOpenModalFunction = (func: () => void) => (openModalFunction = func);
+const setCloseModalFunction = (func: () => void) => (closeModalFunction = func);
+
+export const openAuthModal = () => {
+  if (openModalFunction) {
+    openModalFunction();
+  }
+};
+
+export const closeAuthModal = () => {
+  if (closeModalFunction) {
+    closeModalFunction();
+  }
+};
+
 export default function LoginModal(props: AuthModalProps) {
   initFirebase();
 
@@ -40,6 +58,16 @@ export default function LoginModal(props: AuthModalProps) {
 
   const [loginOpen, setLoginOpen] = useState<boolean>(false);
   const [registerOpen, setRegisterOpen] = useState<boolean>(false);
+
+  setOpenModalFunction(() => {
+    open();
+    setLoginOpen(true);
+  });
+  setCloseModalFunction(() => {
+    close();
+    setLoginOpen(false);
+    setRegisterOpen(false);
+  });
 
   return (
     <>

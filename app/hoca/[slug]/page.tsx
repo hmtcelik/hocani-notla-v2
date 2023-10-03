@@ -24,8 +24,16 @@ import Config from '@/app/_services/Config';
 import { useFirestoreDocument } from '@react-query-firebase/firestore';
 import { IconStar } from '@tabler/icons-react';
 import initFirebase from '@/app/_services/InitService';
+import { useSession } from 'next-auth/react';
+import {
+  openAuthModal,
+  closeAuthModal,
+} from '../../_components/auth/AuthModal'; // Adjust the path accordingly
 
 export default function Hoca({ params }: { params: { slug: string } }) {
+  const session = useSession();
+  const user = session?.data?.user || null;
+
   initFirebase();
 
   const ref = doc(
@@ -179,8 +187,6 @@ export default function Hoca({ params }: { params: { slug: string } }) {
   //   }
   // };
 
-  console.log(rates);
-
   return (
     <>
       <Container py={60} maw={1000}>
@@ -201,7 +207,7 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                 bölümünde öğretim görevlisi
               </Text>
             </Stack>
-            <Link href={`/hoca/${params.slug}/rate`}>
+            {!user ? (
               <Button
                 color="#0255FD"
                 radius="xl"
@@ -209,10 +215,24 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                 px={50}
                 size="lg"
                 fz="sm"
+                onClick={() => openAuthModal()}
               >
                 Bu Hocaya Not Ver
               </Button>
-            </Link>
+            ) : (
+              <Link href={`/hoca/${params.slug}/rate`}>
+                <Button
+                  color="#0255FD"
+                  radius="xl"
+                  mr="auto"
+                  px={50}
+                  size="lg"
+                  fz="sm"
+                >
+                  Bu Hocaya Not Ver
+                </Button>
+              </Link>
+            )}
           </Stack>
           <Stack p={20} pb={30} bg={'#F7F7F7'} justify="center" align="center">
             <Flex
