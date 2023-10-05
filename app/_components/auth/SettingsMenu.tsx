@@ -4,12 +4,15 @@ import { Menu, rem, ActionIcon } from '@mantine/core';
 import { IconSettings, IconHelp, IconLogout } from '@tabler/icons-react';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 type Props = {
   color: string;
 };
 
 export default function SettingsMenu(props: Props) {
+  const path = usePathname();
+
   return (
     <Menu shadow="md" width={200}>
       <Menu.Target>
@@ -40,7 +43,7 @@ export default function SettingsMenu(props: Props) {
         <Menu.Item
           color="red"
           onClick={() => {
-            signOut();
+            signOut({ callbackUrl: path, redirect: false });
           }}
           leftSection={
             <IconLogout style={{ width: rem(14), height: rem(14) }} />

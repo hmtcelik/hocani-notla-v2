@@ -9,7 +9,9 @@ export const authOptions = {
   pages: {
     signIn: '/',
     error: '/',
+    signOut: '/',
   },
+  secret: process.env.SECRET,
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -31,8 +33,38 @@ export const authOptions = {
             return res.user;
           })
           .catch((error) => {
-            console.log(error);
-            return null;
+            let errorMsg = '';
+            switch (error.code) {
+              case 'auth/invalid-email':
+                errorMsg = 'Geçersiz email adresi';
+                break;
+              case 'auth/user-disabled':
+                errorMsg = 'Bu kullanıcı banlanmıştır';
+                break;
+              case 'auth/user-not-found':
+                errorMsg =
+                  'Bu email adresi ile kayıtlı kullanıcı bulunmamaktadır';
+                break;
+              case 'auth/wrong-password':
+                errorMsg = 'Hatalı şifre';
+                break;
+              case 'auth/too-many-requests':
+                errorMsg =
+                  'Çok fazla deneme yaptınız. Lütfen daha sonra tekrar deneyiniz';
+                break;
+              case 'auth/network-request-failed':
+                errorMsg = 'İnternet bağlantınızı kontrol ediniz';
+                break;
+              case 'auth/internal-error':
+                errorMsg = 'Bir hata oluştu';
+                break;
+              case 'auth/invalid-credential':
+                errorMsg = 'Geçersiz kimlik bilgisi';
+                break;
+              default:
+                errorMsg = 'Bir hata oluştu';
+            }
+            throw new Error(errorMsg);
           });
 
         if (!fbUser) {
