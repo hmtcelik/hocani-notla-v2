@@ -23,12 +23,17 @@ import {
 import ScoreAvatar from './ScoreAvatar';
 import { CommentType } from '@/app/_models/Comment';
 import { IconReceipt } from '@tabler/icons-react';
+import { openAuthModal } from '../auth/AuthModal';
+import { useSession } from 'next-auth/react';
 
 interface RatePostProps {
   rate: CommentType;
 }
 
 const RatePost = ({ rate }: RatePostProps) => {
+  const session = useSession();
+  const user = session?.data?.user || null;
+
   return (
     <>
       <Stack p={20} gap={5} bg="#f1f1f166">

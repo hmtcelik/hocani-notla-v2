@@ -22,6 +22,8 @@ import { IconSettings } from '@tabler/icons-react';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import initFirebase from '@/app/_services/InitService';
 import SettingsMenu from './SettingsMenu';
+import { usePathname } from 'next/navigation';
+import path from 'path';
 
 interface AuthModalProps {
   button: {
@@ -51,6 +53,8 @@ export const closeAuthModal = () => {
 
 export default function LoginModal(props: AuthModalProps) {
   initFirebase();
+
+  const path = usePathname();
 
   const session = useSession();
   const user = session?.data?.user || null;
@@ -124,7 +128,7 @@ export default function LoginModal(props: AuthModalProps) {
             color={props.button.color}
             variant={props.button.variant}
             onClick={() => {
-              signOut();
+              signOut({ callbackUrl: path, redirect: false });
             }}
           >
             Çıkış Yap
@@ -145,6 +149,8 @@ function LoginForm({
   setRegisterOpen: Function;
   windowCloser: () => void;
 }) {
+  const path = usePathname();
+
   const [email, setEmail] = useState<string>('');
   const [passwd, setPasswd] = useState<string>('');
   const [emailError, setEmailError] = useState<string>('');
@@ -163,8 +169,21 @@ function LoginForm({
     signIn('credentials', {
       email,
       password: passwd,
-      callbackUrl: '/',
-    });
+      callbackUrl: path,
+      redirect: false,
+    })
+      .then((signInMessage) => {
+        console.log(signInMessage);
+        signInMessage?.error
+          ? notifications.show({
+              message: signInMessage.error,
+              color: 'red',
+            })
+          : windowCloser();
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -254,6 +273,8 @@ function RegisterForm({
   setRegisterOpen: Function;
   windowCloser: () => void;
 }) {
+  const path = usePathname();
+
   const [email, setEmail] = useState<string>('');
   const [passwd, setPasswd] = useState<string>('');
   const [passwdAgain, setPasswdAgain] = useState<string>('');
@@ -288,7 +309,8 @@ function RegisterForm({
         signIn('credentials', {
           email,
           password: passwd,
-          callbackUrl: '/',
+          callbackUrl: path,
+          redirect: false,
         });
         windowCloser();
       })
