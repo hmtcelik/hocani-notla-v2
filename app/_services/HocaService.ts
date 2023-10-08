@@ -26,7 +26,10 @@ const getHoca = async (uid: string) => {
   const docSnapshot = await getDoc(doc_ref);
 
   if (docSnapshot.exists()) {
-    return { id: docSnapshot.id, ...docSnapshot.data() };
+    return {
+      id: docSnapshot.id,
+      ...docSnapshot.data(),
+    } as HocaType;
   }
 
   return null;

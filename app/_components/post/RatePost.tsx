@@ -34,6 +34,37 @@ const RatePost = ({ rate }: RatePostProps) => {
   const session = useSession();
   const user = session?.data?.user || null;
 
+  // const handleLike = (index: number) => {
+  //   if (user && data) {
+  //     let newComment = data.comments;
+  //     let likes = newComment[index].likes;
+  //     let dislikes = newComment[index].dislikes;
+
+  //     if (likes.includes(user.uid)) {
+  //       likes = likes.filter((item) => item !== user.uid);
+  //     } else {
+  //       likes.push(user.uid);
+  //     }
+
+  //     if (dislikes.includes(user.uid)) {
+  //       dislikes = dislikes.filter((item) => item !== user.uid);
+  //     }
+
+  //     newComment[index].likes = likes;
+  //     newComment[index].dislikes = dislikes;
+
+  //     // update dom
+  //     setData({ ...data, comments: newComment });
+
+  //     // update db
+  //     HocaService.updateHocaComments(data.id, newComment).catch((err) => {
+  //       console.log('Error when updating hoca: ', err);
+  //     });
+  //   } else {
+  //     showNotification('error', 'Giriş yapınız.');
+  //   }
+  // };
+
   return (
     <>
       <Stack p={20} gap={5} bg="#f1f1f166">
