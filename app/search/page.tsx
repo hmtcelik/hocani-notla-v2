@@ -5,6 +5,7 @@ import HocaResultCard from '../_components/hoca/HocaResultCard';
 import { useFirestoreQuery } from '@react-query-firebase/firestore';
 import {
   collection,
+  doc,
   getFirestore,
   limit,
   query,
@@ -15,63 +16,55 @@ import Config from '../_services/Config';
 import { HocaType } from '@/app/_models/Hoca';
 import { useSearchParams } from 'next/navigation';
 import initFirebase from '../_services/InitService';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import useHocaSearch from '../_hooks/useHocaSearch';
+import HocaService from '../_services/HocaService';
 
 const SearchPage = () => {
   initFirebase();
 
+  const searchHoca = useHocaSearch();
+
   const searchParams = useSearchParams();
   const searchValue = searchParams.get('value');
 
-  const ref = query(
-    collection(getFirestore(), Config.collections.hoca),
-    where('searchIdx', '==', searchValue?.slice(0, 3).toLowerCase() || ''),
-    limit(5)
-  );
-
-  const queryData = useFirestoreQuery([Config.collections.hoca], ref);
+  const [searchData, setSearchData] = useState<HocaType[]>([]);
+  const [searchResultLen, setSearchResultLen] = useState<number>(0);
 
   useEffect(() => {
-    queryData.refetch();
+    const findHoca = async () => {
+      setSearchData([]);
+
+      if (searchValue) {
+        const data = await searchHoca(searchValue);
+        setSearchResultLen(data?.length || 0);
+        data?.slice(0, 10)?.forEach(async (item: String) => {
+          const ref = doc(
+            collection(getFirestore(), Config.collections.hoca),
+            item.toString()
+          );
+
+          const hocaData = await HocaService.getHoca(item.toString());
+
+          if (hocaData) {
+            setSearchData((prev) => [...prev, hocaData]);
+          }
+        });
+      }
+    };
+
+    findHoca();
   }, [searchValue]);
-
-  if (queryData.isLoading) {
-    return (
-      <Container py={60} maw={1000}>
-        <Group justify="center">
-          <Loader />
-        </Group>
-      </Container>
-    );
-  }
-
-  if (queryData.isError) {
-    return (
-      <Container py={60} maw={1000}>
-        <Group justify="center">
-          <Text c="red">Bir hata oluştu.</Text>
-        </Group>
-      </Container>
-    );
-  }
-
-  const data = Array();
-  queryData.data?.forEach((d) => {
-    data.push({
-      id: d.id,
-      ...d.data(),
-    });
-  });
 
   return (
     <>
       <Container py={60} maw={1000}>
         <Text fz={18}>
-          <b>&quot;{searchValue}&quot;</b> ile ilgili <b>{data.length}</b> sonuç
-          bulundu.
+          <b>&quot;{searchValue}&quot;</b> ile ilgili <b>{searchResultLen}</b>{' '}
+          sonuç bulundu.
         </Text>
         <Stack py={30}>
-          {data.map((item: HocaType, index: number) => {
+          {searchData.map((item: HocaType, index: number) => {
             const comments = item.comments;
             const averageRate =
               comments.length > 0
