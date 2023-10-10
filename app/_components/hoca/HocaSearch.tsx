@@ -2,14 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Box, CloseButton, TextInput } from '@mantine/core';
+import { Box, CloseButton, Combobox, Loader, TextInput, useCombobox } from '@mantine/core';
 import { IconSchool } from '@tabler/icons-react';
 import useHocaSearch from '@/app/_hooks/useHocaSearch';
 import HocaService from '@/app/_services/HocaService';
-import { collection, doc, getFirestore } from 'firebase/firestore';
-import Config from '@/app/_services/Config';
-import { useFirestoreDocument } from '@react-query-firebase/firestore';
 import { useDebouncedState } from '@mantine/hooks';
+import { HocaType } from '@/app/_models/Hoca';
 
 type ResponsiveProps = {
   xs?: string;
@@ -28,11 +26,6 @@ interface HocaSearchProps {
   display?: string | ResponsiveProps;
 }
 
-type SearchDataType = {
-  id: string;
-  name: string;
-};
-
 const HocaSearch = ({
   size,
   inputHeight,
@@ -40,6 +33,7 @@ const HocaSearch = ({
   borderColor,
   display,
 }: HocaSearchProps) => {
+  const combobox = useCombobox();
   const router = useRouter();
   const searchHoca = useHocaSearch();
 
@@ -47,39 +41,41 @@ const HocaSearch = ({
   const searchValue = searchParams.get('value');
 
   const [search, setSearch] = useDebouncedState(searchValue || '', 600);
-  const [searchData, setSearchData] = useState<SearchDataType[]>([]);
+  const [searchData, setSearchData] = useState<HocaType[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const findHoca = async () => {
+      setIsLoading(true)
       if (search) {
         const data = await searchHoca(search);
-        data?.slice(0, 5)?.forEach(async (item: String) => {
-          const ref = doc(
-            collection(getFirestore(), Config.collections.hoca),
-            item.toString()
-          );
-
-          const hocaData = await HocaService.getHoca(item.toString());
-
-          setSearchData((prev) => [
-            ...prev,
-            {
-              id: item.toString(),
-              name: hocaData?.name || '',
-            },
-          ]);
-        });
+        
+        if (data && data?.length>0){
+          const hocaResults = await HocaService.getHocas(
+              data?.slice(0, 5).map((item) => item.toString())
+          )
+          setSearchData(hocaResults); 
+          combobox.openDropdown();
+        }
       }
+      setIsLoading(false)
     };
-
     findHoca();
   }, [search]);
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
     if (search.trim() === '') return;
+    setIsLoading(true)
     router.push(`/search?value=${search}`);
+    setIsLoading(false)
   };
+
+  const handleComboboxSubmit = (e:string) => {
+    setIsLoading(true)
+    router.push(`/hoca/${e}`);
+    setIsLoading(false)
+  }
 
   return (
     <Box
@@ -90,6 +86,8 @@ const HocaSearch = ({
       }}
     >
       <form onSubmit={(e) => handleSubmit(e)}>
+        <Combobox store={combobox} onOptionSubmit={(val)=>{handleComboboxSubmit(val);combobox.closeDropdown();}}>
+        <Combobox.Target>
         <TextInput
           size={size || 'lg'}
           radius="xl"
@@ -98,8 +96,17 @@ const HocaSearch = ({
           onChange={(e) => {
             setSearch(e.currentTarget.value);
             setSearchData([]);
+            combobox.closeDropdown()
           }}
-          leftSection={<IconSchool color="black" />}
+          onBlur={() => {
+            combobox.closeDropdown();
+          }}
+          leftSection={
+            isLoading ? 
+              <Loader size='sm' color='black' />
+             :
+            <IconSchool color="black" />
+        }
           rightSection={
             <CloseButton
               color="black"
@@ -123,6 +130,20 @@ const HocaSearch = ({
             },
           }}
         />
+        </Combobox.Target>
+
+        <Combobox.Dropdown>
+          <Combobox.Options>
+            {searchData.map((item) => (
+              <Combobox.Option value={item.id} key={item.id}>
+                {item.name}
+              </Combobox.Option>
+            ))}
+          </Combobox.Options>
+        </Combobox.Dropdown>
+
+        </Combobox>
+
       </form>
     </Box>
   );
