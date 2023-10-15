@@ -1,8 +1,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { Box, CloseButton, Combobox, Loader, TextInput, useCombobox } from '@mantine/core';
+import { useRouter } from 'next/navigation';
+import {
+  Box,
+  CloseButton,
+  Combobox,
+  Loader,
+  TextInput,
+  useCombobox,
+} from '@mantine/core';
 import { IconSchool } from '@tabler/icons-react';
 import useHocaSearch from '@/app/_hooks/useHocaSearch';
 import HocaService from '@/app/_services/HocaService';
@@ -37,45 +44,54 @@ const HocaSearch = ({
   const router = useRouter();
   const searchHoca = useHocaSearch();
 
-  const searchParams = useSearchParams();
-  const searchValue = searchParams.get('value');
-
-  const [search, setSearch] = useDebouncedState(searchValue || '', 600);
+  const [search, setSearch] = useDebouncedState('', 600);
+  const [searchFormValue, setSearchFormValue] = useState<string>('');
   const [searchData, setSearchData] = useState<HocaType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const findHoca = async () => {
-      setIsLoading(true)
+    const fetchData = async () => {
+      setIsLoading(true);
       if (search) {
         const data = await searchHoca(search);
-        
-        if (data && data?.length>0){
+
+        if (data && data?.length > 0) {
           const hocaResults = await HocaService.getHocas(
-              data?.slice(0, 5).map((item) => item.toString())
-          )
-          setSearchData(hocaResults); 
+            data?.slice(0, 5).map((item) => item.toString())
+          );
+          setSearchData(hocaResults);
           combobox.openDropdown();
         }
       }
-      setIsLoading(false)
+      setIsLoading(false);
     };
-    findHoca();
+
+    fetchData();
   }, [search]);
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    if (search.trim() === '') return;
-    setIsLoading(true)
-    router.push(`/search?value=${search}`);
-    setIsLoading(false)
+  const handleComboboxSubmit = (e: string) => {
+    setIsLoading(true);
+    router.push(`/hoca/${e}`);
+    setIsLoading(false);
+    combobox.closeDropdown();
   };
 
-  const handleComboboxSubmit = (e:string) => {
-    setIsLoading(true)
-    router.push(`/hoca/${e}`);
-    setIsLoading(false)
-  }
+  const handleClickClearBtn = () => {
+    setSearchFormValue('');
+    setSearch('');
+    setSearchData([]);
+    combobox.closeDropdown();
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (searchFormValue.trim() === '') return;
+      setIsLoading(true);
+      router.push(`/search?value=${searchFormValue}`);
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Box
@@ -85,51 +101,56 @@ const HocaSearch = ({
         maxWidth: maxW || 650,
       }}
     >
-      <form onSubmit={(e) => handleSubmit(e)}>
-        <Combobox store={combobox} onOptionSubmit={(val)=>{handleComboboxSubmit(val);combobox.closeDropdown();}}>
+      <Combobox
+        store={combobox}
+        onOptionSubmit={(val) => {
+          handleComboboxSubmit(val);
+        }}
+      >
         <Combobox.Target>
-        <TextInput
-          size={size || 'lg'}
-          radius="xl"
-          defaultValue={search}
-          placeholder="Örn: Can Alkan"
-          onChange={(e) => {
-            setSearch(e.currentTarget.value);
-            setSearchData([]);
-            combobox.closeDropdown()
-          }}
-          onBlur={() => {
-            combobox.closeDropdown();
-          }}
-          leftSection={
-            isLoading ? 
-              <Loader size='sm' color='black' />
-             :
-            <IconSchool color="black" />
-        }
-          rightSection={
-            <CloseButton
-              color="black"
-              aria-label="Clear input"
-              onClick={() => {
-                setSearch('');
-                setSearchData([]);
-              }}
-              style={{ display: search ? undefined : 'none' }}
-            />
-          }
-          styles={{
-            section: {
-              marginLeft: 7,
-              marginRight: 7,
-            },
-            input: {
-              paddingLeft: 60,
-              height: `${inputHeight || '60'}`,
-              border: `solid 2px ${borderColor || 'black'}`,
-            },
-          }}
-        />
+          <TextInput
+            size={size || 'lg'}
+            radius="xl"
+            value={searchFormValue}
+            placeholder="Örn: Can Alkan"
+            onChange={(e) => {
+              const value = e.currentTarget.value;
+              setSearch(value);
+              setSearchFormValue(value);
+              setSearchData([]);
+              combobox.closeDropdown();
+            }}
+            onKeyDown={handleKeyPress}
+            onBlur={() => {
+              combobox.closeDropdown();
+            }}
+            leftSection={
+              isLoading ? (
+                <Loader size="sm" color="black" />
+              ) : (
+                <IconSchool color="black" />
+              )
+            }
+            rightSection={
+              <CloseButton
+                color="black"
+                aria-label="Clear input"
+                onClick={handleClickClearBtn}
+                style={{ display: searchFormValue ? undefined : 'none' }}
+              />
+            }
+            styles={{
+              section: {
+                marginLeft: 7,
+                marginRight: 7,
+              },
+              input: {
+                paddingLeft: 60,
+                height: `${inputHeight || '60'}`,
+                border: `solid 2px ${borderColor || 'black'}`,
+              },
+            }}
+          />
         </Combobox.Target>
 
         <Combobox.Dropdown>
@@ -141,10 +162,7 @@ const HocaSearch = ({
             ))}
           </Combobox.Options>
         </Combobox.Dropdown>
-
-        </Combobox>
-
-      </form>
+      </Combobox>
     </Box>
   );
 };
