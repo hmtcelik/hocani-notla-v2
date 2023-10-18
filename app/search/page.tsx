@@ -2,6 +2,7 @@
 
 import { Center, Container, Loader, Stack, Text } from '@mantine/core';
 import HocaResultCard from '../_components/hoca/HocaResultCard';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 import { HocaType } from '@/app/_models/Hoca';
 import { useSearchParams } from 'next/navigation';
@@ -34,35 +35,27 @@ const SearchPage = () => {
         setSearchResultLen(dataLength);
         const slicedData = data?.slice((page - 1) * 10, page * 10) || [];
 
-        const hocaData = await Promise.all(
-          slicedData.map(async (item) => {
-            const hocaData = await HocaService.getHoca(item.toString());
-            return hocaData;
+        const resData = await HocaService.getHocas(
+          slicedData.map((item) => {
+            return item.toString();
           })
         );
-
-        setSearchData((prev) => [...prev, ...(hocaData as HocaType[])]);
-        dataLength = data?.length || 0;
+        setSearchData((prev) => [...prev, ...resData]);
 
         setHasMore(dataLength > page * 10);
         setPage((prev) => prev + 1);
       } catch (error) {
-        console.error(error);
+        console.log(error);
       } finally {
         setLoading(false);
       }
     }
   };
 
-  const handleScroll = () => {
-    const container = viewport.current;
-    if (container) {
-      const containerRect = container.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      if (containerRect.bottom < windowHeight && hasMore && !loading) {
-        findHoca();
-      }
-    }
+  const getMoreResult = () => {
+    setTimeout(() => {
+      findHoca();
+    }, 200);
   };
 
   const resetSearchStates = () => {
@@ -74,15 +67,13 @@ const SearchPage = () => {
 
   useEffect(() => {
     resetSearchStates();
-    findHoca();
   }, [searchParams]);
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [hasMore, loading]);
+    if (page <= 1) {
+      findHoca();
+    }
+  }, [page]);
 
   return (
     <>
@@ -92,41 +83,48 @@ const SearchPage = () => {
           sonuç bulundu.
         </Text>
         <div>
-          <Stack
-            py={30}
-            style={{
-              overflow: 'auto',
-              display: 'flex',
-              border: '1px solid red',
-            }}
+          <InfiniteScroll
+            dataLength={searchData.length}
+            next={getMoreResult}
+            hasMore={hasMore}
+            loader={null}
+            endMessage={null}
           >
-            {searchData.map((item: HocaType, index: number) => {
-              const comments = item.comments;
-              const averageRate =
-                comments.length > 0
-                  ? comments.reduce((acc, comment) => acc + comment.rate, 0) /
-                    comments.length
-                  : 0;
+            <Stack
+              py={30}
+              style={{
+                overflow: 'auto',
+                display: 'flex',
+              }}
+            >
+              {searchData.map((item: HocaType, index: number) => {
+                const comments = item.comments;
+                const averageRate =
+                  comments.length > 0
+                    ? comments.reduce((acc, comment) => acc + comment.rate, 0) /
+                      comments.length
+                    : 0;
 
-              return (
-                <div key={index}>
-                  <HocaResultCard
-                    hocaUid={item.id}
-                    score={averageRate}
-                    depart={item.department}
-                    name={item.name}
-                    rateCount={comments.length}
-                    university={item.university}
-                  />
-                </div>
-              );
-            })}
-            {loading && (
-              <Center>
-                <Loader />
-              </Center>
-            )}
-          </Stack>
+                return (
+                  <div key={index}>
+                    <HocaResultCard
+                      hocaUid={item.id}
+                      score={averageRate}
+                      depart={item.department}
+                      name={item.name}
+                      rateCount={comments.length}
+                      university={item.university}
+                    />
+                  </div>
+                );
+              })}
+              {loading && (
+                <Center>
+                  <Loader />
+                </Center>
+              )}
+            </Stack>
+          </InfiniteScroll>
         </div>
       </Container>
     </>
