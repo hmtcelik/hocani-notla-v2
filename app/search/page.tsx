@@ -1,22 +1,13 @@
 'use client';
 
-import { Container, Group, Loader, Stack, Text } from '@mantine/core';
+import { Center, Container, Loader, Stack, Text } from '@mantine/core';
 import HocaResultCard from '../_components/hoca/HocaResultCard';
-import { useFirestoreQuery } from '@react-query-firebase/firestore';
-import {
-  collection,
-  doc,
-  getFirestore,
-  limit,
-  query,
-  where,
-} from 'firebase/firestore';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
-import Config from '../_services/Config';
 import { HocaType } from '@/app/_models/Hoca';
 import { useSearchParams } from 'next/navigation';
 import initFirebase from '../_services/InitService';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useHocaSearch from '../_hooks/useHocaSearch';
 import HocaService from '../_services/HocaService';
 
@@ -24,68 +15,117 @@ const SearchPage = () => {
   initFirebase();
 
   const searchHoca = useHocaSearch();
+  const viewport = useRef<HTMLDivElement>(null);
 
   const searchParams = useSearchParams();
   const searchValue = searchParams.get('value');
 
   const [searchData, setSearchData] = useState<HocaType[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(1);
+  const [hasMore, setHasMore] = useState<boolean>(true);
   const [searchResultLen, setSearchResultLen] = useState<number>(0);
 
-  useEffect(() => {
-    const findHoca = async () => {
-      setSearchData([]);
-
-      if (searchValue) {
+  const findHoca = async () => {
+    if (searchValue && hasMore && !loading) {
+      setLoading(true);
+      try {
         const data = await searchHoca(searchValue);
-        setSearchResultLen(data?.length || 0);
-        data?.slice(0, 10)?.forEach(async (item: String) => {
-          const ref = doc(
-            collection(getFirestore(), Config.collections.hoca),
-            item.toString()
-          );
+        let dataLength = data?.length || 0;
+        setSearchResultLen(dataLength);
+        const slicedData = data?.slice((page - 1) * 10, page * 10) || [];
 
-          const hocaData = await HocaService.getHoca(item.toString());
+        const resData = await HocaService.getHocas(
+          slicedData.map((item) => {
+            return item.toString();
+          })
+        );
+        setSearchData((prev) => [...prev, ...resData]);
 
-          if (hocaData) {
-            setSearchData((prev) => [...prev, hocaData]);
-          }
-        });
+        setHasMore(dataLength > page * 10);
+        setPage((prev) => prev + 1);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
       }
-    };
+    }
+  };
 
-    findHoca();
-  }, [searchValue]);
+  const getMoreResult = () => {
+    setTimeout(() => {
+      findHoca();
+    }, 200);
+  };
+
+  const resetSearchStates = () => {
+    setSearchData([]);
+    setPage(1);
+    setHasMore(true);
+    setSearchResultLen(0);
+  };
+
+  useEffect(() => {
+    resetSearchStates();
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (page <= 1) {
+      findHoca();
+    }
+  }, [page]);
 
   return (
     <>
-      <Container py={60} maw={1000}>
+      <Container py={60} maw={1000} ref={viewport}>
         <Text fz={18}>
           <b>&quot;{searchValue}&quot;</b> ile ilgili <b>{searchResultLen}</b>{' '}
           sonuç bulundu.
         </Text>
-        <Stack py={30}>
-          {searchData.map((item: HocaType, index: number) => {
-            const comments = item.comments;
-            const averageRate =
-              comments.length > 0
-                ? comments.reduce((acc, comment) => acc + comment.rate, 0) /
-                  comments.length
-                : 0;
+        <div>
+          <InfiniteScroll
+            dataLength={searchData.length}
+            next={getMoreResult}
+            hasMore={hasMore}
+            loader={null}
+            endMessage={null}
+          >
+            <Stack
+              py={30}
+              style={{
+                overflow: 'auto',
+                display: 'flex',
+              }}
+            >
+              {searchData.map((item: HocaType, index: number) => {
+                const comments = item.comments;
+                const averageRate =
+                  comments.length > 0
+                    ? comments.reduce((acc, comment) => acc + comment.rate, 0) /
+                      comments.length
+                    : 0;
 
-            return (
-              <div key={index}>
-                <HocaResultCard
-                  hocaUid={item.id}
-                  score={averageRate}
-                  depart={item.department}
-                  name={item.name}
-                  rateCount={comments.length}
-                  university={item.university}
-                />
-              </div>
-            );
-          })}
-        </Stack>
+                return (
+                  <div key={index}>
+                    <HocaResultCard
+                      hocaUid={item.id}
+                      score={averageRate}
+                      depart={item.department}
+                      name={item.name}
+                      rateCount={comments.length}
+                      university={item.university}
+                    />
+                  </div>
+                );
+              })}
+              {loading && (
+                <Center>
+                  <Loader />
+                </Center>
+              )}
+            </Stack>
+          </InfiniteScroll>
+        </div>
       </Container>
     </>
   );

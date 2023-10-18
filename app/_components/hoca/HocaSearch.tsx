@@ -52,7 +52,7 @@ const HocaSearch = ({
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
-      if (search) {
+      if (search && search.trim() !== '' && search.length > 2) {
         const data = await searchHoca(search);
 
         if (data && data?.length > 0) {
