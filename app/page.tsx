@@ -11,6 +11,7 @@ import {
 import initFirebase from './_services/InitService';
 import IndexHeaderBar from './_components/navigation/IndexHeaderBar';
 import HocaSearch from './_components/hoca/HocaSearch';
+import { IconSearch } from '@tabler/icons-react';
 
 const illusts = [
   {
@@ -38,14 +39,14 @@ export default function Home() {
       <IndexHeaderBar />
       <div>
         <Container size="xl">
-          <Stack align="center" gap={20} py={80}>
+          <Stack align="center" gap={5} pt={20}>
             <Image
               maw={400}
-              src="https://www.ratemyprofessors.com/static/media/big_rmp_logo_black.41f961d6.svg"
-              mb={30}
+              src="/hocaninotlalogo.svg"
+              mb={20}
             />
-            <Text fz={36}>
-              <b>Hocanı</b> Ara
+            <Text fz={28}>
+              <b>Arama</b> Yap
             </Text>
             <HocaSearch />
           </Stack>
