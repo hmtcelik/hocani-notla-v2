@@ -10,7 +10,7 @@ import {
   TextInput,
   useCombobox,
 } from '@mantine/core';
-import { IconSchool } from '@tabler/icons-react';
+import { IconSchool, IconSearch } from '@tabler/icons-react';
 import useHocaSearch from '@/app/_hooks/useHocaSearch';
 import HocaService from '@/app/_services/HocaService';
 import { useDebouncedState } from '@mantine/hooks';
@@ -128,7 +128,7 @@ const HocaSearch = ({
               isLoading ? (
                 <Loader size="sm" color="black" />
               ) : (
-                <IconSchool color="black" />
+                <IconSearch color="black" />
               )
             }
             rightSection={
