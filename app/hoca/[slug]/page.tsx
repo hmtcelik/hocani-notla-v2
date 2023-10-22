@@ -14,8 +14,8 @@ import {
   Flex,
 } from '@mantine/core';
 import Link from 'next/link';
-import { useContext } from 'react';
-import { collection, doc, getFirestore } from 'firebase/firestore';
+import { useContext, useEffect, useState } from 'react';
+import { collection, doc, getFirestore, query } from 'firebase/firestore';
 
 import { HocaType } from '@/app/_models/Hoca';
 import useNotification from '@/app/_hooks/useNotification';
@@ -25,10 +25,9 @@ import { useFirestoreDocument } from '@react-query-firebase/firestore';
 import { IconStar } from '@tabler/icons-react';
 import initFirebase from '@/app/_services/InitService';
 import { useSession } from 'next-auth/react';
-import {
-  openAuthModal,
-  closeAuthModal,
-} from '../../_components/auth/AuthModal'; // Adjust the path accordingly
+import { openAuthModal } from '../../_components/auth/AuthModal'; // Adjust the path accordingly
+import HocaService from '@/app/_services/HocaService';
+import Loading from './loading';
 
 export default function Hoca({ params }: { params: { slug: string } }) {
   const session = useSession();
@@ -43,13 +42,7 @@ export default function Hoca({ params }: { params: { slug: string } }) {
 
   const queryData = useFirestoreDocument([`/hoca/${params.slug}`], ref, {}, {});
   if (queryData.isLoading) {
-    return (
-      <Container py={60} maw={1000}>
-        <Group justify="center">
-          <Loader />
-        </Group>
-      </Container>
-    );
+    return <Loading />;
   }
 
   if (queryData.isError) {
@@ -125,36 +118,61 @@ export default function Hoca({ params }: { params: { slug: string } }) {
     },
   ];
 
-  // const handleDislike = (index: number) => {
-  //   if (user && data) {
-  //     let newComment = data.comments;
-  //     let dislikes = newComment[index].dislikes;
-  //     let likes = newComment[index].likes;
+  const handleLike = (index: number) => {
+    if (user && user.email && data) {
+      let newComment = comments;
+      let likes = newComment[index].likes;
+      let dislikes = newComment[index].dislikes;
 
-  //     if (dislikes.includes(user.uid)) {
-  //       dislikes = dislikes.filter((item) => item !== user.uid);
-  //     } else {
-  //       dislikes.push(user.uid);
-  //     }
+      if (likes.includes(user.email)) {
+        likes = likes.filter((item) => item !== user.email);
+      } else {
+        likes.push(user.email);
+      }
 
-  //     if (likes.includes(user.uid)) {
-  //       likes = likes.filter((item) => item !== user.uid);
-  //     }
+      if (dislikes.includes(user.email)) {
+        dislikes = dislikes.filter((item) => item !== user.email);
+      }
 
-  //     newComment[index].dislikes = dislikes;
-  //     newComment[index].likes = likes;
+      newComment[index].likes = likes;
+      newComment[index].dislikes = dislikes;
 
-  //     // update dom
-  //     setData({ ...data, comments: newComment });
+      // update db
+      HocaService.updateHocaComments(data.id, newComment).catch((err: any) => {
+        console.log('Error when updating hoca: ', err);
+      });
+    } else {
+      openAuthModal();
+    }
+  };
 
-  //     // update db
-  //     HocaService.updateHocaComments(data.id, newComment).catch((err) => {
-  //       console.log('Error when updating hoca: ', err);
-  //     });
-  //   } else {
-  //     showNotification('error', 'Giriş yapınız.');
-  //   }
-  // };
+  const handleDislike = (index: number) => {
+    if (user && user.email && data) {
+      let newComment = comments;
+      let likes = newComment[index].likes;
+      let dislikes = newComment[index].dislikes;
+
+      if (dislikes.includes(user.email)) {
+        dislikes = dislikes.filter((item) => item !== user.email);
+      } else {
+        dislikes.push(user.email);
+      }
+
+      if (likes.includes(user.email)) {
+        likes = likes.filter((item) => item !== user.email);
+      }
+
+      newComment[index].likes = likes;
+      newComment[index].dislikes = dislikes;
+
+      // update db
+      HocaService.updateHocaComments(data.id, newComment).catch((err: any) => {
+        console.log('Error when updating hoca: ', err);
+      });
+    } else {
+      openAuthModal();
+    }
+  };
 
   return (
     <>
@@ -258,7 +276,11 @@ export default function Hoca({ params }: { params: { slug: string } }) {
             <Stack mt={20} gap={20}>
               {comments.map((item, index) => (
                 <div key={index}>
-                  <RatePost rate={item} />
+                  <RatePost
+                    rate={item}
+                    handleDislike={() => handleDislike(index)}
+                    handleLike={() => handleLike(index)}
+                  />
                 </div>
               ))}
               {comments.length <= 0 && (

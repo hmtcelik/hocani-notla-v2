@@ -1,14 +1,6 @@
 'use client';
 
-import {
-  Badge,
-  Button,
-  Grid,
-  Group,
-  SimpleGrid,
-  Stack,
-  Text,
-} from '@mantine/core';
+import { Badge, Button, Group, Stack, Text } from '@mantine/core';
 import {
   Icon360,
   IconCheck,
@@ -16,7 +8,9 @@ import {
   IconFlag,
   IconStar,
   IconThumbDown,
+  IconThumbDownFilled,
   IconThumbUp,
+  IconThumbUpFilled,
   IconUsers,
   IconX,
 } from '@tabler/icons-react';
@@ -25,45 +19,53 @@ import { CommentType } from '@/app/_models/Comment';
 import { IconReceipt } from '@tabler/icons-react';
 import { openAuthModal } from '../auth/AuthModal';
 import { useSession } from 'next-auth/react';
+import { useState } from 'react';
 
 interface RatePostProps {
   rate: CommentType;
+  handleLike: () => void;
+  handleDislike: () => void;
 }
 
-const RatePost = ({ rate }: RatePostProps) => {
+const RatePost = ({ rate, handleLike, handleDislike }: RatePostProps) => {
   const session = useSession();
   const user = session?.data?.user || null;
 
-  // const handleLike = (index: number) => {
-  //   if (user && data) {
-  //     let newComment = data.comments;
-  //     let likes = newComment[index].likes;
-  //     let dislikes = newComment[index].dislikes;
+  const [isLiked, setIsLiked] = useState(
+    user?.email && rate.likes.includes(user.email)
+  );
+  const [isDisliked, setIsDisliked] = useState(
+    user?.email && rate.dislikes.includes(user.email)
+  );
 
-  //     if (likes.includes(user.uid)) {
-  //       likes = likes.filter((item) => item !== user.uid);
-  //     } else {
-  //       likes.push(user.uid);
-  //     }
+  const [likeCt, setLikeCt] = useState(rate.likes.length);
+  const [dislikeCt, setDislikeCt] = useState(rate.dislikes.length);
 
-  //     if (dislikes.includes(user.uid)) {
-  //       dislikes = dislikes.filter((item) => item !== user.uid);
-  //     }
+  const clickLike = () => {
+    if (!user?.email) {
+      openAuthModal();
+      return;
+    }
+    if (isDisliked) {
+      setIsDisliked(false);
+      setDislikeCt(dislikeCt - 1);
+    }
+    setIsLiked(!isLiked);
+    setLikeCt(likeCt + (isLiked ? -1 : 1));
+  };
 
-  //     newComment[index].likes = likes;
-  //     newComment[index].dislikes = dislikes;
-
-  //     // update dom
-  //     setData({ ...data, comments: newComment });
-
-  //     // update db
-  //     HocaService.updateHocaComments(data.id, newComment).catch((err) => {
-  //       console.log('Error when updating hoca: ', err);
-  //     });
-  //   } else {
-  //     showNotification('error', 'Giriş yapınız.');
-  //   }
-  // };
+  const clickDislike = () => {
+    if (!user?.email) {
+      openAuthModal();
+      return;
+    }
+    if (isLiked) {
+      setIsLiked(false);
+      setLikeCt(likeCt - 1);
+    }
+    setIsDisliked(!isDisliked);
+    setDislikeCt(dislikeCt + (isDisliked ? -1 : 1));
+  };
 
   return (
     <>
@@ -180,11 +182,15 @@ const RatePost = ({ rate }: RatePostProps) => {
                 }}
                 color="black"
                 p={5}
-                leftSection={<IconThumbUp />}
+                leftSection={isLiked ? <IconThumbUpFilled /> : <IconThumbUp />}
                 radius="sm"
                 variant="subtle"
+                onClick={() => {
+                  handleLike();
+                  clickLike();
+                }}
               >
-                {rate.likes.length}
+                {likeCt}
               </Button>
               <Button
                 styles={{
@@ -193,11 +199,17 @@ const RatePost = ({ rate }: RatePostProps) => {
                 p={5}
                 color="black"
                 justify="space-evenly"
-                leftSection={<IconThumbDown />}
+                leftSection={
+                  isDisliked ? <IconThumbDownFilled /> : <IconThumbDown />
+                }
                 radius="sm"
                 variant="subtle"
+                onClick={() => {
+                  handleDislike();
+                  clickDislike();
+                }}
               >
-                {rate.dislikes.length}
+                {dislikeCt}
               </Button>
               {/* <Button
                 styles={{

@@ -30,6 +30,7 @@ import { CommentType } from '@/app/_models/Comment';
 import { HocaType } from '@/app/_models/Hoca';
 import initFirebase from '@/app/_services/InitService';
 import { User } from 'firebase/auth';
+import Loading from './loading';
 
 interface formValuesType {
   rate: number;
@@ -78,13 +79,7 @@ const Page = ({ params }: { params: { slug: string } }) => {
   const showNotification = useNotification();
 
   if (queryData.isLoading) {
-    return (
-      <Container py={20} maw={1000}>
-        <Group justify="center">
-          <Loader />
-        </Group>
-      </Container>
-    );
+    return <Loading />;
   }
 
   const docSnap = queryData.data;
@@ -151,7 +146,10 @@ const Page = ({ params }: { params: { slug: string } }) => {
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Stack maw={900}>
             <Group>
-              <Link href={`/hoca/${hocaUid}/`}>
+              <Link
+                onClick={() => client.removeQueries(`/hoca/${params.slug}`)}
+                href={`/hoca/${hocaUid}/`}
+              >
                 <Button variant="light" color="gray" radius="sm">
                   <IconArrowLeft />
                 </Button>
