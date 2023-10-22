@@ -146,10 +146,7 @@ const Page = ({ params }: { params: { slug: string } }) => {
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Stack maw={900}>
             <Group>
-              <Link
-                onClick={() => client.removeQueries(`/hoca/${params.slug}`)}
-                href={`/hoca/${hocaUid}/`}
-              >
+              <Link href={`/hoca/${hocaUid}/`}>
                 <Button variant="light" color="gray" radius="sm">
                   <IconArrowLeft />
                 </Button>
