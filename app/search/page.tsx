@@ -10,6 +10,7 @@ import initFirebase from '../_services/InitService';
 import { useEffect, useRef, useState } from 'react';
 import useHocaSearch from '../_hooks/useHocaSearch';
 import HocaService from '../_services/HocaService';
+import Loading from './loading';
 
 const SearchPage = () => {
   initFirebase();
@@ -21,6 +22,7 @@ const SearchPage = () => {
   const searchValue = searchParams.get('value');
 
   const [searchData, setSearchData] = useState<HocaType[]>([]);
+  const [firstLoading, setFirstLoading] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const [hasMore, setHasMore] = useState<boolean>(true);
@@ -48,6 +50,7 @@ const SearchPage = () => {
         console.log(error);
       } finally {
         setLoading(false);
+        setFirstLoading(false);
       }
     }
   };
@@ -63,6 +66,7 @@ const SearchPage = () => {
     setPage(1);
     setHasMore(true);
     setSearchResultLen(0);
+    setFirstLoading(true);
   };
 
   useEffect(() => {
@@ -75,7 +79,9 @@ const SearchPage = () => {
     }
   }, [page]);
 
-  return (
+  return firstLoading ? (
+    <Loading />
+  ) : (
     <>
       <Container py={60} maw={1000} ref={viewport}>
         <Text fz={18}>
