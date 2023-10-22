@@ -40,11 +40,7 @@ export default function Home() {
       <div>
         <Container size="xl">
           <Stack align="center" gap={5} pt={20}>
-            <Image
-              maw={400}
-              src="/hocaninotlalogo.svg"
-              mb={20}
-            />
+            <Image maw={400} src="hocaninotlalogo.jpeg" mb={20} />
             <Text fz={28}>
               <b>Arama</b> Yap
             </Text>
