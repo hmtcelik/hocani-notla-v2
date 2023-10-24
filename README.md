@@ -5,3 +5,4 @@
 - Mantine
 - Next Auth
 - Nprogress
+- React Query (Firebase)
