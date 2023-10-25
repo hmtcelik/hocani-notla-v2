@@ -15,7 +15,14 @@ import {
 } from '@mantine/core';
 import Link from 'next/link';
 import { useContext, useEffect, useState } from 'react';
-import { collection, doc, getFirestore, query } from 'firebase/firestore';
+import {
+  DocumentSnapshot,
+  FirestoreError,
+  collection,
+  doc,
+  getFirestore,
+  query,
+} from 'firebase/firestore';
 
 import { HocaType } from '@/app/_models/Hoca';
 import useNotification from '@/app/_hooks/useNotification';
@@ -26,26 +33,31 @@ import { IconStar } from '@tabler/icons-react';
 import initFirebase from '@/app/_services/InitService';
 import { useSession } from 'next-auth/react';
 import { openAuthModal } from '../../_components/auth/AuthModal'; // Adjust the path accordingly
-import HocaService from '@/app/_services/HocaService';
 import Loading from './loading';
+import { UseQueryResult, useQueryClient } from 'react-query';
+import { useFirestoreDocumentMutation } from '@react-query-firebase/firestore';
+import HocaService from '@/app/_services/HocaService';
 
 export default function Hoca({ params }: { params: { slug: string } }) {
+  initFirebase();
+
   const session = useSession();
   const user = session?.data?.user || null;
-
-  initFirebase();
+  const client = useQueryClient();
 
   const ref = doc(
     collection(getFirestore(), Config.collections.hoca),
     params.slug
   );
 
+  const mutation = useFirestoreDocumentMutation(ref);
   const queryData = useFirestoreDocument([`/hoca/${params.slug}`], ref, {}, {});
+
   if (queryData.isLoading) {
     return <Loading />;
   }
 
-  if (queryData.isError) {
+  if (queryData.isError || mutation.isError) {
     return (
       <Container py={60} maw={1000}>
         <Group justify="center">
@@ -56,7 +68,6 @@ export default function Hoca({ params }: { params: { slug: string } }) {
   }
 
   const docSnap = queryData.data;
-
   if (!docSnap?.exists()) {
     return (
       <Container py={60} maw={1000}>
@@ -137,6 +148,23 @@ export default function Hoca({ params }: { params: { slug: string } }) {
       newComment[index].likes = likes;
       newComment[index].dislikes = dislikes;
 
+      client.setQueryData(`/hoca/${params.slug}`, (old: any) => {
+        let updatedObject = Object.assign(
+          Object.create(Object.getPrototypeOf(old)),
+          {
+            ...old,
+            data: () => {
+              return {
+                ...old.data(),
+                comments: newComment,
+              };
+            },
+          }
+        );
+
+        return updatedObject;
+      });
+
       // update db
       HocaService.updateHocaComments(data.id, newComment).catch((err: any) => {
         console.log('Error when updating hoca: ', err);
@@ -165,9 +193,26 @@ export default function Hoca({ params }: { params: { slug: string } }) {
       newComment[index].likes = likes;
       newComment[index].dislikes = dislikes;
 
+      client.setQueryData(`/hoca/${params.slug}`, (old: any) => {
+        let updatedObject = Object.assign(
+          Object.create(Object.getPrototypeOf(old)),
+          {
+            ...old,
+            data: () => {
+              return {
+                ...old.data(),
+                comments: newComment,
+              };
+            },
+          }
+        );
+
+        return updatedObject;
+      });
       // update db
-      HocaService.updateHocaComments(data.id, newComment).catch((err: any) => {
-        console.log('Error when updating hoca: ', err);
+      mutation.mutate({
+        ...data,
+        comments: newComment,
       });
     } else {
       openAuthModal();

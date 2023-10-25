@@ -31,42 +31,6 @@ const RatePost = ({ rate, handleLike, handleDislike }: RatePostProps) => {
   const session = useSession();
   const user = session?.data?.user || null;
 
-  const [isLiked, setIsLiked] = useState(
-    user?.email && rate.likes.includes(user.email)
-  );
-  const [isDisliked, setIsDisliked] = useState(
-    user?.email && rate.dislikes.includes(user.email)
-  );
-
-  const [likeCt, setLikeCt] = useState(rate.likes.length);
-  const [dislikeCt, setDislikeCt] = useState(rate.dislikes.length);
-
-  const clickLike = () => {
-    if (!user?.email) {
-      openAuthModal();
-      return;
-    }
-    if (isDisliked) {
-      setIsDisliked(false);
-      setDislikeCt(dislikeCt - 1);
-    }
-    setIsLiked(!isLiked);
-    setLikeCt(likeCt + (isLiked ? -1 : 1));
-  };
-
-  const clickDislike = () => {
-    if (!user?.email) {
-      openAuthModal();
-      return;
-    }
-    if (isLiked) {
-      setIsLiked(false);
-      setLikeCt(likeCt - 1);
-    }
-    setIsDisliked(!isDisliked);
-    setDislikeCt(dislikeCt + (isDisliked ? -1 : 1));
-  };
-
   return (
     <>
       <Stack p={20} gap={5} bg="#f1f1f166">
@@ -182,15 +146,24 @@ const RatePost = ({ rate, handleLike, handleDislike }: RatePostProps) => {
                 }}
                 color="black"
                 p={5}
-                leftSection={isLiked ? <IconThumbUpFilled /> : <IconThumbUp />}
+                leftSection={
+                  user?.email ? (
+                    rate.likes.includes(user.email) ? (
+                      <IconThumbUpFilled />
+                    ) : (
+                      <IconThumbUp />
+                    )
+                  ) : (
+                    <IconThumbUp />
+                  )
+                }
                 radius="sm"
                 variant="subtle"
                 onClick={() => {
                   handleLike();
-                  clickLike();
                 }}
               >
-                {likeCt}
+                {rate.likes.length}
               </Button>
               <Button
                 styles={{
@@ -200,16 +173,23 @@ const RatePost = ({ rate, handleLike, handleDislike }: RatePostProps) => {
                 color="black"
                 justify="space-evenly"
                 leftSection={
-                  isDisliked ? <IconThumbDownFilled /> : <IconThumbDown />
+                  user?.email ? (
+                    rate.dislikes.includes(user.email) ? (
+                      <IconThumbDownFilled />
+                    ) : (
+                      <IconThumbDown />
+                    )
+                  ) : (
+                    <IconThumbDown />
+                  )
                 }
                 radius="sm"
                 variant="subtle"
                 onClick={() => {
                   handleDislike();
-                  clickDislike();
                 }}
               >
-                {dislikeCt}
+                {rate.dislikes.length}
               </Button>
               {/* <Button
                 styles={{
@@ -223,7 +203,7 @@ const RatePost = ({ rate, handleLike, handleDislike }: RatePostProps) => {
               /> */}
             </Group>
             <Group gap={3}>
-              <Button
+              {/* <Button
                 styles={{
                   section: { marginRight: 3 },
                 }}
@@ -232,9 +212,12 @@ const RatePost = ({ rate, handleLike, handleDislike }: RatePostProps) => {
                 leftSection={<IconFlag />}
                 radius="sm"
                 variant="subtle"
-              />
+              /> */}
               <Text fz={14} c="#00000090">
-                20.10.2021
+                {
+                  // DD-MM-YYYY
+                  new Date(rate.date).toLocaleDateString('tr-TR')
+                }
               </Text>
             </Group>
           </Group>
