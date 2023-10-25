@@ -4,13 +4,7 @@ import React from 'react';
 import BaseLayout from '../../_layouts/BaseLayout';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      cacheTime: 0,
-    },
-  },
-});
+const queryClient = new QueryClient();
 
 const HocaPageLayout = ({ children }: { children: React.ReactNode }) => {
   return (
