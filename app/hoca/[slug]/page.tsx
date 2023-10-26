@@ -51,7 +51,7 @@ export default function Hoca({ params }: { params: { slug: string } }) {
   );
 
   const mutation = useFirestoreDocumentMutation(ref);
-  const queryData = useFirestoreDocument([`/hoca/${params.slug}`], ref, {}, {});
+  const queryData = useFirestoreDocument([`/hoca/${params.slug}`], ref, {subscribe:false}, {});
 
   if (queryData.isLoading) {
     return <Loading />;

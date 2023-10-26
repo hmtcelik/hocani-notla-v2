@@ -71,7 +71,7 @@ const Page = ({ params }: { params: { slug: string } }) => {
     params.slug
   );
   const mutation = useFirestoreDocumentMutation(ref);
-  const queryData = useFirestoreDocument([`/hoca/${params.slug}`], ref, {});
+  const queryData = useFirestoreDocument([`/hoca/${params.slug}`], ref, {subscribe:false});
 
   const hocaUid = params.slug;
   const router = useRouter();

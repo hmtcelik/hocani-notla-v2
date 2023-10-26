@@ -1,7 +1,7 @@
 'use client';
 
 import { Menu, rem, ActionIcon } from '@mantine/core';
-import { IconSettings, IconHelp, IconLogout } from '@tabler/icons-react';
+import { IconSettings, IconHelp, IconLogout, IconNotes } from '@tabler/icons-react';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -39,6 +39,14 @@ export default function SettingsMenu(props: Props) {
           leftSection={<IconHelp style={{ width: rem(14), height: rem(14) }} />}
         >
           Yardım İste
+        </Menu.Item>
+        <Menu.Item
+          leftSection={<IconNotes style={{ width: rem(14), height: rem(14) }} />}
+          component='a'
+          href='/profile/comments'
+          td='none'
+        >
+          Verdiğim Notlar
         </Menu.Item>
         <Menu.Item
           color="red"
