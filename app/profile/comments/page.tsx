@@ -16,8 +16,6 @@ type UserAttrsType = {
 const page = () => {
   const user = useSession();
 
-  console.log(user);
-
   const ref = doc(
     collection(getFirestore(), Config.collections.userAttrs),
     user?.data?.user?.id

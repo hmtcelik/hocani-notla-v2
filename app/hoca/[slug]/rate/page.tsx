@@ -11,10 +11,7 @@ import {
   TextInput,
   Textarea,
 } from '@mantine/core';
-import {
-  useFirestoreDocument,
-  useFirestoreDocumentMutation,
-} from '@react-query-firebase/firestore';
+import { useFirestoreDocument } from '@react-query-firebase/firestore';
 import { IconArrowLeft, IconStar, IconStarFilled } from '@tabler/icons-react';
 import { collection, doc, getFirestore } from 'firebase/firestore';
 import Link from 'next/link';
@@ -71,10 +68,46 @@ const Page = ({ params }: { params: { slug: string } }) => {
     collection(getFirestore(), Config.collections.hoca),
     params.slug
   );
-  const mutation = useFirestoreDocumentMutation(ref);
-  const queryData = useFirestoreDocument([`/hoca/${params.slug}`], ref, {
-    subscribe: false,
-  });
+
+  const queryData = useFirestoreDocument(
+    [`/hoca/${params.slug}`],
+    ref,
+    {
+      subscribe: false,
+    },
+    {
+      onSuccess: (data) => {
+        if (data?.exists()) {
+          const docSnap = data;
+          const hocaData: HocaType = {
+            id: docSnap.id,
+            ...docSnap.data(),
+          } as HocaType;
+
+          const not = hocaData.comments.find(
+            (item) => item.commenter === user?.id
+          );
+          if (not) {
+            form.values.again = not?.again
+              ? 'yes'
+              : not?.again === false
+              ? 'no'
+              : initialValues.again;
+            form.values.attandance = not?.attandance
+              ? 'yes'
+              : not?.attandance === false
+              ? 'no'
+              : initialValues.attandance;
+            form.values.online = not?.online || initialValues.online;
+            form.values.grade = not?.grade || initialValues.grade;
+            form.values.comment = not?.comment || initialValues.comment;
+            form.values.rate = not?.rate || initialValues.rate;
+            form.values.course = not?.course || initialValues.course;
+          }
+        }
+      },
+    }
+  );
 
   const hocaUid = params.slug;
   const router = useRouter();
@@ -86,7 +119,6 @@ const Page = ({ params }: { params: { slug: string } }) => {
   }
 
   const docSnap = queryData.data;
-
   if (!docSnap?.exists()) {
     return (
       <Container py={60} maw={1000}>
@@ -124,7 +156,6 @@ const Page = ({ params }: { params: { slug: string } }) => {
 
     HocaService.updateHocaComments(hocaUid, [...hocaData.comments, newComment])
       .then(() => {
-        showNotification('success', 'Yorumunuz başarıyla eklendi.');
         client.removeQueries(`/hoca/${params.slug}`);
         router.push(`/hoca/${hocaUid}/`);
       })
@@ -351,6 +382,11 @@ const Page = ({ params }: { params: { slug: string } }) => {
             </Stack>
 
             <Stack mt={10} gap={20} justify="center" align="center">
+              {(form.errors.rate || form.errors.course) && (
+                <span style={{ color: 'red' }}>
+                  {form.errors.rate || form.errors.course}
+                </span>
+              )}
               <Button
                 type="submit"
                 variant="filled"

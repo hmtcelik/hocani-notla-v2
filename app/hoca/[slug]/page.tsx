@@ -21,7 +21,13 @@ import Config from '@/app/_services/Config';
 import HocaService from '@/app/_services/HocaService';
 import initFirebase from '@/app/_services/InitService';
 import { useFirestoreDocument } from '@react-query-firebase/firestore';
-import { IconStar } from '@tabler/icons-react';
+import {
+  IconEdit,
+  IconPencil,
+  IconPencilBolt,
+  IconPencilPlus,
+  IconStar,
+} from '@tabler/icons-react';
 import { useSession } from 'next-auth/react';
 import { useQueryClient } from 'react-query';
 import { openAuthModal } from '../../_components/auth/AuthModal'; // Adjust the path accordingly
@@ -33,6 +39,22 @@ export default function Hoca({ params }: { params: { slug: string } }) {
   const session = useSession();
   const user = session?.data?.user || null;
   const client = useQueryClient();
+
+  const userAttrRef = doc(
+    collection(getFirestore(), Config.collections.userAttrs),
+    user?.id
+  );
+
+  const userAttrQueryData = useFirestoreDocument(
+    ['userAttrs', user?.id],
+    userAttrRef,
+    { subscribe: false },
+    {}
+  );
+
+  const isAlreadyNot =
+    userAttrQueryData.data?.exists() &&
+    userAttrQueryData.data?.data()?.rates.includes(params.slug);
 
   const ref = doc(
     collection(getFirestore(), Config.collections.hoca),
@@ -242,7 +264,7 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                 fz="sm"
                 onClick={() => openAuthModal()}
               >
-                Bu Hocaya Not Ver
+                {!isAlreadyNot ? 'Bu Hocaya Not Ver' : 'Notumu Düzenle'}
               </Button>
             ) : (
               <Link href={`/hoca/${params.slug}/rate`}>
@@ -250,11 +272,14 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                   color="#0255FD"
                   radius="xl"
                   mr="auto"
-                  px={50}
+                  px={40}
+                  leftSection={
+                    !isAlreadyNot ? <IconPencilPlus /> : <IconEdit />
+                  }
                   size="lg"
                   fz="sm"
                 >
-                  Bu Hocaya Not Ver
+                  {!isAlreadyNot ? 'Bu Hocaya Not Ver' : 'Notumu Düzenle'}
                 </Button>
               </Link>
             )}
