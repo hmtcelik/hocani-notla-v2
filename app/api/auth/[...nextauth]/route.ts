@@ -1,7 +1,7 @@
-import CredentialsProvider from 'next-auth/providers/credentials';
-import NextAuth from 'next-auth';
-import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import initFirebase from '@/app/_services/InitService';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import NextAuth, { Session, User } from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
 
 initFirebase();
 
@@ -78,6 +78,19 @@ export const authOptions = {
       },
     }),
   ],
+  callbacks: {
+    jwt: async ({ token, user }: { token: any; user: User }) => {
+      if (user) {
+        token.user = user;
+      }
+      return token;
+    },
+    session: async ({ session, token }: { session: Session; token: any }) => {
+      session.user.id = token.user.id;
+      session.user.email = token.user.email;
+      return session;
+    },
+  },
 };
 const handler = NextAuth(authOptions);
 

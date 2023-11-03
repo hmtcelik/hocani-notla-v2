@@ -1,15 +1,15 @@
 'use client';
 
 import { Center, Container, Loader, Stack, Text } from '@mantine/core';
-import HocaResultCard from '../_components/hoca/HocaResultCard';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import HocaResultCard from '../_components/hoca/HocaResultCard';
 
 import { HocaType } from '@/app/_models/Hoca';
 import { useSearchParams } from 'next/navigation';
-import initFirebase from '../_services/InitService';
 import { useEffect, useRef, useState } from 'react';
 import useHocaSearch from '../_hooks/useHocaSearch';
 import HocaService from '../_services/HocaService';
+import initFirebase from '../_services/InitService';
 import Loading from './loading';
 
 const SearchPage = () => {

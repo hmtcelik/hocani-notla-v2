@@ -1,4 +1,4 @@
-import { Avatar, Text } from '@mantine/core';
+import { Text } from '@mantine/core';
 
 interface ScoreProps {
   score: number;

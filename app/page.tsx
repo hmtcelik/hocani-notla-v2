@@ -8,10 +8,9 @@ import {
   Title,
 } from '@mantine/core';
 
-import initFirebase from './_services/InitService';
-import IndexHeaderBar from './_components/navigation/IndexHeaderBar';
 import HocaSearch from './_components/hoca/HocaSearch';
-import { IconSearch } from '@tabler/icons-react';
+import IndexHeaderBar from './_components/navigation/IndexHeaderBar';
+import initFirebase from './_services/InitService';
 
 const illusts = [
   {

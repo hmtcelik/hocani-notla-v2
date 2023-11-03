@@ -1,11 +1,9 @@
 'use client';
 
-import { IconSearch } from '@tabler/icons-react';
-import { useEffect, useState } from 'react';
 import { Autocomplete } from '@mantine/core';
+import { IconSearch } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
-
-import DoctorService from '@/app/_services/HocaService';
+import { useState } from 'react';
 
 export default function DoctorSearch() {
   const [search, setSearch] = useState<string>('');

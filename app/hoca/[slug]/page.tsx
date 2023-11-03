@@ -1,42 +1,31 @@
 'use client';
 
 import {
+  Button,
   Container,
+  Flex,
   Group,
-  SimpleGrid,
   Progress,
+  SimpleGrid,
   Stack,
+  Tabs,
   Text,
   Title,
-  Button,
-  Tabs,
-  Loader,
-  Flex,
 } from '@mantine/core';
+import { collection, doc, getFirestore } from 'firebase/firestore';
 import Link from 'next/link';
-import { useContext, useEffect, useState } from 'react';
-import {
-  DocumentSnapshot,
-  FirestoreError,
-  collection,
-  doc,
-  getFirestore,
-  query,
-} from 'firebase/firestore';
 
-import { HocaType } from '@/app/_models/Hoca';
-import useNotification from '@/app/_hooks/useNotification';
 import RatePost from '@/app/_components/post/RatePost';
+import { HocaType } from '@/app/_models/Hoca';
 import Config from '@/app/_services/Config';
+import HocaService from '@/app/_services/HocaService';
+import initFirebase from '@/app/_services/InitService';
 import { useFirestoreDocument } from '@react-query-firebase/firestore';
 import { IconStar } from '@tabler/icons-react';
-import initFirebase from '@/app/_services/InitService';
 import { useSession } from 'next-auth/react';
+import { useQueryClient } from 'react-query';
 import { openAuthModal } from '../../_components/auth/AuthModal'; // Adjust the path accordingly
 import Loading from './loading';
-import { UseQueryResult, useQueryClient } from 'react-query';
-import { useFirestoreDocumentMutation } from '@react-query-firebase/firestore';
-import HocaService from '@/app/_services/HocaService';
 
 export default function Hoca({ params }: { params: { slug: string } }) {
   initFirebase();
@@ -50,14 +39,18 @@ export default function Hoca({ params }: { params: { slug: string } }) {
     params.slug
   );
 
-  const mutation = useFirestoreDocumentMutation(ref);
-  const queryData = useFirestoreDocument([`/hoca/${params.slug}`], ref, {subscribe:false}, {});
+  const queryData = useFirestoreDocument(
+    [`/hoca/${params.slug}`],
+    ref,
+    { subscribe: false },
+    {}
+  );
 
   if (queryData.isLoading) {
     return <Loading />;
   }
 
-  if (queryData.isError || mutation.isError) {
+  if (queryData.isError) {
     return (
       <Container py={60} maw={1000}>
         <Group justify="center">
@@ -130,19 +123,19 @@ export default function Hoca({ params }: { params: { slug: string } }) {
   ];
 
   const handleLike = (index: number) => {
-    if (user && user.email && data) {
+    if (user && user.id && data) {
       let newComment = comments;
       let likes = newComment[index].likes;
       let dislikes = newComment[index].dislikes;
 
-      if (likes.includes(user.email)) {
-        likes = likes.filter((item) => item !== user.email);
+      if (likes.includes(user.id)) {
+        likes = likes.filter((item) => item !== user.id);
       } else {
-        likes.push(user.email);
+        likes.push(user.id);
       }
 
-      if (dislikes.includes(user.email)) {
-        dislikes = dislikes.filter((item) => item !== user.email);
+      if (dislikes.includes(user.id)) {
+        dislikes = dislikes.filter((item) => item !== user.id);
       }
 
       newComment[index].likes = likes;
@@ -175,19 +168,19 @@ export default function Hoca({ params }: { params: { slug: string } }) {
   };
 
   const handleDislike = (index: number) => {
-    if (user && user.email && data) {
+    if (user && user.id && data) {
       let newComment = comments;
       let likes = newComment[index].likes;
       let dislikes = newComment[index].dislikes;
 
-      if (dislikes.includes(user.email)) {
-        dislikes = dislikes.filter((item) => item !== user.email);
+      if (dislikes.includes(user.id)) {
+        dislikes = dislikes.filter((item) => item !== user.id);
       } else {
-        dislikes.push(user.email);
+        dislikes.push(user.id);
       }
 
-      if (likes.includes(user.email)) {
-        likes = likes.filter((item) => item !== user.email);
+      if (likes.includes(user.id)) {
+        likes = likes.filter((item) => item !== user.id);
       }
 
       newComment[index].likes = likes;
@@ -209,10 +202,10 @@ export default function Hoca({ params }: { params: { slug: string } }) {
 
         return updatedObject;
       });
+
       // update db
-      mutation.mutate({
-        ...data,
-        comments: newComment,
+      HocaService.updateHocaComments(data.id, newComment).catch((err: any) => {
+        console.log('Error when updating hoca: ', err);
       });
     } else {
       openAuthModal();

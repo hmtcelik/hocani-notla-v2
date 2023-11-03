@@ -1,29 +1,26 @@
 'use client';
 
-import Link from 'next/link';
-import { notifications } from '@mantine/notifications';
-import { useDisclosure } from '@mantine/hooks';
 import {
-  Modal,
   Button,
+  Group,
+  Loader,
+  Modal,
+  PasswordInput,
+  Stack,
+  Text,
   TextInput,
   Title,
-  Text,
-  Stack,
-  Group,
-  PasswordInput,
-  Loader,
-  ActionIcon,
 } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { notifications } from '@mantine/notifications';
+import Link from 'next/link';
 
-import React, { useState } from 'react';
 import AuthService from '@/app/_services/AuthService';
-import { IconSettings } from '@tabler/icons-react';
-import { signIn, signOut, useSession } from 'next-auth/react';
 import initFirebase from '@/app/_services/InitService';
-import SettingsMenu from './SettingsMenu';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
-import path from 'path';
+import React, { useState } from 'react';
+import SettingsMenu from './SettingsMenu';
 
 interface AuthModalProps {
   button: {
@@ -173,7 +170,6 @@ function LoginForm({
       redirect: false,
     })
       .then((signInMessage) => {
-        console.log(signInMessage);
         signInMessage?.error
           ? notifications.show({
               message: signInMessage.error,

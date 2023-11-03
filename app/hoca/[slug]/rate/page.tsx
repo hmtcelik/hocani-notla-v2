@@ -1,35 +1,34 @@
 'use client';
 
 import {
+  Button,
+  Container,
+  Group,
+  Radio,
   Rating,
   Stack,
-  Textarea,
   Text,
-  Button,
-  Group,
   TextInput,
-  Radio,
-  Container,
-  Loader,
+  Textarea,
 } from '@mantine/core';
-import { IconStar, IconStarFilled, IconArrowLeft } from '@tabler/icons-react';
-import { useContext, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import {
   useFirestoreDocument,
   useFirestoreDocumentMutation,
 } from '@react-query-firebase/firestore';
+import { IconArrowLeft, IconStar, IconStarFilled } from '@tabler/icons-react';
 import { collection, doc, getFirestore } from 'firebase/firestore';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useQueryClient } from 'react-query';
 
 import useNotification from '@/app/_hooks/useNotification';
-import Config from '@/app/_services/Config';
-import { useForm } from '@mantine/form';
 import { CommentType } from '@/app/_models/Comment';
 import { HocaType } from '@/app/_models/Hoca';
+import Config from '@/app/_services/Config';
+import HocaService from '@/app/_services/HocaService';
 import initFirebase from '@/app/_services/InitService';
-import { User } from 'firebase/auth';
+import { useForm } from '@mantine/form';
+import { useSession } from 'next-auth/react';
 import Loading from './loading';
 
 interface formValuesType {
@@ -56,7 +55,9 @@ const Page = ({ params }: { params: { slug: string } }) => {
   initFirebase();
 
   const client = useQueryClient();
-  const user = null;
+
+  const session = useSession();
+  const user = session?.data?.user || null;
 
   const form = useForm({
     initialValues: initialValues,
@@ -71,7 +72,9 @@ const Page = ({ params }: { params: { slug: string } }) => {
     params.slug
   );
   const mutation = useFirestoreDocumentMutation(ref);
-  const queryData = useFirestoreDocument([`/hoca/${params.slug}`], ref, {subscribe:false});
+  const queryData = useFirestoreDocument([`/hoca/${params.slug}`], ref, {
+    subscribe: false,
+  });
 
   const hocaUid = params.slug;
   const router = useRouter();
@@ -111,9 +114,7 @@ const Page = ({ params }: { params: { slug: string } }) => {
           ? false
           : null,
       date: new Date().toISOString(),
-      commenter:
-        // user?.uid ||
-        '',
+      commenter: user?.id || '',
       likes: [],
       dislikes: [],
       flag: false,
@@ -121,23 +122,16 @@ const Page = ({ params }: { params: { slug: string } }) => {
       survey_id: '',
     };
 
-    mutation.mutate(
-      {
-        ...hocaData,
-        comments: [...hocaData.comments, newComment],
-      },
-      {
-        onSuccess() {
-          showNotification('success', 'Yorumunuz başarıyla eklendi.');
-          client.removeQueries(`/hoca/${params.slug}`);
-          router.push(`/hoca/${hocaUid}/`);
-        },
-        onError(error) {
-          console.log(error);
-          showNotification('error', 'Bir hata oluştu.');
-        },
-      }
-    );
+    HocaService.updateHocaComments(hocaUid, [...hocaData.comments, newComment])
+      .then(() => {
+        showNotification('success', 'Yorumunuz başarıyla eklendi.');
+        client.removeQueries(`/hoca/${params.slug}`);
+        router.push(`/hoca/${hocaUid}/`);
+      })
+      .catch((error) => {
+        console.log(error);
+        showNotification('error', 'Bir hata oluştu.');
+      });
   };
 
   return (

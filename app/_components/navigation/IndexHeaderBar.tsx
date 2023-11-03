@@ -1,4 +1,4 @@
-import { BackgroundImage, Button, Container, Group } from '@mantine/core';
+import { BackgroundImage, Container, Group } from '@mantine/core';
 import { IconBrandInstagram, IconBrandX } from '@tabler/icons-react';
 
 import AuthModal from '../auth/AuthModal';

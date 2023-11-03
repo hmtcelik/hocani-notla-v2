@@ -1,6 +1,5 @@
+import { Accordion, Alert } from '@mantine/core';
 import Link from 'next/link';
-import { Alert, Accordion } from '@mantine/core';
-import { Avatar } from '@mantine/core';
 import ScoreAvatar from '../post/ScoreAvatar';
 
 interface DoctorData {
