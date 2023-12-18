@@ -4,6 +4,7 @@ import {
   Button,
   Container,
   Group,
+  Loader,
   Radio,
   Rating,
   Stack,
@@ -11,22 +12,20 @@ import {
   TextInput,
   Textarea,
 } from '@mantine/core';
-import { useFirestoreDocument } from '@react-query-firebase/firestore';
+import { useFirestoreDocumentMutation } from '@react-query-firebase/firestore';
 import { IconArrowLeft, IconStar, IconStarFilled } from '@tabler/icons-react';
-import { collection, doc, getFirestore } from 'firebase/firestore';
+import { arrayUnion, collection, doc, getFirestore } from 'firebase/firestore';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from 'react-query';
 
 import useNotification from '@/app/_hooks/useNotification';
 import { CommentType } from '@/app/_models/Comment';
-import { HocaType } from '@/app/_models/Hoca';
 import Config from '@/app/_services/Config';
-import HocaService from '@/app/_services/HocaService';
 import initFirebase from '@/app/_services/InitService';
 import { useForm } from '@mantine/form';
 import { useSession } from 'next-auth/react';
-import Loading from './loading';
+import { getAuth } from 'firebase/auth';
 
 interface formValuesType {
   rate: number;
@@ -52,89 +51,27 @@ const Page = ({ params }: { params: { slug: string } }) => {
   initFirebase();
 
   const client = useQueryClient();
-
   const session = useSession();
+  const router = useRouter();
+  const showNotification = useNotification();
+
   const user = session?.data?.user || null;
+  const hocaUid = params.slug;
 
   const form = useForm({
     initialValues: initialValues,
     validate: {
       rate: (value) => (value == 0 ? 'Lütfen bir not veriniz.' : null),
-      course: (value) => (value == '' ? 'Lütfen bir ders kodu giriniz.' : null),
+      course: (value) => (value == '' ? 'Lütfen dersin adını giriniz.' : null),
     },
   });
 
-  const ref = doc(
-    collection(getFirestore(), Config.collections.hoca),
-    params.slug
-  );
-
-  const queryData = useFirestoreDocument(
-    [`/hoca/${params.slug}`],
-    ref,
-    {
-      subscribe: false,
-    },
-    {
-      onSuccess: (data) => {
-        if (data?.exists()) {
-          const docSnap = data;
-          const hocaData: HocaType = {
-            id: docSnap.id,
-            ...docSnap.data(),
-          } as HocaType;
-
-          const not = hocaData.comments.find(
-            (item) => item.commenter === user?.id
-          );
-          if (not) {
-            form.values.again = not?.again
-              ? 'yes'
-              : not?.again === false
-              ? 'no'
-              : initialValues.again;
-            form.values.attandance = not?.attandance
-              ? 'yes'
-              : not?.attandance === false
-              ? 'no'
-              : initialValues.attandance;
-            form.values.online = not?.online || initialValues.online;
-            form.values.grade = not?.grade || initialValues.grade;
-            form.values.comment = not?.comment || initialValues.comment;
-            form.values.rate = not?.rate || initialValues.rate;
-            form.values.course = not?.course || initialValues.course;
-          }
-        }
-      },
-    }
-  );
-
-  const hocaUid = params.slug;
-  const router = useRouter();
-
-  const showNotification = useNotification();
-
-  if (queryData.isLoading) {
-    return <Loading />;
-  }
-
-  const docSnap = queryData.data;
-  if (!docSnap?.exists()) {
-    return (
-      <Container py={60} maw={1000}>
-        <Group justify="center">
-          <Text c="red">Hoca Bulunamadı.</Text>
-        </Group>
-      </Container>
-    );
-  }
-
-  const hocaData: HocaType = {
-    id: docSnap.id,
-    ...docSnap.data(),
-  } as HocaType;
+  const ref = doc(collection(getFirestore(), Config.collections.hoca), hocaUid);
+  const mutation = useFirestoreDocumentMutation(ref, { merge: true });
 
   const handleSubmit = (values: formValuesType) => {
+    if (mutation.isLoading) return;
+
     const newComment: CommentType = {
       ...values,
       again:
@@ -154,15 +91,16 @@ const Page = ({ params }: { params: { slug: string } }) => {
       survey_id: '',
     };
 
-    HocaService.updateHocaComments(hocaUid, [...hocaData.comments, newComment])
-      .then(() => {
-        client.removeQueries(`/hoca/${params.slug}`);
-        router.push(`/hoca/${hocaUid}/`);
-      })
-      .catch((error) => {
-        console.log(error);
-        showNotification('error', 'Bir hata oluştu.');
-      });
+    mutation.mutate({
+      comments: arrayUnion(newComment),
+    });
+
+    // showNotification(
+    //   'success',
+    //   'Yorumunuz başarıyla eklendi.'
+    // );
+
+    router.push(`/hoca/${hocaUid}`);
   };
 
   return (
@@ -218,13 +156,13 @@ const Page = ({ params }: { params: { slug: string } }) => {
               }}
             >
               <Text size="md" fw="bold">
-                Aldığın Dersin Kodu <span style={{ color: 'red' }}>*</span>
+                Aldığın Ders <span style={{ color: 'red' }}>*</span>
               </Text>
               <TextInput
                 radius="sm"
                 size="md"
                 maxLength={1000}
-                placeholder="Örn: MATH101"
+                placeholder="Örn: Fizik 1"
                 withAsterisk
                 styles={{ input: { border: '1px solid gray' } }}
                 {...form.getInputProps('course')}
@@ -396,9 +334,15 @@ const Page = ({ params }: { params: { slug: string } }) => {
                 h={60}
                 w={180}
               >
-                Kaydet
+                {mutation.isLoading ? <Loader c="white" /> : 'Kaydet'}
               </Button>
             </Stack>
+
+            {mutation.error && (
+              <Text mt={10} c="red">
+                {mutation.error.message}
+              </Text>
+            )}
           </Stack>
         </form>
       </Container>

@@ -40,21 +40,7 @@ export default function Hoca({ params }: { params: { slug: string } }) {
   const user = session?.data?.user || null;
   const client = useQueryClient();
 
-  const userAttrRef = doc(
-    collection(getFirestore(), Config.collections.userAttrs),
-    user?.id
-  );
-
-  const userAttrQueryData = useFirestoreDocument(
-    ['userAttrs', user?.id],
-    userAttrRef,
-    { subscribe: false },
-    {}
-  );
-
-  const isAlreadyNot =
-    userAttrQueryData.data?.exists() &&
-    userAttrQueryData.data?.data()?.rates.includes(params.slug);
+  const isAlreadyNot = false;
 
   const ref = doc(
     collection(getFirestore(), Config.collections.hoca),
@@ -259,9 +245,10 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                 color="#0255FD"
                 radius="xl"
                 mr="auto"
-                px={50}
+                px={40}
                 size="lg"
                 fz="sm"
+                leftSection={!isAlreadyNot ? <IconPencilPlus /> : <IconEdit />}
                 onClick={() => openAuthModal()}
               >
                 {!isAlreadyNot ? 'Bu Hocaya Not Ver' : 'Notumu Düzenle'}

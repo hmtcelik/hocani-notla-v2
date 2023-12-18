@@ -38,9 +38,6 @@ export const authOptions = {
               case 'auth/invalid-email':
                 errorMsg = 'Geçersiz email adresi';
                 break;
-              case 'auth/user-disabled':
-                errorMsg = 'Bu kullanıcı banlanmıştır';
-                break;
               case 'auth/user-not-found':
                 errorMsg =
                   'Bu email adresi ile kayıtlı kullanıcı bulunmamaktadır';
@@ -55,14 +52,11 @@ export const authOptions = {
               case 'auth/network-request-failed':
                 errorMsg = 'İnternet bağlantınızı kontrol ediniz';
                 break;
-              case 'auth/internal-error':
-                errorMsg = 'Bir hata oluştu';
-                break;
               case 'auth/invalid-credential':
                 errorMsg = 'Geçersiz kimlik bilgisi';
                 break;
               default:
-                errorMsg = 'Bir hata oluştu';
+                errorMsg = 'Giriş yapılamadı';
             }
             throw new Error(errorMsg);
           });
