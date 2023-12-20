@@ -25,7 +25,6 @@ import Config from '@/app/_services/Config';
 import initFirebase from '@/app/_services/InitService';
 import { useForm } from '@mantine/form';
 import { useSession } from 'next-auth/react';
-import { getAuth } from 'firebase/auth';
 
 interface formValuesType {
   rate: number;
@@ -67,7 +66,19 @@ const Page = ({ params }: { params: { slug: string } }) => {
   });
 
   const ref = doc(collection(getFirestore(), Config.collections.hoca), hocaUid);
-  const mutation = useFirestoreDocumentMutation(ref, { merge: true });
+  const mutation = useFirestoreDocumentMutation(
+    ref,
+    { merge: true },
+    {
+      onSuccess: () => {
+        // TODO: implement optimistic update
+        client.invalidateQueries({ queryKey: [`/hoca/${hocaUid}`] });
+
+        router.push(`/hoca/${hocaUid}`);
+        router.refresh();
+      },
+    }
+  );
 
   const handleSubmit = (values: formValuesType) => {
     if (mutation.isLoading) return;
@@ -94,13 +105,6 @@ const Page = ({ params }: { params: { slug: string } }) => {
     mutation.mutate({
       comments: arrayUnion(newComment),
     });
-
-    // showNotification(
-    //   'success',
-    //   'Yorumunuz başarıyla eklendi.'
-    // );
-
-    router.push(`/hoca/${hocaUid}`);
   };
 
   return (
