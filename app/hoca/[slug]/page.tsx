@@ -12,22 +12,25 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import { collection, doc, getFirestore } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getFirestore,
+  limit,
+  query,
+} from 'firebase/firestore';
 import Link from 'next/link';
 
 import RatePost from '@/app/_components/post/RatePost';
+import { CommentType } from '@/app/_models/Comment';
 import { HocaType } from '@/app/_models/Hoca';
 import Config from '@/app/_services/Config';
-import HocaService from '@/app/_services/HocaService';
 import initFirebase from '@/app/_services/InitService';
-import { useFirestoreDocument } from '@react-query-firebase/firestore';
 import {
-  IconEdit,
-  IconPencil,
-  IconPencilBolt,
-  IconPencilPlus,
-  IconStar,
-} from '@tabler/icons-react';
+  useFirestoreDocument,
+  useFirestoreQuery,
+} from '@react-query-firebase/firestore';
+import { IconEdit, IconPencilPlus, IconStar } from '@tabler/icons-react';
 import { useSession } from 'next-auth/react';
 import { useQueryClient } from 'react-query';
 import { openAuthModal } from '../../_components/auth/AuthModal'; // Adjust the path accordingly
@@ -38,8 +41,8 @@ export default function Hoca({ params }: { params: { slug: string } }) {
 
   const session = useSession();
   const user = session?.data?.user || null;
-  const client = useQueryClient();
 
+  // TODO: implement this
   const isAlreadyNot = false;
 
   const ref = doc(
@@ -47,11 +50,28 @@ export default function Hoca({ params }: { params: { slug: string } }) {
     params.slug
   );
 
+  const commentsRef = query(
+    collection(
+      getFirestore(),
+      Config.collections.hoca,
+      params.slug,
+      Config.collections.comments
+    ),
+    limit(5)
+    // TODO: add pagination
+  );
+
   const queryData = useFirestoreDocument(
     [`/hoca/${params.slug}`],
     ref,
     { subscribe: false },
     {}
+  );
+
+  const queryComments = useFirestoreQuery(
+    ['hoca', params.slug, 'comments'],
+    commentsRef,
+    { subscribe: false }
   );
 
   if (queryData.isLoading) {
@@ -84,13 +104,47 @@ export default function Hoca({ params }: { params: { slug: string } }) {
     ...docSnap.data(),
   } as HocaType;
 
-  const comments = data.comments;
+  // TODO: load only comment section instead of all page
+  if (queryComments.isLoading) {
+    return <Loading />;
+  }
+
+  if (queryComments.isError) {
+    return (
+      <Container py={60} maw={1000}>
+        <Group justify="center">
+          <Text c="red">Bir hata oluştu.</Text>
+        </Group>
+      </Container>
+    );
+  }
+
+  const commentsSnap = queryComments.data;
+  if (!commentsSnap?.docs) {
+    return (
+      <Container py={60} maw={1000}>
+        <Group justify="center">
+          <Text c="red">Hoca Bulunamadı.</Text>
+        </Group>
+      </Container>
+    );
+  }
+
+  const comments: CommentType[] = commentsSnap.docs.map(
+    (doc) =>
+      ({
+        id: doc.id,
+        ...doc.data(),
+      }) as CommentType
+  );
+
   const averageRate =
     comments.length > 0
       ? comments.reduce((acc, comment) => acc + comment.rate, 0) /
         comments.length
       : 0;
 
+  // TODO: refactor this (add this values into document (hoca) )
   const fiveCt = comments.filter((item) => item.rate === 5).length;
   const fourCt = comments.filter((item) => item.rate === 4).length;
   const threeCt = comments.filter((item) => item.rate === 3).length;
@@ -129,96 +183,6 @@ export default function Hoca({ params }: { params: { slug: string } }) {
       ratio: (oneCt / comments.length) * 100,
     },
   ];
-
-  const handleLike = (index: number) => {
-    if (user && user.id && data) {
-      let newComment = comments;
-      let likes = newComment[index].likes;
-      let dislikes = newComment[index].dislikes;
-
-      if (likes.includes(user.id)) {
-        likes = likes.filter((item) => item !== user.id);
-      } else {
-        likes.push(user.id);
-      }
-
-      if (dislikes.includes(user.id)) {
-        dislikes = dislikes.filter((item) => item !== user.id);
-      }
-
-      newComment[index].likes = likes;
-      newComment[index].dislikes = dislikes;
-
-      client.setQueryData(`/hoca/${params.slug}`, (old: any) => {
-        let updatedObject = Object.assign(
-          Object.create(Object.getPrototypeOf(old)),
-          {
-            ...old,
-            data: () => {
-              return {
-                ...old.data(),
-                comments: newComment,
-              };
-            },
-          }
-        );
-
-        return updatedObject;
-      });
-
-      // update db
-      HocaService.updateHocaComments(data.id, newComment).catch((err: any) => {
-        console.log('Error when updating hoca: ', err);
-      });
-    } else {
-      openAuthModal();
-    }
-  };
-
-  const handleDislike = (index: number) => {
-    if (user && user.id && data) {
-      let newComment = comments;
-      let likes = newComment[index].likes;
-      let dislikes = newComment[index].dislikes;
-
-      if (dislikes.includes(user.id)) {
-        dislikes = dislikes.filter((item) => item !== user.id);
-      } else {
-        dislikes.push(user.id);
-      }
-
-      if (likes.includes(user.id)) {
-        likes = likes.filter((item) => item !== user.id);
-      }
-
-      newComment[index].likes = likes;
-      newComment[index].dislikes = dislikes;
-
-      client.setQueryData(`/hoca/${params.slug}`, (old: any) => {
-        let updatedObject = Object.assign(
-          Object.create(Object.getPrototypeOf(old)),
-          {
-            ...old,
-            data: () => {
-              return {
-                ...old.data(),
-                comments: newComment,
-              };
-            },
-          }
-        );
-
-        return updatedObject;
-      });
-
-      // update db
-      HocaService.updateHocaComments(data.id, newComment).catch((err: any) => {
-        console.log('Error when updating hoca: ', err);
-      });
-    } else {
-      openAuthModal();
-    }
-  };
 
   return (
     <>
@@ -328,8 +292,8 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                 <div key={index}>
                   <RatePost
                     rate={item}
-                    handleDislike={() => handleDislike(index)}
-                    handleLike={() => handleLike(index)}
+                    handleDislike={() => null}
+                    handleLike={() => null}
                   />
                 </div>
               ))}

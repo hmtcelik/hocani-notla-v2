@@ -12,7 +12,10 @@ import {
   TextInput,
   Textarea,
 } from '@mantine/core';
-import { useFirestoreDocumentMutation } from '@react-query-firebase/firestore';
+import {
+  useFirestoreCollectionMutation,
+  useFirestoreDocumentMutation,
+} from '@react-query-firebase/firestore';
 import { IconArrowLeft, IconStar, IconStarFilled } from '@tabler/icons-react';
 import { arrayUnion, collection, doc, getFirestore } from 'firebase/firestore';
 import Link from 'next/link';
@@ -65,20 +68,19 @@ const Page = ({ params }: { params: { slug: string } }) => {
     },
   });
 
-  const ref = doc(collection(getFirestore(), Config.collections.hoca), hocaUid);
-  const mutation = useFirestoreDocumentMutation(
-    ref,
-    { merge: true },
-    {
-      onSuccess: () => {
-        // TODO: implement optimistic update
-        client.invalidateQueries({ queryKey: [`/hoca/${hocaUid}`] });
-
-        router.push(`/hoca/${hocaUid}`);
-        router.refresh();
-      },
-    }
+  const ref = collection(
+    getFirestore(),
+    Config.collections.hoca,
+    hocaUid,
+    Config.collections.comments
   );
+
+  const mutation = useFirestoreCollectionMutation(ref, {
+    onMutate: async (newComment) => {
+      client.removeQueries(['hoca', hocaUid, 'comments']);
+      router.push(`/hoca/${hocaUid}/`);
+    },
+  });
 
   const handleSubmit = (values: formValuesType) => {
     if (mutation.isLoading) return;
@@ -102,9 +104,7 @@ const Page = ({ params }: { params: { slug: string } }) => {
       survey_id: '',
     };
 
-    mutation.mutate({
-      comments: arrayUnion(newComment),
-    });
+    mutation.mutate(newComment);
   };
 
   return (

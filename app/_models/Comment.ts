@@ -1,4 +1,5 @@
 export interface CommentType {
+  id?: string;
   rate: number;
   comment: string;
   date: string; // should be in this format "dd/mm/yyyy"

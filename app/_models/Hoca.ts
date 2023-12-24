@@ -7,7 +7,6 @@ export interface HocaType {
   university: string;
   faculty: string;
   department: string;
-  comments: CommentType[];
   userId: string;
   searchIdx: string;
 }
