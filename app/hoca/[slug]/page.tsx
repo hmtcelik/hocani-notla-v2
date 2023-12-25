@@ -3,6 +3,7 @@
 import {
   Button,
   Container,
+  Divider,
   Flex,
   Group,
   Progress,
@@ -18,6 +19,7 @@ import {
   getFirestore,
   limit,
   query,
+  where,
 } from 'firebase/firestore';
 import Link from 'next/link';
 
@@ -35,15 +37,13 @@ import { useSession } from 'next-auth/react';
 import { useQueryClient } from 'react-query';
 import { openAuthModal } from '../../_components/auth/AuthModal'; // Adjust the path accordingly
 import Loading from './loading';
+import { useState } from 'react';
 
 export default function Hoca({ params }: { params: { slug: string } }) {
   initFirebase();
 
   const session = useSession();
   const user = session?.data?.user || null;
-
-  // TODO: implement this
-  const isAlreadyNot = false;
 
   const ref = doc(
     collection(getFirestore(), Config.collections.hoca),
@@ -57,8 +57,20 @@ export default function Hoca({ params }: { params: { slug: string } }) {
       params.slug,
       Config.collections.comments
     ),
+    where('commenter', '!=', user?.id || ''),
     limit(5)
     // TODO: add pagination
+  );
+
+  const userCommentRef = query(
+    collection(
+      getFirestore(),
+      Config.collections.hoca,
+      params.slug,
+      Config.collections.comments
+    ),
+    where('commenter', '==', user?.id || ''),
+    limit(1)
   );
 
   const queryData = useFirestoreDocument(
@@ -71,6 +83,12 @@ export default function Hoca({ params }: { params: { slug: string } }) {
   const queryComments = useFirestoreQuery(
     ['hoca', params.slug, 'comments'],
     commentsRef,
+    { subscribe: false }
+  );
+
+  const queryUserComment = useFirestoreQuery(
+    ['hoca', params.slug, 'comments', user?.id],
+    userCommentRef,
     { subscribe: false }
   );
 
@@ -184,6 +202,16 @@ export default function Hoca({ params }: { params: { slug: string } }) {
     },
   ];
 
+  let userComment: CommentType | null = null;
+  const userCommentSnap = queryUserComment.data;
+  if (userCommentSnap?.docs) {
+    const userCommentDoc = userCommentSnap.docs[0];
+    userComment = {
+      id: userCommentDoc.id,
+      ...userCommentDoc.data(),
+    } as CommentType;
+  }
+
   return (
     <>
       <Container py={60} maw={1000}>
@@ -212,10 +240,10 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                 px={40}
                 size="lg"
                 fz="sm"
-                leftSection={!isAlreadyNot ? <IconPencilPlus /> : <IconEdit />}
+                leftSection={!userComment ? <IconPencilPlus /> : <IconEdit />}
                 onClick={() => openAuthModal()}
               >
-                {!isAlreadyNot ? 'Bu Hocaya Not Ver' : 'Notumu Düzenle'}
+                {!userComment ? 'Bu Hocaya Not Ver' : 'Notumu Düzenle'}
               </Button>
             ) : (
               <Link href={`/hoca/${params.slug}/rate`}>
@@ -224,13 +252,11 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                   radius="xl"
                   mr="auto"
                   px={40}
-                  leftSection={
-                    !isAlreadyNot ? <IconPencilPlus /> : <IconEdit />
-                  }
+                  leftSection={!userComment ? <IconPencilPlus /> : <IconEdit />}
                   size="lg"
                   fz="sm"
                 >
-                  {!isAlreadyNot ? 'Bu Hocaya Not Ver' : 'Notumu Düzenle'}
+                  {!userComment ? 'Bu Hocaya Not Ver' : 'Notumu Düzenle'}
                 </Button>
               </Link>
             )}
@@ -288,6 +314,19 @@ export default function Hoca({ params }: { params: { slug: string } }) {
           </Tabs.List>
           <Tabs.Panel value="rates">
             <Stack mt={20} gap={20}>
+              {userComment && (
+                <Stack gap={10}>
+                  <Text fs="italic" size="sm" fw="bold">
+                    Senin Notun:
+                  </Text>
+                  <RatePost
+                    rate={userComment}
+                    handleDislike={() => null}
+                    handleLike={() => null}
+                  />
+                  <Divider mt={10} />
+                </Stack>
+              )}
               {comments.map((item, index) => (
                 <div key={index}>
                   <RatePost
@@ -297,7 +336,7 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                   />
                 </div>
               ))}
-              {comments.length <= 0 && (
+              {comments.length <= 0 && !userComment && (
                 <Text mt={20} ta="center">
                   İlk Not Veren{' '}
                   <Link href={`/hoca/${params.slug}/rate`}>Sen Ol!</Link>

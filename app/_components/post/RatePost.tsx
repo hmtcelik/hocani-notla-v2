@@ -20,6 +20,7 @@ interface RatePostProps {
   rate: CommentType;
   handleLike: () => void;
   handleDislike: () => void;
+  isYourComment?: boolean;
 }
 
 const RatePost = ({ rate, handleLike, handleDislike }: RatePostProps) => {
