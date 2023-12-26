@@ -1,7 +1,6 @@
 import { Group, Stack, Text, Title } from '@mantine/core';
-import React from 'react';
-import ScoreAvatar from '../post/ScoreAvatar';
 import Link from 'next/link';
+import ScoreAvatar from '../post/ScoreAvatar';
 
 interface HocaResultCardProps {
   hocaUid: string;

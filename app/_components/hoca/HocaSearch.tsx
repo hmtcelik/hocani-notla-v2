@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import useHocaSearch from '@/app/_hooks/useHocaSearch';
+import { HocaType } from '@/app/_models/Hoca';
+import HocaService from '@/app/_services/HocaService';
 import {
   Box,
   CloseButton,
@@ -10,11 +11,10 @@ import {
   TextInput,
   useCombobox,
 } from '@mantine/core';
-import { IconSchool, IconSearch } from '@tabler/icons-react';
-import useHocaSearch from '@/app/_hooks/useHocaSearch';
-import HocaService from '@/app/_services/HocaService';
 import { useDebouncedState } from '@mantine/hooks';
-import { HocaType } from '@/app/_models/Hoca';
+import { IconSearch } from '@tabler/icons-react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 type ResponsiveProps = {
   xs?: string;

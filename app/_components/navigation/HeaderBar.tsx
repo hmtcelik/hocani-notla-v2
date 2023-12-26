@@ -2,21 +2,18 @@
 
 import {
   ActionIcon,
-  Button,
   Collapse,
   Container,
   Flex,
   Group,
   Image,
   Stack,
-  Transition,
 } from '@mantine/core';
-import HocaSearch from '../hoca/HocaSearch';
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
+import { IconMenu2, IconX } from '@tabler/icons-react';
 import Link from 'next/link';
 import AuthModal from '../auth/AuthModal';
-import { IconMenu, IconMenu2, IconMenuOrder, IconX } from '@tabler/icons-react';
-import { useDisclosure, useMediaQuery } from '@mantine/hooks';
-import { IconMenuDeep } from '@tabler/icons-react';
+import HocaSearch from '../hoca/HocaSearch';
 
 const HeaderBar = () => {
   const [opened, { toggle }] = useDisclosure(false);

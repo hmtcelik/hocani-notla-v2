@@ -1,63 +1,102 @@
 'use client';
 
 import {
+  Button,
   Container,
+  Divider,
+  Flex,
   Group,
-  SimpleGrid,
   Progress,
+  SimpleGrid,
   Stack,
+  Tabs,
   Text,
   Title,
-  Button,
-  Tabs,
-  Loader,
-  Flex,
 } from '@mantine/core';
-import Link from 'next/link';
-import { useContext, useEffect, useState } from 'react';
 import {
-  DocumentSnapshot,
-  FirestoreError,
   collection,
   doc,
   getFirestore,
+  limit,
   query,
+  where,
 } from 'firebase/firestore';
+import Link from 'next/link';
 
-import { HocaType } from '@/app/_models/Hoca';
-import useNotification from '@/app/_hooks/useNotification';
 import RatePost from '@/app/_components/post/RatePost';
+import { CommentType } from '@/app/_models/Comment';
+import { HocaType } from '@/app/_models/Hoca';
 import Config from '@/app/_services/Config';
-import { useFirestoreDocument } from '@react-query-firebase/firestore';
-import { IconStar } from '@tabler/icons-react';
 import initFirebase from '@/app/_services/InitService';
+import {
+  useFirestoreDocument,
+  useFirestoreQuery,
+} from '@react-query-firebase/firestore';
+import { IconEdit, IconPencilPlus, IconStar } from '@tabler/icons-react';
 import { useSession } from 'next-auth/react';
+import { useQueryClient } from 'react-query';
 import { openAuthModal } from '../../_components/auth/AuthModal'; // Adjust the path accordingly
 import Loading from './loading';
-import { UseQueryResult, useQueryClient } from 'react-query';
-import { useFirestoreDocumentMutation } from '@react-query-firebase/firestore';
-import HocaService from '@/app/_services/HocaService';
+import { useState } from 'react';
 
 export default function Hoca({ params }: { params: { slug: string } }) {
   initFirebase();
 
   const session = useSession();
   const user = session?.data?.user || null;
-  const client = useQueryClient();
 
   const ref = doc(
     collection(getFirestore(), Config.collections.hoca),
     params.slug
   );
 
-  const mutation = useFirestoreDocumentMutation(ref);
-  const queryData = useFirestoreDocument([`/hoca/${params.slug}`], ref, {}, {});
+  const commentsRef = query(
+    collection(
+      getFirestore(),
+      Config.collections.hoca,
+      params.slug,
+      Config.collections.comments
+    ),
+    where('commenter', '!=', user?.id || ''),
+    limit(5)
+    // TODO: add pagination
+  );
+
+  const userCommentRef = query(
+    collection(
+      getFirestore(),
+      Config.collections.hoca,
+      params.slug,
+      Config.collections.comments
+    ),
+    where('commenter', '==', user?.id || ''),
+    limit(1)
+  );
+
+  const queryData = useFirestoreDocument(
+    [`/hoca/${params.slug}`],
+    ref,
+    { subscribe: false },
+    {}
+  );
+
+  const queryComments = useFirestoreQuery(
+    ['hoca', params.slug, 'comments'],
+    commentsRef,
+    { subscribe: false }
+  );
+
+  const queryUserComment = useFirestoreQuery(
+    ['hoca', params.slug, 'comments', user?.id],
+    userCommentRef,
+    { subscribe: false }
+  );
 
   if (queryData.isLoading) {
     return <Loading />;
   }
 
-  if (queryData.isError || mutation.isError) {
+  if (queryData.isError) {
     return (
       <Container py={60} maw={1000}>
         <Group justify="center">
@@ -83,13 +122,47 @@ export default function Hoca({ params }: { params: { slug: string } }) {
     ...docSnap.data(),
   } as HocaType;
 
-  const comments = data.comments;
+  // TODO: load only comment section instead of all page
+  if (queryComments.isLoading) {
+    return <Loading />;
+  }
+
+  if (queryComments.isError) {
+    return (
+      <Container py={60} maw={1000}>
+        <Group justify="center">
+          <Text c="red">Bir hata oluştu.</Text>
+        </Group>
+      </Container>
+    );
+  }
+
+  const commentsSnap = queryComments.data;
+  if (!commentsSnap?.docs) {
+    return (
+      <Container py={60} maw={1000}>
+        <Group justify="center">
+          <Text c="red">Hoca Bulunamadı.</Text>
+        </Group>
+      </Container>
+    );
+  }
+
+  const comments: CommentType[] = commentsSnap.docs.map(
+    (doc) =>
+      ({
+        id: doc.id,
+        ...doc.data(),
+      }) as CommentType
+  );
+
   const averageRate =
     comments.length > 0
       ? comments.reduce((acc, comment) => acc + comment.rate, 0) /
         comments.length
       : 0;
 
+  // TODO: refactor this (add this values into document (hoca) )
   const fiveCt = comments.filter((item) => item.rate === 5).length;
   const fourCt = comments.filter((item) => item.rate === 4).length;
   const threeCt = comments.filter((item) => item.rate === 3).length;
@@ -129,95 +202,16 @@ export default function Hoca({ params }: { params: { slug: string } }) {
     },
   ];
 
-  const handleLike = (index: number) => {
-    if (user && user.email && data) {
-      let newComment = comments;
-      let likes = newComment[index].likes;
-      let dislikes = newComment[index].dislikes;
-
-      if (likes.includes(user.email)) {
-        likes = likes.filter((item) => item !== user.email);
-      } else {
-        likes.push(user.email);
-      }
-
-      if (dislikes.includes(user.email)) {
-        dislikes = dislikes.filter((item) => item !== user.email);
-      }
-
-      newComment[index].likes = likes;
-      newComment[index].dislikes = dislikes;
-
-      client.setQueryData(`/hoca/${params.slug}`, (old: any) => {
-        let updatedObject = Object.assign(
-          Object.create(Object.getPrototypeOf(old)),
-          {
-            ...old,
-            data: () => {
-              return {
-                ...old.data(),
-                comments: newComment,
-              };
-            },
-          }
-        );
-
-        return updatedObject;
-      });
-
-      // update db
-      HocaService.updateHocaComments(data.id, newComment).catch((err: any) => {
-        console.log('Error when updating hoca: ', err);
-      });
-    } else {
-      openAuthModal();
-    }
-  };
-
-  const handleDislike = (index: number) => {
-    if (user && user.email && data) {
-      let newComment = comments;
-      let likes = newComment[index].likes;
-      let dislikes = newComment[index].dislikes;
-
-      if (dislikes.includes(user.email)) {
-        dislikes = dislikes.filter((item) => item !== user.email);
-      } else {
-        dislikes.push(user.email);
-      }
-
-      if (likes.includes(user.email)) {
-        likes = likes.filter((item) => item !== user.email);
-      }
-
-      newComment[index].likes = likes;
-      newComment[index].dislikes = dislikes;
-
-      client.setQueryData(`/hoca/${params.slug}`, (old: any) => {
-        let updatedObject = Object.assign(
-          Object.create(Object.getPrototypeOf(old)),
-          {
-            ...old,
-            data: () => {
-              return {
-                ...old.data(),
-                comments: newComment,
-              };
-            },
-          }
-        );
-
-        return updatedObject;
-      });
-      // update db
-      mutation.mutate({
-        ...data,
-        comments: newComment,
-      });
-    } else {
-      openAuthModal();
-    }
-  };
+  let userComment: CommentType | null = null;
+  const userCommentSnap = queryUserComment.data;
+  if (userCommentSnap?.docs) {
+    const userCommentDoc = userCommentSnap.docs[0];
+    if (userCommentDoc)
+      userComment = {
+        id: userCommentDoc.id,
+        ...userCommentDoc.data(),
+      } as CommentType;
+  }
 
   return (
     <>
@@ -244,24 +238,32 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                 color="#0255FD"
                 radius="xl"
                 mr="auto"
-                px={50}
+                px={40}
                 size="lg"
                 fz="sm"
+                leftSection={!userComment ? <IconPencilPlus /> : <IconEdit />}
                 onClick={() => openAuthModal()}
               >
-                Bu Hocaya Not Ver
+                {!userComment ? 'Bu Hocaya Not Ver' : 'Notumu Düzenle'}
               </Button>
             ) : (
-              <Link href={`/hoca/${params.slug}/rate`}>
+              <Link
+                href={
+                  !userComment
+                    ? `/hoca/${params.slug}/rate`
+                    : `/hoca/${params.slug}/rate/${userComment.id}`
+                }
+              >
                 <Button
                   color="#0255FD"
                   radius="xl"
                   mr="auto"
-                  px={50}
+                  px={40}
+                  leftSection={!userComment ? <IconPencilPlus /> : <IconEdit />}
                   size="lg"
                   fz="sm"
                 >
-                  Bu Hocaya Not Ver
+                  {!userComment ? 'Bu Hocaya Not Ver' : 'Notumu Düzenle'}
                 </Button>
               </Link>
             )}
@@ -319,16 +321,29 @@ export default function Hoca({ params }: { params: { slug: string } }) {
           </Tabs.List>
           <Tabs.Panel value="rates">
             <Stack mt={20} gap={20}>
+              {userComment && (
+                <Stack gap={10}>
+                  <Text fs="italic" size="sm" fw="bold">
+                    Senin Notun:
+                  </Text>
+                  <RatePost
+                    rate={userComment}
+                    handleDislike={() => null}
+                    handleLike={() => null}
+                  />
+                  <Divider mt={10} />
+                </Stack>
+              )}
               {comments.map((item, index) => (
                 <div key={index}>
                   <RatePost
                     rate={item}
-                    handleDislike={() => handleDislike(index)}
-                    handleLike={() => handleLike(index)}
+                    handleDislike={() => null}
+                    handleLike={() => null}
                   />
                 </div>
               ))}
-              {comments.length <= 0 && (
+              {comments.length <= 0 && !userComment && (
                 <Text mt={20} ta="center">
                   İlk Not Veren{' '}
                   <Link href={`/hoca/${params.slug}/rate`}>Sen Ol!</Link>

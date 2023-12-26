@@ -1,13 +1,7 @@
-import {
-  getStorage,
-  FirebaseStorage,
-  ref,
-  getBytes,
-  getDownloadURL,
-} from 'firebase/storage';
 import { getApp } from 'firebase/app';
-import initFirebase from '../_services/InitService';
+import { getBytes, getStorage, ref } from 'firebase/storage';
 import TrieSearch from 'trie-search';
+import initFirebase from '../_services/InitService';
 
 function useHocaSearch() {
   const search = async (keyword: string) => {

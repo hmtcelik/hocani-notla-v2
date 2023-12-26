@@ -1,18 +1,17 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { Grid, Title, Text, Group, Button, Divider } from '@mantine/core';
+import { Button, Divider, Grid, Group, Text, Title } from '@mantine/core';
 import {
-  IconHeart,
   IconArrowForward,
+  IconHeart,
   IconMessageCircle,
   IconShare,
 } from '@tabler/icons-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import Link from 'next/link';
 
-import ScoreAvatar from './ScoreAvatar';
 import { PostProps } from './Post';
+import ScoreAvatar from './ScoreAvatar';
 
 const cardTitleTextColor = '#595959';
 

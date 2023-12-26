@@ -12,9 +12,12 @@ import {
   TextInput,
   Textarea,
 } from '@mantine/core';
-import { useFirestoreCollectionMutation } from '@react-query-firebase/firestore';
+import {
+  useFirestoreDocument,
+  useFirestoreDocumentMutation,
+} from '@react-query-firebase/firestore';
 import { IconArrowLeft, IconStar, IconStarFilled } from '@tabler/icons-react';
-import { collection, getFirestore } from 'firebase/firestore';
+import { collection, doc, getFirestore } from 'firebase/firestore';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from 'react-query';
@@ -25,6 +28,7 @@ import Config from '@/app/_services/Config';
 import initFirebase from '@/app/_services/InitService';
 import { useForm } from '@mantine/form';
 import { useSession } from 'next-auth/react';
+import Loading from './loading';
 
 interface formValuesType {
   rate: number;
@@ -46,16 +50,20 @@ const initialValues = {
   course: '',
 };
 
-const Page = ({ params }: { params: { slug: string } }) => {
+const UpdateRatePage = ({
+  params,
+}: {
+  params: { slug: string; rateSlug: string };
+}) => {
   initFirebase();
 
   const client = useQueryClient();
   const session = useSession();
   const router = useRouter();
-  const showNotification = useNotification();
 
   const user = session?.data?.user || null;
   const hocaUid = params.slug;
+  const rateUid = params.rateSlug;
 
   const form = useForm({
     initialValues: initialValues,
@@ -65,19 +73,61 @@ const Page = ({ params }: { params: { slug: string } }) => {
     },
   });
 
-  const ref = collection(
-    getFirestore(),
-    Config.collections.hoca,
-    hocaUid,
-    Config.collections.comments
+  const rateRef = doc(
+    collection(
+      getFirestore(),
+      Config.collections.hoca,
+      hocaUid,
+      Config.collections.comments
+    ),
+    rateUid
   );
 
-  const mutation = useFirestoreCollectionMutation(ref, {
-    onMutate: async (newComment) => {
-      client.removeQueries(['hoca', hocaUid, 'comments']);
-      router.push(`/hoca/${hocaUid}/`);
-    },
-  });
+  const mutation = useFirestoreDocumentMutation(
+    rateRef,
+    {},
+    {
+      onMutate: async () => {
+        // TODO: optimistic updates and you may require removeQueries hoca / id
+        client.removeQueries(['hoca', hocaUid, 'comments', user?.id]);
+        client.removeQueries(['hoca', hocaUid, 'comments']);
+        router.push(`/hoca/${hocaUid}/`);
+      },
+    }
+  );
+
+  const rateDoc = useFirestoreDocument(
+    ['hoca', params.slug, 'comments', user?.id, 'rate'],
+    rateRef,
+    { subscribe: false },
+    {
+      select(snapshot) {
+        return snapshot.exists()
+          ? snapshot.data()
+          : router.push(`/hoca/${hocaUid}/`);
+      },
+    }
+  );
+
+  if (rateDoc.isLoading) return <Loading />;
+  if (rateDoc.error) return <div>{rateDoc.error.message}</div>;
+
+  const rate = rateDoc.data as CommentType;
+  if (rate.commenter !== user?.id) {
+    return router.push(`/hoca/${hocaUid}/`);
+  }
+
+  initialValues.rate = rate.rate;
+  initialValues.comment = rate.comment || '';
+  initialValues.again = rate.again ? 'yes' : rate.again === false ? 'no' : '';
+  initialValues.attandance = rate.attandance
+    ? 'yes'
+    : rate.attandance === false
+    ? 'no'
+    : '';
+  initialValues.online = rate.online || '';
+  initialValues.grade = rate.grade || '';
+  initialValues.course = rate.course || '';
 
   const handleSubmit = (values: formValuesType) => {
     if (mutation.isLoading) return;
@@ -353,4 +403,4 @@ const Page = ({ params }: { params: { slug: string } }) => {
   );
 };
 
-export default Page;
+export default UpdateRatePage;

@@ -1,7 +1,7 @@
 'use client';
 
-import { Grid, Title, Text, Group, Button, Divider } from '@mantine/core';
-import { IconHeart, IconMessageCircle, IconShare } from '@tabler/icons-react';
+import { Button, Divider, Grid, Group, Text, Title } from '@mantine/core';
+import { IconHeart, IconMessageCircle } from '@tabler/icons-react';
 import { useState } from 'react';
 
 export interface postReplyProps {

@@ -1,9 +1,13 @@
 'use client';
 
-import { Menu, rem, ActionIcon } from '@mantine/core';
-import { IconSettings, IconHelp, IconLogout } from '@tabler/icons-react';
+import { ActionIcon, Menu, rem } from '@mantine/core';
+import {
+  IconHelp,
+  IconLogout,
+  IconPencil,
+  IconSettings,
+} from '@tabler/icons-react';
 import { signOut } from 'next-auth/react';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 type Props = {
@@ -36,6 +40,16 @@ export default function SettingsMenu(props: Props) {
           Şifremi Değiştir
         </Menu.Item> */}
         <Menu.Item
+          leftSection={
+            <IconPencil style={{ width: rem(14), height: rem(14) }} />
+          }
+          component="a"
+          href="/profile/comments"
+          td="none"
+        >
+          Verdiğim Notlar
+        </Menu.Item>
+        <Menu.Item
           leftSection={<IconHelp style={{ width: rem(14), height: rem(14) }} />}
         >
           Yardım İste
@@ -43,7 +57,7 @@ export default function SettingsMenu(props: Props) {
         <Menu.Item
           color="red"
           onClick={() => {
-            signOut({ callbackUrl: path, redirect: false });
+            signOut({ callbackUrl: path, redirect: true });
           }}
           leftSection={
             <IconLogout style={{ width: rem(14), height: rem(14) }} />

@@ -1,6 +1,6 @@
 import {
-  getAuth,
   createUserWithEmailAndPassword,
+  getAuth,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
 import initFirebase from '../_services/InitService';
@@ -68,7 +68,6 @@ const signIn = (email: string, password: string): Promise<string> => {
           errorMsg = 'Bir hata oluştu';
         }
         reject(errorMsg);
-        console.log('error :>> ', error);
       });
   });
 };

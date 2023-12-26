@@ -1,7 +1,7 @@
-import CredentialsProvider from 'next-auth/providers/credentials';
-import NextAuth from 'next-auth';
-import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import initFirebase from '@/app/_services/InitService';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import NextAuth, { Session, User } from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
 
 initFirebase();
 
@@ -38,9 +38,6 @@ export const authOptions = {
               case 'auth/invalid-email':
                 errorMsg = 'Geçersiz email adresi';
                 break;
-              case 'auth/user-disabled':
-                errorMsg = 'Bu kullanıcı banlanmıştır';
-                break;
               case 'auth/user-not-found':
                 errorMsg =
                   'Bu email adresi ile kayıtlı kullanıcı bulunmamaktadır';
@@ -55,14 +52,11 @@ export const authOptions = {
               case 'auth/network-request-failed':
                 errorMsg = 'İnternet bağlantınızı kontrol ediniz';
                 break;
-              case 'auth/internal-error':
-                errorMsg = 'Bir hata oluştu';
-                break;
               case 'auth/invalid-credential':
                 errorMsg = 'Geçersiz kimlik bilgisi';
                 break;
               default:
-                errorMsg = 'Bir hata oluştu';
+                errorMsg = 'Giriş yapılamadı';
             }
             throw new Error(errorMsg);
           });
@@ -78,6 +72,19 @@ export const authOptions = {
       },
     }),
   ],
+  callbacks: {
+    jwt: async ({ token, user }: { token: any; user: User }) => {
+      if (user) {
+        token.user = user;
+      }
+      return token;
+    },
+    session: async ({ session, token }: { session: Session; token: any }) => {
+      session.user.id = token.user.id;
+      session.user.email = token.user.email;
+      return session;
+    },
+  },
 };
 const handler = NextAuth(authOptions);
 

@@ -1,11 +1,11 @@
 'use client';
 
+import { CommentType } from '@/app/_models/Comment';
 import { Badge, Button, Group, Stack, Text } from '@mantine/core';
 import {
   Icon360,
   IconCheck,
   IconDeviceLaptop,
-  IconFlag,
   IconStar,
   IconThumbDown,
   IconThumbDownFilled,
@@ -14,17 +14,13 @@ import {
   IconUsers,
   IconX,
 } from '@tabler/icons-react';
-import ScoreAvatar from './ScoreAvatar';
-import { CommentType } from '@/app/_models/Comment';
-import { IconReceipt } from '@tabler/icons-react';
-import { openAuthModal } from '../auth/AuthModal';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
 
 interface RatePostProps {
   rate: CommentType;
   handleLike: () => void;
   handleDislike: () => void;
+  isYourComment?: boolean;
 }
 
 const RatePost = ({ rate, handleLike, handleDislike }: RatePostProps) => {
@@ -147,8 +143,8 @@ const RatePost = ({ rate, handleLike, handleDislike }: RatePostProps) => {
                 color="black"
                 p={5}
                 leftSection={
-                  user?.email ? (
-                    rate.likes.includes(user.email) ? (
+                  user?.id ? (
+                    rate.likes.includes(user.id) ? (
                       <IconThumbUpFilled />
                     ) : (
                       <IconThumbUp />
@@ -173,8 +169,8 @@ const RatePost = ({ rate, handleLike, handleDislike }: RatePostProps) => {
                 color="black"
                 justify="space-evenly"
                 leftSection={
-                  user?.email ? (
-                    rate.dislikes.includes(user.email) ? (
+                  user?.id ? (
+                    rate.dislikes.includes(user.id) ? (
                       <IconThumbDownFilled />
                     ) : (
                       <IconThumbDown />
