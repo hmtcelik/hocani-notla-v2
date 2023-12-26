@@ -206,10 +206,11 @@ export default function Hoca({ params }: { params: { slug: string } }) {
   const userCommentSnap = queryUserComment.data;
   if (userCommentSnap?.docs) {
     const userCommentDoc = userCommentSnap.docs[0];
-    userComment = {
-      id: userCommentDoc.id,
-      ...userCommentDoc.data(),
-    } as CommentType;
+    if (userCommentDoc)
+      userComment = {
+        id: userCommentDoc.id,
+        ...userCommentDoc.data(),
+      } as CommentType;
   }
 
   return (
