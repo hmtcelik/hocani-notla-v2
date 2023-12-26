@@ -57,7 +57,7 @@ export default function SettingsMenu(props: Props) {
         <Menu.Item
           color="red"
           onClick={() => {
-            signOut({ callbackUrl: path, redirect: false });
+            signOut({ callbackUrl: path, redirect: true });
           }}
           leftSection={
             <IconLogout style={{ width: rem(14), height: rem(14) }} />

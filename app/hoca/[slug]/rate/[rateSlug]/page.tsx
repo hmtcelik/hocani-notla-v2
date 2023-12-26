@@ -60,7 +60,6 @@ const UpdateRatePage = ({
   const client = useQueryClient();
   const session = useSession();
   const router = useRouter();
-  const showNotification = useNotification();
 
   const user = session?.data?.user || null;
   const hocaUid = params.slug;
@@ -89,27 +88,31 @@ const UpdateRatePage = ({
     {},
     {
       onMutate: async () => {
-        // TODO: optimistic updates and you may removequeries hoca / id
+        // TODO: optimistic updates and you may require removeQueries hoca / id
         client.removeQueries(['hoca', hocaUid, 'comments', user?.id]);
         client.removeQueries(['hoca', hocaUid, 'comments']);
-        client.removeQueries(['hoca', hocaUid]);
         router.push(`/hoca/${hocaUid}/`);
       },
     }
   );
 
   const rateDoc = useFirestoreDocument(
-    ['hoca', params.slug, 'comments', user?.id],
-    rateRef
+    ['hoca', params.slug, 'comments', user?.id, 'rate'],
+    rateRef,
+    { subscribe: false },
+    {
+      select(snapshot) {
+        return snapshot.exists()
+          ? snapshot.data()
+          : router.push(`/hoca/${hocaUid}/`);
+      },
+    }
   );
 
   if (rateDoc.isLoading) return <Loading />;
   if (rateDoc.error) return <div>{rateDoc.error.message}</div>;
-  if (!rateDoc.data?.exists()) {
-    return router.push(`/hoca/${hocaUid}/`);
-  }
 
-  const rate = rateDoc.data.data() as CommentType;
+  const rate = rateDoc.data as CommentType;
   if (rate.commenter !== user?.id) {
     return router.push(`/hoca/${hocaUid}/`);
   }
@@ -187,7 +190,9 @@ const UpdateRatePage = ({
                   }
                   {...form.getInputProps('rate')}
                 />
-                <Text c="gray">{form.values.rate}</Text>
+                <Text c="gray" fw="bold">
+                  {form.values.rate}
+                </Text>
               </Group>
               <Text c="red" fz={14}>
                 {form.errors.rate}

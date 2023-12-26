@@ -12,12 +12,9 @@ import {
   TextInput,
   Textarea,
 } from '@mantine/core';
-import {
-  useFirestoreCollectionMutation,
-  useFirestoreDocumentMutation,
-} from '@react-query-firebase/firestore';
+import { useFirestoreCollectionMutation } from '@react-query-firebase/firestore';
 import { IconArrowLeft, IconStar, IconStarFilled } from '@tabler/icons-react';
-import { arrayUnion, collection, doc, getFirestore } from 'firebase/firestore';
+import { collection, getFirestore } from 'firebase/firestore';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from 'react-query';
@@ -143,7 +140,9 @@ const Page = ({ params }: { params: { slug: string } }) => {
                   }
                   {...form.getInputProps('rate')}
                 />
-                <Text c="gray">{form.values.rate}</Text>
+                <Text c="gray" fw="bold">
+                  {form.values.rate}
+                </Text>
               </Group>
               <Text c="red" fz={14}>
                 {form.errors.rate}

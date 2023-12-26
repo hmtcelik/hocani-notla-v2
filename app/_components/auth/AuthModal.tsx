@@ -125,7 +125,7 @@ export default function LoginModal(props: AuthModalProps) {
             color={props.button.color}
             variant={props.button.variant}
             onClick={() => {
-              signOut({ callbackUrl: path, redirect: false });
+              signOut({ callbackUrl: path, redirect: true });
             }}
           >
             Çıkış Yap
@@ -167,7 +167,7 @@ function LoginForm({
       email,
       password: passwd,
       callbackUrl: path,
-      redirect: false,
+      redirect: true, // TODO: can be redirect false to avoid refresh page
     })
       .then((signInMessage) => {
         signInMessage?.error
@@ -306,7 +306,7 @@ function RegisterForm({
           email,
           password: passwd,
           callbackUrl: path,
-          redirect: false,
+          redirect: true, // TODO: can be redirect false to avoid refresh page
         });
         windowCloser();
       })
