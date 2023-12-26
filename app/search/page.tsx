@@ -104,12 +104,9 @@ const SearchPage = () => {
               }}
             >
               {searchData.map((item: HocaType, index: number) => {
-                const comments = item.comments;
-                const averageRate =
-                  comments.length > 0
-                    ? comments.reduce((acc, comment) => acc + comment.rate, 0) /
-                      comments.length
-                    : 0;
+                // TODO: implement this
+                const averageRate = 0;
+                const rateCount = 0;
 
                 return (
                   <div key={index}>
@@ -118,7 +115,7 @@ const SearchPage = () => {
                       score={averageRate}
                       depart={item.department}
                       name={item.name}
-                      rateCount={comments.length}
+                      rateCount={rateCount}
                       university={item.university}
                     />
                   </div>

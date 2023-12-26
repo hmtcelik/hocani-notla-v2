@@ -13,7 +13,7 @@ type UserAttrsType = {
   rates: string[];
 };
 
-const page = () => {
+const ProfilePage = () => {
   const user = useSession();
 
   const ref = doc(
@@ -59,4 +59,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default ProfilePage;
