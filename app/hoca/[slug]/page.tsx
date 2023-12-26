@@ -247,7 +247,13 @@ export default function Hoca({ params }: { params: { slug: string } }) {
                 {!userComment ? 'Bu Hocaya Not Ver' : 'Notumu Düzenle'}
               </Button>
             ) : (
-              <Link href={`/hoca/${params.slug}/rate`}>
+              <Link
+                href={
+                  !userComment
+                    ? `/hoca/${params.slug}/rate`
+                    : `/hoca/${params.slug}/rate/${userComment.id}`
+                }
+              >
                 <Button
                   color="#0255FD"
                   radius="xl"
